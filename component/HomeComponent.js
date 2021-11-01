@@ -2,19 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Image, useWindowDimensions, Dimensions, Platform, RefreshControl } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-
-const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  }
-
+import Myloader from '../constants/Myloader';
 const HomeComponent = ({ navigation }) => {
-
-    const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
 
     const [Data, SetData] = useState([]);
     const [LatestAddedData, setLatestAddedData] = useState([]);
@@ -26,12 +15,12 @@ const HomeComponent = ({ navigation }) => {
     const itemWidth2 = 250;
     const separatorWidth2 = 30;
     const totalItemWidth2 = itemWidth2 + separatorWidth2;
+    const [loader, setLoader] = React.useState(false)
 
     const myFunctionRegistered = async () => {
         let isActive = true;
         const abortCtrl = new AbortController();
         const opts = {
-            signal: abortCtrl.signal,
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -71,7 +60,6 @@ const HomeComponent = ({ navigation }) => {
         let isActive = true;
         const abortCtrl = new AbortController();
         const opts = {
-            signal: abortCtrl.signal,
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -115,7 +103,7 @@ const HomeComponent = ({ navigation }) => {
         let isActive = true;
         const abortCtrl = new AbortController();
         const opts = {
-            signal: abortCtrl.signal,
+          
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -173,15 +161,18 @@ const HomeComponent = ({ navigation }) => {
     let addresslimit = 27;
 
     useEffect(() => {
+        const abortCtrl = new AbortController();
         SetData([])
         myFunctionRegistered();
         myFunctionLastAdded();
         myFunctionHorsesForSale();
+        return () => abortCtrl.abort()
     }, []);
     return (
         <ScrollView 
         style={styles.container}
         >
+            <Myloader Show={loader} />
             <View style={{ top: 20 }}>
                 <Text style={[styles.heightText]}>Registered Stallions</Text>
                 <FlatList horizontal={true}

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Platform, NativeModules, Modal, TouchableOpacity, StyleSheet, ScrollView, View, Text, Switch, Button, StatusBar, Dimensions, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { drawerItemsMain } from './screens/drawerItemsMain';
 import CustomDrawerContent from './screens/CustomDrawerContent.js';
@@ -43,19 +44,21 @@ import { AddAHorse2 } from './screens/AddAHorse2';
 import ResultScreen from './screens/ResultScreen';
 import ErrorScreen from './screens/ErrorScreen';
 import Myloader from './constants/Myloader';
+import { SearchModal } from './screens/SearchModal';
+import HypotheticalSearchModalSire from './screens/HypotheticalSearchModalSire';
+import { EffectiveNickSearchModal } from './screens/EffectiveNickSearchModal';
+import HorseDetailScreenPedigree from './screens/HorseDetailScreenPedigree';
+import HorseDetailScreenProfile from './screens/HorseDetailScreenProfile';
 
 export const BASE_URL = 'http://api.pedigreeall.com/';
 
-
-
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+
 const navOptionHandler = () => ({
   headerShown: false,
 
 })
-
-
 
 function MainDrawerNavigation() {
 
@@ -508,7 +511,7 @@ function MainDrawerNavigation() {
 
         <View style={{ right: 30, flexDirection: 'row', top: 5 }}>
           <Switch
-            trackColor={{ false: "#D6D6D6", true: "#77b5fe" }}
+            trackColor={{ false: "#D6D6D6", true: "#2e3f6e" }}
             thumbColor={isEnabled ? "#fff" : "#fff"}
             ios_backgroundColor="#D6D6D6"
             onValueChange={toggleSwitch}
@@ -584,7 +587,7 @@ function MainDrawerNavigation() {
         <Stack.Screen name="MyEditRequests" component={MyEditRequestsScreen} options={navOptionHandler} />
         <Stack.Screen name="DeleteAHorse" component={DeleteAHorseScreen} options={navOptionHandler} />
         <Stack.Screen name="MyDeleteRequests" component={MyDeleteRequestsScreen} options={navOptionHandler} />
-
+        <Stack.Screen name="HorseDetail" component={HorseDetailScreen} options={navOptionHandler} />
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
 
         </Stack.Group>
@@ -873,7 +876,11 @@ export default function App({ navigation }) {
             <Stack.Screen name="Result" component={ResultScreen} options={navOptionHandler} />
 
             <Stack.Group screenOptions={{ presentation: 'modal' }}>
-              <Stack.Screen name="HorseDetail" component={HorseDetailScreen} options={navOptionHandler} />
+              <Stack.Screen name="SearchModal" component={SearchModal} options={navOptionHandler} />
+              <Stack.Screen name="HypotheticalSearchModalSire" component={HypotheticalSearchModalSire} options={navOptionHandler} />
+              <Stack.Screen name="EffectiveNickSearchModal" component={EffectiveNickSearchModal} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenPedigree" component={HorseDetailScreenPedigree} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenProfile" component={HorseDetailScreenProfile} options={navOptionHandler} />
             </Stack.Group>
           </Stack.Navigator>
         )}
@@ -930,5 +937,3 @@ const styles = StyleSheet.create({
   }
 
 });
-
-

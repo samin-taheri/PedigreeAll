@@ -1,18 +1,13 @@
-import React, { Component, useRef, useState } from 'react'
-import { View, Text, Image, Button, StyleSheet, SafeAreaView, TouchableOpacity, ImageBackground, Dimensions, Platform, ScrollView } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform, ScrollView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import { Global } from './Global';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
-import RNPickerSelect from 'react-native-picker-select';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { SearchBar, Tabs, Card, CheckBox, ListItem } from "react-native-elements";
 import HomeComponent from '../component/HomeComponent';
-import Icon from "react-native-vector-icons/FontAwesome5";
 import { Ionicons } from '@expo/vector-icons';
 import MyButton from '../component/MyButton';
-
 
 const GenerationData = [
   {
@@ -42,27 +37,30 @@ const GenerationData = [
 ];
 
 
-export function TabHypotheticalSearch({ navigation }) {
-  const bottomSheet = useRef();
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+export function TabHypotheticalSearch({ navigation, route, props }) {
+
 
   const refRBSheetGeneration = useRef();
-  const BottomSheetSearchNavigation = useRef();
-  const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
-  const [state, setState] = React.useState({ checked: [] });
+  const [GenerationTitle, setGenerationTitle] = React.useState('Generation 5');
+  const [state, setState] = React.useState({checked: [] });
   const [chekedItem, setChekedItem] = React.useState(5)
-  const [searchValue, setSearchValue] = React.useState("")
-  const [userData, setUserData] = useState();
-  const [HorseData, setHorseData] = useState([]);
-  const [loader, setLoader] = useState(false)
+  const [getSireText, setSireText] = React.useState("")
+  const [getMareText, setMareText] = React.useState("")
+  const [getSireId, setSireId] = React.useState(0)
+  const [getMareId, setMareId] = React.useState(0)
 
+  useEffect(() => {
 
-  const [getData, setData] = React.useState([]);
+    if (route.params?.isSire) {
+      setSireText(route.params?.HorseName)
+      setSireId(route.params?.HorseId)
 
-  const [getText, setText] = React.useState("");
-  const [stallion, setStallion] = React.useState("");
+    } else {
+      setMareText(route.params?.HorseName)
+      setMareId(route.params?.HorseId)
 
+    }
+  });
 
   return (
     <ScrollView>
@@ -74,37 +72,52 @@ export function TabHypotheticalSearch({ navigation }) {
           animation="fadeInDown">
 
 
+
           <View style={styles.InputContainer}>
+
             <Feather
-              style={{ top: 5, marginRight: 10 }}
+              style={{ top: 3, marginRight: 10 }}
               name="search"
               color="#2e3f6e"
               size={20}
             />
 
-            <TextInput
-              style={{ color: 'black', left: 5, width: '100%', height: '100%' }}
-              placeholder="Type a Name:"
-              onChangeText={(text) => {
-                setText(text)
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('HypotheticalSearchModalSire', {
+                  isSire: true,
+                  HorseId: getSireId
+                })
               }}
-            />
+              style={styles.TwoValueInLineButton}
+            >
+              <Text style={{ alignSelf: 'center' }}>Sire Name: {getSireText}</Text>
+            </TouchableOpacity>
           </View>
+
+
+
           <View style={{ bottom: 5 }}>
+
             <View style={styles.InputContainer2}>
               <Feather
-                style={{ top: 5, marginRight: 10 }}
+                style={{ top: 3, marginRight: 10 }}
                 name="search"
                 color="#2e3f6e"
                 size={20}
               />
-              <TextInput
-                style={{ color: 'black', left: 5, width: '100%', height: '100%' }}
-                placeholder="Type a Name:"
-                onChangeText={(text) => {
-                  setText(text)
-                }}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('HypotheticalSearchModalSire', {
+                    isSire: false,
+                    HorseId: getMareId
+                  })
+                }} style={styles.TwoValueInLineButton}
+
+              >
+                <Text style={{ alignSelf: 'center'}}>Mare Name: {getMareText}</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -171,7 +184,7 @@ export function TabHypotheticalSearch({ navigation }) {
 
                         }}
                       >
-                        <Ionicons name="chevron-forward-outline" size={16} color="black" />
+                        <Ionicons name="arrow-forward-outline" size={16} color="black" />
 
                         <View style={{ flexDirection: 'row' }}>
 
@@ -196,7 +209,9 @@ export function TabHypotheticalSearch({ navigation }) {
             Icon="search-outline"
             IconSize={18}
             onPress={() => navigation.navigate('HorseDetail', {
-              HORSE_NAME: getText
+              HORSE_NAME: route.params?.HorseName,
+              HORSE_ID: route.params?.HorseId,
+              Generation: chekedItem,
             })}
           >
           </MyButton>
@@ -206,7 +221,6 @@ export function TabHypotheticalSearch({ navigation }) {
     </ScrollView>
 
   );
-
 }
 const windowWidth = Dimensions.get('window').width - 100;
 export default TabHypotheticalSearch;
@@ -291,6 +305,16 @@ const styles = StyleSheet.create({
 
     padding: 8,
     color: '#000',
+  },
+  TwoValueInLineButton: {
+    flexDirection: 'row',
+    width: windowWidth + 40,
+    paddingTop: 10,
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? -10 : -12,
+    paddingLeft: 5,
+    color: '#05375a',
+    
   },
   action: {
     flexDirection: 'row',

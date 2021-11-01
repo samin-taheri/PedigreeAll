@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { View, Alert, StyleSheet, FlatList, StatusBar, ScrollView, TouchableOpacity, Dimensions, Text, Image, TextInput, ActivityIndicator, Platform, Switch, SafeAreaView, Keyboard } from 'react-native'
+import { View, Animated, StyleSheet, FlatList, StatusBar, ScrollView, TouchableOpacity, Dimensions, Text, Image, TextInput, ActivityIndicator, Platform, Switch, SafeAreaView, Keyboard } from 'react-native'
 import { SearchBar, ListItem } from "react-native-elements";
 import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +20,12 @@ import * as ImagePicker from 'expo-image-picker';
 import MyButtonWhite from '../component/MyButtonWhite';
 import MyButton from '../component/MyButton';
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
+import faker from 'faker'
+
+faker.seed(10);
+const SPACING = 18;
+const AVATAR_SIZE = 55;
+const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const RomanMillerData = [
     {
@@ -1091,6 +1097,7 @@ export function RequestsEditAHorse({ navigation }) {
         }
         return () => { abortCtrl.abort(), isActive = false, isMounted = false };
     }, [])
+    const scrollY = React.useRef(new Animated.Value(0)).current;
 
     return (
         <View>
@@ -1327,13 +1334,38 @@ export function RequestsEditAHorse({ navigation }) {
                                         <>
                                             {getHorseGetByName2.length > 0 ?
 
-                                                <FlatList
+                                                <Animated.FlatList
                                                     scrollEnabled={true}
                                                     bounces={false}
+                                                    onScroll={Animated.event(
+                                                        [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                                                        {useNativeDriver: true}
+                                                    )}
                                                     style={styles.flatList2}
                                                     data={SireMareHorseData}
-                                                    renderItem={({ item }) => (
-                                                        <TouchableOpacity style={styles.item}
+                                                    
+                                                    renderItem={({ item, index }) => {
+                                                        const opacityInputRange = [
+                                                            -1,
+                                                            0,
+                                                            ITEM_SIZE * index,
+                                                            ITEM_SIZE * ( index + .5)
+                                                        ]
+                                                        const inputRange = [
+                                                            -1,
+                                                            0,
+                                                            ITEM_SIZE * index,
+                                                            ITEM_SIZE * ( index + 2)
+                                                        ]
+                                                         const scale = scrollY.interpolate({
+                                                             inputRange,
+                                                             outputRange: [1,1,1,0]
+                                                         })
+                                                         const opacity = scrollY.interpolate({
+                                                            inputRange: opacityInputRange,
+                                                            outputRange: [1,1,1,0]
+                                                        })
+                                                        return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
                                                             onPress={() => {
                                                                 setSearchValue("")
                                                                 if (SireMareHorseName === 'Sire') {
@@ -1381,7 +1413,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                                             </View>
 
-                                                        </TouchableOpacity>)}
+                                                        </TouchableOpacity>}}
                                                     keyExtractor={item => item.HORSE_ID.toString()}
                                                 />
 
@@ -1441,13 +1473,37 @@ export function RequestsEditAHorse({ navigation }) {
 
                                         {getOwnerBreederData.length > 0 ?
 
-                                            <FlatList
+                                            <Animated.FlatList
                                                 scrollEnabled={true}
                                                 bounces={false}
                                                 style={styles.flatList2}
                                                 data={getOwnerBreederData}
-                                                renderItem={({ item }) => (
-                                                    <TouchableOpacity style={styles.item}
+                                                onScroll={Animated.event(
+                                                    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                                                    {useNativeDriver: true}
+                                                )}
+                                                renderItem={({ item, index }) => {
+                                                    const opacityInputRange = [
+                                                        -1,
+                                                        0,
+                                                        ITEM_SIZE * index,
+                                                        ITEM_SIZE * ( index + .5)
+                                                    ]
+                                                    const inputRange = [
+                                                        -1,
+                                                        0,
+                                                        ITEM_SIZE * index,
+                                                        ITEM_SIZE * ( index + 2)
+                                                    ]
+                                                     const scale = scrollY.interpolate({
+                                                         inputRange,
+                                                         outputRange: [1,1,1,0]
+                                                     })
+                                                     const opacity = scrollY.interpolate({
+                                                        inputRange: opacityInputRange,
+                                                        outputRange: [1,1,1,0]
+                                                    })
+                                                    return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
                                                         onPress={() => {
                                                             if (getCoachBreederOwner === "Owner") {
                                                                 setOwnerText(item.NAME)
@@ -1480,7 +1536,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                                         </View>
 
-                                                    </TouchableOpacity>)}
+                                                    </TouchableOpacity>}}
                                                 keyExtractor={item => item.NAME.toString()}
                                             />
                                             :
@@ -1898,8 +1954,8 @@ export function RequestsEditAHorse({ navigation }) {
                                                     step={1}
                                                     colorMax={"#f04048"}
                                                     colorMin={"#40c5f4"}
-                                                    colorLeft={"#77b5fe"}
-                                                    colorRight={"#77b5fe"}
+                                                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                                                    colorRight={"rgba(149, 162, 209, 0.6)"}
                                                     colorPress={"#40c5f4"}
                                                     longStep={5}
                                                     editable={false}
@@ -1919,8 +1975,8 @@ export function RequestsEditAHorse({ navigation }) {
                                                     step={1}
                                                     colorMax={"#f04048"}
                                                     colorMin={"#40c5f4"}
-                                                    colorLeft={"#77b5fe"}
-                                                    colorRight={"#77b5fe"}
+                                                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                                                    colorRight={"rgba(149, 162, 209, 0.6)"}
                                                     colorPress={"#40c5f4"}
                                                     longStep={5}
                                                     editable={false}
@@ -1938,8 +1994,8 @@ export function RequestsEditAHorse({ navigation }) {
                                                     step={1}
                                                     colorMax={"#f04048"}
                                                     colorMin={"#40c5f4"}
-                                                    colorLeft={"#77b5fe"}
-                                                    colorRight={"#77b5fe"}
+                                                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                                                    colorRight={"rgba(149, 162, 209, 0.6)"}
                                                     colorPress={"#40c5f4"}
                                                     longStep={5}
                                                     editable={false}
@@ -1958,8 +2014,8 @@ export function RequestsEditAHorse({ navigation }) {
                                                     step={1}
                                                     colorMax={"#f04048"}
                                                     colorMin={"#40c5f4"}
-                                                    colorLeft={"#77b5fe"}
-                                                    colorRight={"#77b5fe"}
+                                                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                                                    colorRight={"rgba(149, 162, 209, 0.6)"}
                                                     colorPress={"#40c5f4"}
                                                     editable={false}
                                                     longStep={5}
@@ -1977,8 +2033,8 @@ export function RequestsEditAHorse({ navigation }) {
                                                 <InputSpinner
                                                     step={1}
                                                     colorMax={"#40c5f4"}
-                                                    colorLeft={"#77b5fe"}
-                                                    colorRight={"#77b5fe"}
+                                                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                                                    colorRight={"rgba(149, 162, 209, 0.6)"}
                                                     colorMin={"#40c5f4"}
                                                     editable={false}
                                                     longStep={5}
@@ -1995,7 +2051,7 @@ export function RequestsEditAHorse({ navigation }) {
                                             <View style={[styles.action, { bottom: 30, paddingTop: 40 }]}>
                                                 <Text style={styles.text_footer}>Dead: </Text>
                                                 <Switch
-                                                    trackColor={{ false: "#D6D6D6", true: "#77b5fe" }}
+                                                    trackColor={{ false: "#D6D6D6", true: "#2e3f6e" }}
                                                     thumbColor={DeadCheckBox ? "#fff" : "#fff"}
                                                     ios_backgroundColor="#D6D6D6"
                                                     onValueChange={toggleSwitch}
@@ -2241,6 +2297,7 @@ export function RequestsEditAHorse({ navigation }) {
                                     platform="ios"
                                     cancelButtonTitle=""
                                     inputStyle={{ fontSize: 12, height: 45, justifyContent: 'center' }}
+                                    containerStyle={{ backgroundColor: 'transparent', }}
                                     inputContainerStyle={{
                                         width: '95%',
                                         backgroundColor: "#fff",
@@ -2290,19 +2347,43 @@ export function RequestsEditAHorse({ navigation }) {
 
                                         {getHorseGetByName.length > 0 ?
 
-                                            <View style={{ borderBottomWidth: 0.5, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
+                                            <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
                                                 <View style={{ flexDirection: 'row' }}>
                                                     <Text style={{ fontSize: 12 }}>Search results found ({getHorseGetByName.length}) records</Text>
                                                     <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
                                                 </View>
-                                                <FlatList
+                                                <Animated.FlatList
                                                     scrollEnabled={true}
                                                     bounces={false}
+                                                    onScroll={Animated.event(
+                                                        [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                                                        {useNativeDriver: true}
+                                                    )}
                                                     style={styles.flatList}
                                                     data={getHorseGetByName}
 
-                                                    renderItem={({ item }) => (
-                                                        <TouchableOpacity style={styles.latestItem}
+                                                    renderItem={({ item, index }) => {
+                                                        const opacityInputRange = [
+                                                            -1,
+                                                            0,
+                                                            ITEM_SIZE * index,
+                                                            ITEM_SIZE * ( index + .5)
+                                                        ]
+                                                        const inputRange = [
+                                                            -1,
+                                                            0,
+                                                            ITEM_SIZE * index,
+                                                            ITEM_SIZE * ( index + 2)
+                                                        ]
+                                                         const scale = scrollY.interpolate({
+                                                             inputRange,
+                                                             outputRange: [1,1,1,0]
+                                                         })
+                                                         const opacity = scrollY.interpolate({
+                                                            inputRange: opacityInputRange,
+                                                            outputRange: [1,1,1,0]
+                                                        })
+                                                        return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
                                                             onPress={() => {
                                                                 setLoaderText(item.HORSE_NAME + "\n" + ' Verileri Yükleniyor..')
                                                                 setLoader(true)
@@ -2340,7 +2421,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                                             </View>
 
-                                                        </TouchableOpacity>)}
+                                                        </TouchableOpacity>}}
                                                     keyExtractor={item => item.HORSE_ID.toString()}
                                                 />
                                             </View>
@@ -2731,7 +2812,7 @@ const styles = StyleSheet.create({
     },
     flatList: {
         paddingBottom: 20,
-        paddingTop: 10,
+        paddingTop: 8,
         borderTopWidth: 0.5,
         borderTopColor: '#CFCFD5',
         marginTop: 10,
@@ -2744,7 +2825,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         marginTop: 10,
         marginLeft: 15,
-        maxHeight: Dimensions.get('screen').height / 1.4,
+        maxHeight: Dimensions.get('screen').height / 1.41,
 
     },
     item: {

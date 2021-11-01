@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
-        shadowColor: "rgba(0,0,0,0)",
+        shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 5,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         elevation: 10,
         maxHeight: height - (Platform.OS == 'ios' ? 230 : 200),
         paddingTop: '4%',
-
+        paddingBottom: Platform.OS == 'ios' ? '4%' : '0%'
     },
     topShadow: {
         top: 0,

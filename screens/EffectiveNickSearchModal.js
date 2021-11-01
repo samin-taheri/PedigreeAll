@@ -1,36 +1,29 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, Animated, Keyboard } from 'react-native'
+import { View, Easing, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard, Platform } from 'react-native'
 import { SearchBar, ListItem } from "react-native-elements";
-import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from "react-native-vector-icons/FontAwesome5";
 import { Global } from './Global';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import * as Animatable from 'react-native-animatable';
-import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
-import MyHeader from '../component/MyHeader';
-import MyButton from '../component/MyButton';
-import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 faker.seed(10);
 const SPACING = 18;
 const AVATAR_SIZE = 55;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
-export function DeleteAHorseScreen({ navigation }) {
+export function EffectiveNickSearchModal({ route, navigation }) {
 
     const BottomSheetLong = useRef();
     const [searchText, setSearchText] = React.useState("");
 
     const [getHorseGetByName, setHorseGetByName] = React.useState([]);
-    const [getSelectedDeleteHorse, setSelectedDeleteHorse] = React.useState();
     const [loader, setLoader] = React.useState(false)
-    const [Isloading, setIsLoading] = React.useState(false)
     const [loaderText, setLoaderText] = React.useState("Lütfen Bekleyin..")
     const [Data, SetData] = useState([]);
+    const [getHorseId, setHorseId] = React.useState(0);
 
     const readHorseGetByName = async () => {
 
@@ -69,7 +62,6 @@ export function DeleteAHorseScreen({ navigation }) {
                         setLoader(false)
                         setHorseGetByName(json.m_cData)
                         setLoaderText('Lütfen Bekleyin..')
-
                     })
 
                     .catch((error) => {
@@ -80,133 +72,49 @@ export function DeleteAHorseScreen({ navigation }) {
                 console.log("Basarisiz")
             }
         } catch (e) {
-        }
-    }
-
-    const readDeleteAHorse = async (HORSE_ID) => {
-        try {
-            const token = await AsyncStorage.getItem('TOKEN')
-            if (token !== null) {
-                fetch('https://api.pedigreeall.com/Horse/Delete', {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': "Basic " + token,
-                    },
-                    body: JSON.stringify({
-                        "HORSE_ID": HORSE_ID,
-
-                    })
-                })
-                    .then((response) => response.json())
-                    .then((json) => {
-                        setLoaderText("Lütfen bekleyin..")
-                        setSearchText("")
-                        setLoader(false)
-                        navigation.navigate('Result', {
-                            res: JSON.stringify(json)
-                        })
-                        //setHorseAddRequestData(json.m_cData)
-                        //setTime(false)
-                        //console.log(json.m_cData)
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    })
-            }
-            else {
-                console.log("Basarisiz")
-            }
-        } catch (e) {
-            console.log(e)
         }
     }
 
     const [getSearchPlaceholder, setSearchPlaceholder] = React.useState("")
-    const [getDeleteButtonPlaceholder, setDeleteButtonPlaceholder] = React.useState("")
 
     React.useEffect(() => {
+        setHorseId(route.params?.HorseId)
         setSearchText("")
         if (Global.Language === 1) {
             setSearchPlaceholder("Lütfen isim giriniz ve ara butonuna basınız ..")
-            setDeleteButtonPlaceholder("Yükle")
         }
         else {
             setSearchPlaceholder("Please type here and press search .. ")
-            setDeleteButtonPlaceholder("Search")
         }
     }, [])
 
-    const deleteMessage = (HorseID) =>
-        Alert.alert(
-            "Delete Horse",
-            "Are you sure you want to delete this Horse?",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                    onPress: () => {
-                        setLoader(false)
-
-                    }
-                },
-                {
-                    text: "Delete",
-                    onPress: () => readDeleteAHorse(HorseID)
-
-                }
-            ],
-            { cancelable: true }
-        );
-
-
-        const scrollY = React.useRef(new Animated.Value(0)).current;
+    const scrollY = React.useRef(new Animated.Value(0)).current;
 
     return (
-        <View>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
             <Myloader Show={loader} Text={loaderText} />
             <View style={styles.container}>
+            <View style={styles.headerContainer}>
 
-
-                <MyHeader Title="Delete A Horse"
-                    onPress={() => navigation.goBack()}
-                >
-
-                    <RBSheet
-                        ref={BottomSheetLong}
-                        closeOnDragDown={true}
-                        closeOnPressMask={true}
-                        height={Dimensions.get('window').height - 50}
-                        customStyles={{
-                            container: {
-                                borderTopLeftRadius: 10,
-                                borderTopRightRadius: 10
-                            },
-
-                        }}
-                    ></RBSheet>
-
+            <View style={[styles.headerContainer2,{ marginBottom: 'auto'}]}>
                     <SearchBar
                         placeholder={getSearchPlaceholder}
                         lightTheme
                         platform="ios"
                         cancelButtonTitle=""
+                        containerStyle={{ backgroundColor: 'transparent', }}
                         inputStyle={{ fontSize: 12, height: 45, justifyContent: 'center' }}
                         inputContainerStyle={{
-                            width: '95%',
+                            width: '86%',
                             backgroundColor: "#fff",
+                            borderRadius: 8,
                             flexDirection: 'row',
                             marginBottom: '0%',
-                            borderWidth: 1,
-                            borderColor: '#d4d2d2',
-                            zIndex: 99,
                             fontSize: 25,
                             height: 45,
                             padding: 8,
-                            borderBottomWidth: 1,
-                            bottom: '1%',
-
+                            bottom: '6.5%',
+                            left: -5
                         }}
                         rightIconContainerStyle={{ margin: 0, padding: 0, minHeight: 'auto', height: 'auto' }}
                         leftIconContainerStyle={{ margin: 0, padding: 0, minHeight: 'auto', height: 'auto' }}
@@ -215,12 +123,8 @@ export function DeleteAHorseScreen({ navigation }) {
                             setSearchText(e);
                         }}
                     />
-
-
-                    <MyButtonEditDelete
-                        Title="Search"
-                        Icon="search-outline"
-                        IconSize={18}
+                        <View style={{ left: '86%', bottom: '212%' }}>
+                    <TouchableOpacity
                         onPress={() => {
                             if (searchText) {
                                 setLoader(true)
@@ -230,27 +134,31 @@ export function DeleteAHorseScreen({ navigation }) {
                                 alert("Please search the name first");
                             }
                         }}
-                    >
-                    </MyButtonEditDelete>
-                    <View style={styles.Container}>
+                        style={styles.searchButton}>
+                        <Ionicons name="search-outline" size={20} color="white"/>
+                    </TouchableOpacity>
+                </View>
+                </View>
+                </View>
 
-                        {getHorseGetByName.length > 0 ?
+                <View style={styles.Container}>
 
-                            <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseGetByName.length}) records</Text>
-                                    <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
-                                </View>
-                                <Animated.FlatList
+                    {getHorseGetByName.length > 0 ?
+
+                        <View style={{ bottom: Platform.OS == 'ios' ? '10%' : '20%'  }}>
+                            <Animated.FlatList
                                     scrollEnabled={true}
-                                    bounces={false}
                                     onScroll={Animated.event(
                                         [{nativeEvent: {contentOffset: {y: scrollY}}}],
                                         {useNativeDriver: true}
                                     )}
+                                    bounces={false}
                                     style={styles.flatList}
                                     data={getHorseGetByName}
-
+                                    contentContainerStyle={{
+                                        padding: SPACING,
+                                        paddingTop: StatusBar.currentHeight || 42
+                                    }}
                                     renderItem={({ item, index }) => {
                                         const opacityInputRange = [
                                             -1,
@@ -273,60 +181,66 @@ export function DeleteAHorseScreen({ navigation }) {
                                             outputRange: [1,1,1,0]
                                         })
                                         return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
-                                            onPress={() => {
-                                                setLoaderText(item.HORSE_NAME + ' işleniyor..')
-                                                setLoader(true)
-                                                BottomSheetLong.current.close();
-                                                setTimeout(() => {
-                                                    setSelectedDeleteHorse(item);
-                                                    deleteMessage(item.HORSE_ID);
-                                                }, 1500);
+                                        onPress={() => {
+                                            if (searchText) {
+                                                navigation.navigate({
+                                                    name: 'TabEffectiveNickSearch',
+                                                    params: { horseEffectiveNick: item.HORSE_NAME, HorseId: item.HORSE_ID},
+                                                    merge: true,
+                                                });
+                                            } else {
+                                                alert("Please search the name first");
+                                            }
+                                        }}
+                                    >
+                                        <Image style={styles.image}
+                                            source={{ uri: item.IMAGE }}
+                                            resizeMode="cover"
+                                        />
+                                        <View style={{ flexDirection: 'column' }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={[styles.textStyle2]}>Horse: </Text>
 
+                                                <Text style={styles.textStyle}>
+                                                    {item.HORSE_NAME}
+                                                </Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={[styles.textStyle2]}>Sire: </Text>
 
-                                                //BottomSheetLong.current.close();
-
-                                            }}
-                                        >
-                                            <Image style={styles.image}
-                                                source={{ uri: item.IMAGE }}
-                                                resizeMode="cover"
-                                            />
-                                            <View style={{ flexDirection: 'column' }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Horse: </Text>
-
-                                                    <Text style={styles.textStyle}>
-                                                        {item.HORSE_NAME}
-                                                    </Text>
-                                                </View>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Sire: </Text>
-
-                                                    <Text style={styles.textStyle}>
-                                                        {item.FATHER_NAME}
-                                                    </Text>
-                                                </View>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Mare: </Text>
-                                                    <Text style={styles.textStyle}>
-                                                        {item.MOTHER_NAME}
-                                                    </Text>
-                                                </View>
-
+                                                <Text style={styles.textStyle}>
+                                                    {item.FATHER_NAME}
+                                                </Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                <Text style={styles.textStyle}>
+                                                    {item.MOTHER_NAME}
+                                                </Text>
                                             </View>
 
-                                        </TouchableOpacity>}}
-                                    keyExtractor={item => item.HORSE_ID.toString()}
-                                />
-                            </View>
-                            :
-                            null
-                        }
-                    </View>
+                                        </View>
 
-                </MyHeader>
+                                    </TouchableOpacity>}}
+                                keyExtractor={item => item.HORSE_ID.toString()}
+                            />
+                        </View>
+                        :
+                        null
+                    }
+                </View>
+               
+                <TouchableOpacity
+                        style={styles.closeButton}
+                        onPress={() => navigation.goBack()} >
+
+                        <Text style={[styles.TextStyle, {
+                            color: '#2e3f6e'
+                        }]}>Close</Text>
+                    </TouchableOpacity>
             </View>
-        </View>
+
+        </SafeAreaView>
 
     )
 }
@@ -339,6 +253,46 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
+        marginTop: Platform.OS == 'android' ? 30 : 0,
+        padding:10
+    },
+    closeButton: {
+        bottom: Platform.OS == 'android' ? 35 : 0,
+        width: '100%',
+        height: 46,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 8,
+        zIndex: 1,
+        borderColor: '#d5dce3',
+        borderWidth: 1,
+        backgroundColor: '#dce3e9'
+    },
+
+    headerContainer2: {
+        top: '0%',
+        position: 'absolute',
+        backgroundColor: '#fff',
+        margin: 'auto',
+        alignSelf: 'center',
+        borderTopEndRadius: 10,
+        borderTopLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 3.27,
+        width: '96%',
+        elevation: 10,
+        height: 50,
+        paddingTop: '4%',
+    },
+    headerContainer: {
+        height: '17%',
         backgroundColor: '#fff'
     },
     InformationText4: {
@@ -371,6 +325,17 @@ const styles = StyleSheet.create({
         top: '25%',
         left: '7%'
     },
+    searchButton: {
+        height: 45,
+        alignItems: 'center',
+        backgroundColor: '#2e3f6e',
+        borderRadius: 8,
+        width: 52,
+        bottom: '2.5%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        right: '3%'
+    },
     HeaderText2: {
         fontSize: 23,
         color: 'white',
@@ -391,10 +356,10 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 5,
+            height: 1,
         },
-        shadowOpacity: 0.34,
-        shadowRadius: 6.27,
+        shadowOpacity: 0.2,
+        shadowRadius: 3.27,
         width: '90%',
         padding: 10,
         elevation: 10,
@@ -436,15 +401,7 @@ const styles = StyleSheet.create({
         color: '#05375a',
         fontSize: 14
     },
-    signIn: {
-        width: '100%',
-        height: 45,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 50,
-        borderWidth: 3,
-        borderColor: '#000',
-    },
+
     signInButton: {
         height: 45,
         justifyContent: 'center',
@@ -628,10 +585,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     image: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        marginRight: 10,
+        width: AVATAR_SIZE,
+        height: AVATAR_SIZE,
+        borderRadius: AVATAR_SIZE,
+        marginRight: SPACING / 2
     },
     heightText: {
         marginTop: 15,
@@ -639,48 +596,28 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     flatList: {
-        paddingBottom: 20,
-        paddingTop: 8,
-        borderTopWidth: 0.5,
-        borderTopColor: '#CFCFD5',
-        marginTop: 10,
-        marginLeft: -15,
-        maxHeight: Dimensions.get('screen').height / 2.2,
-
+        height: Dimensions.get('screen').height / (Platform.OS== 'ios' ? 1.40 : 1.30),
+        top: Platform.OS == 'ios' ? 0 : 15
     },
-    flatList2: {
-        paddingBottom: 20,
-        paddingTop: 10,
-        marginTop: 10,
-        marginLeft: 15,
-        maxHeight: Dimensions.get('screen').height / 1.4,
-
-    },
-    item: {
-        flexDirection: 'row',
-        width: 360,
-        left: -15,
-        padding: 10,
-        marginVertical: 7,
-        marginHorizontal: 16,
-        zIndex: 1,
-        borderBottomWidth: 0.5,
-        borderBottomColor: '#d6d3d3',
-
-    },
+  
     title: {
         fontSize: 32,
     },
     latestItem: {
         flexDirection: 'row',
-        width: 360,
-        left: -10,
-        padding: 10,
-        marginVertical: 7,
-        marginHorizontal: 16,
-        zIndex: 1,
-        borderBottomWidth: 0.5,
-        borderBottomColor: '#d6d3d3',
-    },
+        width: '100%',
+        padding: SPACING,
+        marginBottom: SPACING,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 3.27,
+        elevation: 10,
 
+    },
 })

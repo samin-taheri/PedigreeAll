@@ -460,7 +460,7 @@ const RegisterScreen = ({ route, navigation }) => {
 
 
                         <View style={{ marginTop: 15, marginBottom: 50 }}>
-                           
+
                             <MyButton
                                 Title="Sign Up"
                                 Icon="log-in-outline"
@@ -535,6 +535,8 @@ const pickerSelectStyles = StyleSheet.create({
         minHeight: 56,
         maxHeight: 56,
         width: '100%',
+        bottom: 5,
+        left: 15,
         borderRadius: 4,
         marginBottom: 0,
         justifyContent: 'center',
@@ -544,7 +546,7 @@ const pickerSelectStyles = StyleSheet.create({
         flex: 1,
     },
     inputAndroid: {
-        marginLeft: 8,
+        marginLeft: 10,
         color: 'black',
         marginTop: -20,
         fontSize: 15,
@@ -553,9 +555,9 @@ const pickerSelectStyles = StyleSheet.create({
         maxHeight: 56,
         width: windowWidth,
         borderRadius: 4,
-        marginBottom: -10,
         justifyContent: 'center',
-        paddingTop: 5,
+        paddingTop: 8,
+        left: 10,
     },
     placeholder: { color: '#9a9aa1', fontSize: 14 },
 });

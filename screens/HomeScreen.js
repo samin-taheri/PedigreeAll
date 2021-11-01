@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react'
 import { View, StatusBar, Modal, Dimensions, Image, StyleSheet, Platform, ScrollView } from 'react-native';
-import { TabSearch } from './TabSearch';
+import  TabSearch  from './TabSearch';
 import { TabHypotheticalSearch } from './TabHypotheticalSearch';
 import { TabEffectiveNickSearch } from './TabEffectiveNickSearch';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';

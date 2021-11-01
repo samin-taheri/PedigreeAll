@@ -6,18 +6,12 @@ import {
     TouchableOpacity,
     Platform,
     Dimensions,
-    Image,
     ScrollView,
-    UIManager,
     ActivityIndicator,
-    Alert,
-    TextInput,
-    FlatList
+    FlatList,
+    Animated
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import { SearchBar, Tabs, Card, CheckBox, ListItem } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Autocomplete from 'react-native-autocomplete-input';
 import * as Animatable from 'react-native-animatable';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Global } from "./Global";
@@ -25,6 +19,12 @@ import HomeComponent from "../component/HomeComponent";
 import MyButton from "../component/MyButton";
 import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
+import faker from 'faker'
+
+faker.seed(10);
+const SPACING = 18;
+const AVATAR_SIZE = 55;
+const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const GenerationData = [
     {
@@ -53,33 +53,28 @@ const GenerationData = [
     },
 ];
 
-export function TabEffectiveNickSearch({ navigation }) {
+export function TabEffectiveNickSearch({ navigation, route }) {
+
+    useEffect(() => {
+
+        setHorseText(route.params?.horseEffectiveNick)
+        setHorseId(route.params?.HorseId)
+
+    });
+    const [getHorseText, setHorseText] = useState('')
+    const [getHorseId, setHorseId] = useState(0)
     const OpenFullBottomSheet = useRef();
-    const OpenSmallBottomSheet = useRef();
     const [loader, setLoader] = useState(false)
     const [loaderRegistration, setLoaderRegistration] = React.useState(false);
     const [state, setState] = React.useState({ checked: [] });
-    const [chekedItem, setChekedItem] = React.useState()
+    const [chekedItem, setChekedItem] = React.useState(5)
     const [getRegisteredStallions, setRegisteredStallions] = React.useState([]);
-    const [getRegisteredStallionsItemData, setRegisteredStallionsItemData] = React.useState();
     const [getRegisteredStallionsName, setRegisteredStallionsName] = React.useState("Stallion");
-    const [getSireData, setSireData] = React.useState();
-    const [getSearchHorseData, setSearchHorseData] = React.useState([]);
-    const [getSireName, setSireName] = React.useState("Sire Name");
-    const [getStallionCodeData, setStallionCodeData] = React.useState();
-    const [getStallionCode, setStallionCode] = React.useState("-");
     const [getBottomSheetText, setBottomSheetText] = React.useState();
-    const [searchValue, setSearchValue] = React.useState()
-    const [getSelectedHorseID, setSelectedHorseID] = React.useState();
 
-    const [getText, setText] = React.useState("");
     const [getData, setData] = React.useState([]);
 
     const [getFirstHorseID, setFirstHorseID] = React.useState();
-    const [getSecondHorseID, setSecondHorseID] = React.useState();
-    const [getRegistrationID, setRegistrationID] = React.useState();
-    const [StallionTitle, setStallionTitle] = React.useState("Stallion");
-    const [stallion, setStallion] = React.useState("");
     const refRBSheetGeneration = useRef();
     const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
 
@@ -189,6 +184,8 @@ export function TabEffectiveNickSearch({ navigation }) {
         readHorseData([]);
 
     }, [])
+    const scrollY = React.useRef(new Animated.Value(0)).current;
+
     return (
         <ScrollView>
             <Animatable.View style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}
@@ -226,13 +223,38 @@ export function TabEffectiveNickSearch({ navigation }) {
                                 <>
                                     {getRegisteredStallions.length > 0 ?
 
-                                        <FlatList
+                                        <Animated.FlatList
                                             scrollEnabled={true}
                                             bounces={false}
+                                            onScroll={Animated.event(
+                                                [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                                                {useNativeDriver: true}
+                                            )}
+                                            
                                             style={styles.flatList2}
                                             data={getRegisteredStallions}
-                                            renderItem={({ item }) => (
-                                                <TouchableOpacity style={styles.item}
+                                            renderItem={({ item, index }) => {
+                                                const opacityInputRange = [
+                                                    -1,
+                                                    0,
+                                                    ITEM_SIZE * index,
+                                                    ITEM_SIZE * ( index + .5)
+                                                ]
+                                                const inputRange = [
+                                                    -1,
+                                                    0,
+                                                    ITEM_SIZE * index,
+                                                    ITEM_SIZE * ( index + 2)
+                                                ]
+                                                 const scale = scrollY.interpolate({
+                                                     inputRange,
+                                                     outputRange: [1,1,1,0]
+                                                 })
+                                                 const opacity = scrollY.interpolate({
+                                                    inputRange: opacityInputRange,
+                                                    outputRange: [1,1,1,0]
+                                                })
+                                                return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
                                                     onPress={() => {
                                                         OpenFullBottomSheet.current.close();
                                                         setRegisteredStallionsName(item.HORSE_NAME);
@@ -262,7 +284,7 @@ export function TabEffectiveNickSearch({ navigation }) {
                                                     <Text style={{ left: 20 }}>{item.HORSE_NAME}</Text>
 
 
-                                                </TouchableOpacity>)}
+                                                </TouchableOpacity>}}
                                             keyExtractor={item => item.HORSE_ID.toString()}
                                         />
 
@@ -327,7 +349,7 @@ export function TabEffectiveNickSearch({ navigation }) {
 
                                             }}
                                         >
-                                            <Ionicons name="chevron-forward-outline" size={16} color="black" />
+                                            <Ionicons name="arrow-forward-outline" size={16} color="black" />
 
                                             <View style={{ flexDirection: 'row' }}>
 
@@ -367,21 +389,25 @@ export function TabEffectiveNickSearch({ navigation }) {
 
                     </View>
                     <View style={{ top: 0 }}>
+
                         <View style={styles.InputContainer}>
                             <Feather
-                                style={{ top: 5, marginRight: 10 }}
+                                style={{ top: 3, marginRight: 10 }}
                                 name="search"
                                 color="#2e3f6e"
                                 size={20}
                             />
-                            <TextInput
-                                style={{ color: 'black', left: 5, width: '100%', height: '100%' }}
-                                placeholder="Type a Name:"
-                                onChangeText={(text) => {
-                                    setText(text)
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate('EffectiveNickSearchModal', {
+                                        HorseId: getHorseId
+                                    })
                                 }}
-                            />
+                                style={styles.TwoValueInLineButton}>
+                                <Text style={{ alignSelf: 'center' }}>Mare Name: {getHorseText}</Text>
+                            </TouchableOpacity>
                         </View>
+
                     </View>
                     <View style={{ bottom: 5 }}>
 
@@ -407,7 +433,10 @@ export function TabEffectiveNickSearch({ navigation }) {
                             Icon="search-outline"
                             IconSize={18}
                             onPress={() => navigation.navigate('HorseDetail', {
-                                HORSE_NAME: getText
+                                HORSE_NAME: route.params?.horseEffectiveNick,
+                                HORSE_ID: route.params?.HorseId,
+                                Generation: chekedItem,
+                                Stallion: getRegisteredStallionsName
                             })}
                         >
                         </MyButton>
@@ -421,7 +450,7 @@ export function TabEffectiveNickSearch({ navigation }) {
     )
 }
 
-
+const windowWidth = Dimensions.get('window').width - 100;
 const styles = StyleSheet.create({
     container: {
         marginTop: 0,
@@ -510,6 +539,16 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
     },
+    TwoValueInLineButton: {
+        flexDirection: 'row',
+        width: windowWidth + 40,
+        paddingTop: 10,
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? -10 : -12,
+        paddingLeft: 5,
+        color: '#05375a',
+        
+      },
     latestItem: {
         flexDirection: 'row',
         width: 360,

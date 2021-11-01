@@ -1,20 +1,13 @@
-import React, { Component, useRef, useState } from 'react'
-import { View, Text, Button, Image, StyleSheet, StatusBar, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Dimensions, Platform, Switch, RefreshControl } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import RNPickerSelect from 'react-native-picker-select';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import Icon from "react-native-vector-icons/FontAwesome5";
-import { SearchBar, Tabs, Card, CheckBox, ListItem } from "react-native-elements";
 import { Global } from './Global';
-import CheckBoxLanguage1 from '../component/CheckBoxLanguage1';
-import CheckBoxLanguage2 from '../component/CheckBoxLanguage2';
 import HomeComponent from '../component/HomeComponent';
 import { Ionicons } from '@expo/vector-icons';
 import MyButton from '../component/MyButton';
-
 const GenerationData = [
   {
     id: "4",
@@ -42,45 +35,26 @@ const GenerationData = [
   },
 ];
 
-const wait = (timeout) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
+const TabSearch = ({ route, navigation }) => {
 
+  useEffect(() => {
+    const ac = new AbortController();
 
-export function TabSearch({ navigation }) {
-  const [refreshing, setRefreshing] = React.useState(false);
+    setHorseText(route.params?.horse)
+    setHorseId(route.params?.HorseId)  
+    return () => ac.abort(); 
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setRefreshing(false)
-  }, []);
-
-  const bottomSheet = useRef();
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  });
 
   const refRBSheetGeneration = useRef();
-  const BottomSheetSearchNavigation = useRef();
   const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
   const [state, setState] = React.useState({ checked: [] });
   const [chekedItem, setChekedItem] = React.useState(5)
-  const [searchValue, setSearchValue] = React.useState("")
-  const [userData, setUserData] = useState();
-  const [HorseData, setHorseData] = useState([]);
-  const [loader, setLoader] = useState(false)
-
-
-  const [getData, setData] = React.useState([]);
-  const [getGen, setGen] = React.useState("");
-
-  const [getText, setText] = React.useState("");
-  const [stallion, setStallion] = React.useState("");
-
-
+  const [getHorseText, setHorseText] = useState('')
+  const [getHorseId, setHorseId] = useState(0)
+  
   return (
     <>
-
-
       <ScrollView>
         <Animatable.View style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}
           animation="fadeInDown"
@@ -98,14 +72,15 @@ export function TabSearch({ navigation }) {
                 color="#2e3f6e"
                 size={20}
               />
-
-              <TextInput
-                style={{ color: 'black', left: 5, width: '100%', height: '100%' }}
-                placeholder="Type a Name:"
-                onChangeText={(text) => {
-                  setText(text)
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('SearchModal', {
+                    HorseId: getHorseId
+                  })
                 }}
-              />
+                style={styles.TwoValueInLineButton}>
+                <Text style={{ alignSelf: 'center' }}>Name: {getHorseText}</Text>
+              </TouchableOpacity>
             </View>
 
 
@@ -118,7 +93,6 @@ export function TabSearch({ navigation }) {
                 style={styles.action}
                 onPress={() => {
                   refRBSheetGeneration.current.open()
-                  setGen()
                 }}>
 
                 <Ionicons
@@ -177,7 +151,7 @@ export function TabSearch({ navigation }) {
 
                             }}
                           >
-                            <Ionicons name="chevron-forward-outline" size={16} color="black" />
+                            <Ionicons name="arrow-forward-outline" size={16} color="black" />
 
                             <View style={{ flexDirection: 'row' }}>
 
@@ -199,15 +173,28 @@ export function TabSearch({ navigation }) {
               </RBSheet>
 
             </View>
+
             <MyButton
               Title="Search"
               Icon="search-outline"
               IconSize={18}
-              onPress={() => navigation.navigate('HorseDetail', {
-                HORSE_NAME: getText,
-                HORSE_GENERATION : getGen
-              })}
-            ></MyButton>
+              onPress={() => 
+                {
+                  if(route.params?.HorseId !== undefined){
+                navigation.navigate('HorseDetail', {
+                HORSE_NAME: route.params?.horse,
+                HORSE_ID: route.params?.HorseId,
+                Generation: chekedItem
+                }
+                
+              )
+            }
+            else{
+              alert('Please search for a name first..')
+            }
+            }}
+            >
+            </MyButton>
             <HomeComponent />
           </Animatable.View>
         </Animatable.View>
@@ -694,5 +681,15 @@ const styles = StyleSheet.create({
     left: 5,
     fontSize: 13,
     fontWeight: 'bold'
+  },
+  TwoValueInLineButton: {
+    flexDirection: 'row',
+    width: windowWidth + 40,
+    paddingTop: 10,
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? -10 : -12,
+    paddingLeft: 5,
+    color: '#05375a',
+    
   },
 });

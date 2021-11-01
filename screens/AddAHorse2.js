@@ -662,8 +662,10 @@ export function AddAHorse2({ navigation }) {
           })
           .then((response) => response.json())
           .then((json) => {
+            var dataDisplay = null;
             var aa = [];
-            json.m_cData.map((i, index) => (
+            if(json && json.m_cData){
+              dataDisplay = json.m_cData.map((i, index) => (
               aa.push({
                 HORSE_DATA: i,
                 HORSE_ID: i.HORSE_ID,
@@ -673,6 +675,7 @@ export function AddAHorse2({ navigation }) {
                 IMAGE: i.IMAGE,
               })
             ))
+            }
             setCheckHorseAvaibleData(json)
             if (json !== undefined) {
               if (json.m_cDetail.m_eProcessState < 1) {
@@ -889,8 +892,21 @@ export function AddAHorse2({ navigation }) {
                     platform="ios"
                     cancelButtonTitle=""
                     inputStyle={{ fontSize: 12, minHeight: 'auto', height: 36 }}
-                    containerStyle={{ backgroundColor: 'transparent', }}
-                    inputContainerStyle={{ backgroundColor: '#F0F1F3', minHeight: 'auto', height: 'auto', top: '3%' }}
+                    inputContainerStyle={{
+                      width: '95%',
+                      backgroundColor: "#fff",
+                      borderRadius: 8,
+                      flexDirection: 'row',
+                      marginBottom: '0%',
+                      borderWidth: 1,
+                      borderColor: '#d4d2d2',
+                      zIndex: 99,
+                      fontSize: 25,
+                      height: 45,
+                      padding: 8,
+                      borderBottomWidth: 1,
+                      bottom: '1%'
+                  }}
                     rightIconContainerStyle={{ margin: 0, padding: 0, minHeight: 'auto', height: 'auto' }}
                     leftIconContainerStyle={{ margin: 0, padding: 0, minHeight: 'auto', height: 'auto' }}
                     value={searchValue}
@@ -1379,8 +1395,8 @@ export function AddAHorse2({ navigation }) {
                     step={1}
                     colorMax={"#f04048"}
                     colorMin={"#40c5f4"}
-                    colorLeft={"#77b5fe"}
-                    colorRight={"#77b5fe"}
+                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                    colorRight={"rgba(149, 162, 209, 0.6)"}
                     colorPress={"#40c5f4"}
                     longStep={5}
                     editable={false}
@@ -1401,8 +1417,8 @@ export function AddAHorse2({ navigation }) {
                     step={1}
                     colorMax={"#f04048"}
                     colorMin={"#40c5f4"}
-                    colorLeft={"#77b5fe"}
-                    colorRight={"#77b5fe"}
+                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                    colorRight={"rgba(149, 162, 209, 0.6)"}
                     colorPress={"#40c5f4"}
                     longStep={5}
                     editable={false}
@@ -1420,8 +1436,8 @@ export function AddAHorse2({ navigation }) {
                     step={1}
                     colorMax={"#f04048"}
                     colorMin={"#40c5f4"}
-                    colorLeft={"#77b5fe"}
-                    colorRight={"#77b5fe"}
+                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                    colorRight={"rgba(149, 162, 209, 0.6)"}
                     colorPress={"#40c5f4"}
                     longStep={5}
                     editable={false}
@@ -1439,8 +1455,8 @@ export function AddAHorse2({ navigation }) {
                     step={1}
                     colorMax={"#f04048"}
                     colorMin={"#40c5f4"}
-                    colorLeft={"#77b5fe"}
-                    colorRight={"#77b5fe"}
+                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                    colorRight={"rgba(149, 162, 209, 0.6)"}
                     colorPress={"#2e3f6e"}
                     editable={false}
                     longStep={5}
@@ -1457,8 +1473,8 @@ export function AddAHorse2({ navigation }) {
                   <InputSpinner
                     step={1}
                     colorMax={"#40c5f4"}
-                    colorLeft={"#77b5fe"}
-                    colorRight={"#77b5fe"}
+                    colorLeft={"rgba(149, 162, 209, 0.6)"}
+                    colorRight={"rgba(149, 162, 209, 0.6)"}
                     colorMin={"#40c5f4"}
                     editable={false}
                     longStep={5}
@@ -1474,7 +1490,7 @@ export function AddAHorse2({ navigation }) {
               <View style={[styles.action, { bottom: 30, paddingTop: 15 }]}>
                 <Text style={styles.text_footer}>Dead: </Text>
                 <Switch
-                  trackColor={{ false: "#D6D6D6", true: "#77b5fe" }}
+                  trackColor={{ false: "#D6D6D6", true: "#2e3f6e" }}
                   thumbColor={isEnabled ? "#fff" : "#fff"}
                   ios_backgroundColor="#D6D6D6"
                   onValueChange={toggleSwitch}

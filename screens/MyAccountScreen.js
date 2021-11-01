@@ -107,6 +107,7 @@ export function MyAccountScreen({ route, navigation }) {
   const [getKurumsalText, setKurumsalText] = React.useState("")
   const [getSaveButtonText, setSaveButtonText] = React.useState("")
   const [CounrtyList, setCountryList] = useState([])
+  
   const readDataCountryList = async (data) => {
     fetch('https://api.pedigreeall.com/Country/Get', {
       method: 'GET',
@@ -706,38 +707,39 @@ export default MyAccountScreen;
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    paddingHorizontal: 16,
-    fontSize: 15,
-    flex: 1,
-    marginTop: -20,
-    minHeight: 56,
-    maxHeight: 56,
-    width: '100%',
-    borderRadius: 4,
-    marginBottom: 0,
-    justifyContent: 'center',
-    paddingTop: 5,
+      paddingHorizontal: 16,
+      fontSize: 15,
+      flex: 1,
+      marginTop: -20,
+      minHeight: 56,
+      maxHeight: 56,
+      width: '100%',
+      bottom: 5,
+      left: 15,
+      borderRadius: 4,
+      marginBottom: 0,
+      justifyContent: 'center',
+      paddingTop: 5,
   },
   viewContainer: {
-    flex: 1,
+      flex: 1,
   },
   inputAndroid: {
-    marginLeft: 8,
-    color: 'black',
-    marginTop: -20,
-    fontSize: 15,
-    flex: 1,
-    minHeight: 56,
-    maxHeight: 56,
-    width: windowWidth,
-    borderRadius: 4,
-    marginBottom: -10,
-    justifyContent: 'center',
-    paddingTop: 5,
+      marginLeft: 10,
+      color: 'black',
+      marginTop: -20,
+      fontSize: 15,
+      flex: 1,
+      minHeight: 56,
+      maxHeight: 56,
+      width: windowWidth,
+      borderRadius: 4,
+      justifyContent: 'center',
+      paddingTop: 8,
+      left: 0,
   },
-  placeholder: { color: '#9a9aa1', fontSize: 14, left: 5 },
+  placeholder: { color: '#9a9aa1', fontSize: 14 },
 });
-
 const styles = StyleSheet.create({
   footer: {
     flex: 3,
