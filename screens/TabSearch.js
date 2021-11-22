@@ -42,6 +42,7 @@ const TabSearch = ({ route, navigation }) => {
 
     setHorseText(route.params?.horse)
     setHorseId(route.params?.HorseId)  
+    setMareId(route.params?.MareId)  
     return () => ac.abort(); 
 
   });
@@ -50,8 +51,9 @@ const TabSearch = ({ route, navigation }) => {
   const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
   const [state, setState] = React.useState({ checked: [] });
   const [chekedItem, setChekedItem] = React.useState(5)
-  const [getHorseText, setHorseText] = useState('')
-  const [getHorseId, setHorseId] = useState(0)
+  const [getHorseText, setHorseText] = React.useState('')
+  const [getHorseId, setHorseId] = React.useState(-1)
+  const [getMareId, setMareId] = React.useState(-1)
   
   return (
     <>
@@ -75,7 +77,8 @@ const TabSearch = ({ route, navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('SearchModal', {
-                    HorseId: getHorseId
+                    HorseId: getHorseId,
+                    MareId: getMareId
                   })
                 }}
                 style={styles.TwoValueInLineButton}>
@@ -84,11 +87,7 @@ const TabSearch = ({ route, navigation }) => {
             </View>
 
 
-
-
-
             <View style={{ bottom: 5 }}>
-
               <TouchableOpacity
                 style={styles.action}
                 onPress={() => {
@@ -102,7 +101,7 @@ const TabSearch = ({ route, navigation }) => {
                   size={22}
                 />
                 <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{GenerationTitle}</Text>
-                <Feather style={{ paddingLeft: Dimensions.get('screen').width / 1.9, top: '1%' }} name="chevron-down" color="grey" size={20} />
+                <Feather style={{ paddingLeft: '60%', top: '1%' }} name="chevron-down" color="grey" size={20} />
 
               </TouchableOpacity>
 
@@ -184,10 +183,9 @@ const TabSearch = ({ route, navigation }) => {
                 navigation.navigate('HorseDetail', {
                 HORSE_NAME: route.params?.horse,
                 HORSE_ID: route.params?.HorseId,
+                SECOND_ID: -1,
                 Generation: chekedItem
-                }
-                
-              )
+                })
             }
             else{
               alert('Please search for a name first..')

@@ -104,7 +104,8 @@ export function SearchModal({ route, navigation }) {
                         json.m_cData.map((i, index) => (
                             aa.push({
                                 HORSE_DATA: i,
-                                HORSE_ID: i.HORSE_ID
+                                HORSE_ID: i.HORSE_ID,
+                            
                             })
                         ))
                         setData(aa)
@@ -631,7 +632,7 @@ const styles = StyleSheet.create({
     image: {
         width: AVATAR_SIZE,
         height: AVATAR_SIZE,
-        borderRadius: AVATAR_SIZE,
+        borderRadius: 10,
         marginRight: SPACING / 2
     },
     heightText: {

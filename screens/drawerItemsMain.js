@@ -112,16 +112,16 @@ export const drawerItemsMain = [
       Image: 'https://img.icons8.com/fluency-systems-regular/96/000000/ad-banner.png',
   
       routes: [
-        {
-          nav: 'MainDrawer',
-          routeName: 'Ads',
-          title: 'Ads'
-        },
-        {
+               {
           nav: 'MainDrawer',
           routeName: 'HorsesForSale',
           title: 'Horses For Sale'
         },
+        {
+          nav: 'MainDrawer',
+          routeName: 'RegisteredStallions',
+          title: 'Registered Stallions'
+        }
       ],
     },
     {

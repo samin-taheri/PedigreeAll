@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Platform, NativeModules, Modal, TouchableOpacity, StyleSheet, ScrollView, View, Text, Switch, Button, StatusBar, Dimensions, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { drawerItemsMain } from './screens/drawerItemsMain';
 import CustomDrawerContent from './screens/CustomDrawerContent.js';
@@ -13,12 +12,6 @@ import RegisterScreen from './screens/RegisterScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
-import * as Font from 'expo-font';
-import TabSearchStyles from './screens/TabSearch.styles';
-import TabSearch from './screens/TabSearch';
-import CustomHeader from './screens/CustomHeader';
-import TabEffectiveNickSearch from './screens/TabEffectiveNickSearch';
-import TabHypotheticalSearch from './screens/TabHypotheticalSearch';
 import { SplashScreen } from './screens/SplashScreen';
 import { ContactScreen } from './screens/ContactScreen';
 import { BlogScreen } from './screens/BlogScreen';
@@ -27,29 +20,45 @@ import { AddAHorse } from './screens/AddAHorse';
 import HorseDetailScreen from './screens/HorseDetailScreen';
 import { Global } from './screens/Global';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import Icon from "react-native-vector-icons/FontAwesome5";
-import Flag from "react-native-flags";
-import { AlertTriangle } from 'react-native-feather';
 import { Ionicons } from '@expo/vector-icons';
-import CheckBoxLanguage1 from './component/CheckBoxLanguage1';
-import CheckBoxLanguage2 from './component/CheckBoxLanguage2';
 import { MyAddingRequestScreen } from './screens/MyAddingRequestScreen';
 import { RequestsEditAHorse } from './screens/RequestsEditAHorse';
 import { MyEditRequestsScreen } from './screens/MyEditRequestsScreen';
-import { TextInput } from 'react-native-gesture-handler';
 import { MyAccountScreen } from './screens/MyAccountScreen'
 import { DeleteAHorseScreen } from './screens/DeleteAHorseScreen';
 import { MyDeleteRequestsScreen } from './screens/MyDeleteRequestsScreen';
 import { AddAHorse2 } from './screens/AddAHorse2';
 import ResultScreen from './screens/ResultScreen';
-import ErrorScreen from './screens/ErrorScreen';
-import Myloader from './constants/Myloader';
 import { SearchModal } from './screens/SearchModal';
 import HypotheticalSearchModalSire from './screens/HypotheticalSearchModalSire';
+import HypotheticalSearchModalMare from './screens/HypotheticalSearchModalMare';
 import { EffectiveNickSearchModal } from './screens/EffectiveNickSearchModal';
 import HorseDetailScreenPedigree from './screens/HorseDetailScreenPedigree';
 import HorseDetailScreenProfile from './screens/HorseDetailScreenProfile';
-
+import HorseDetailScreenProgency from './screens/HorseDetailScreenProgency';
+import HorseDetailScreenNick from './screens/HorseDetailScreenNick';
+import HorseDetailScreenFamily from './screens/HorseDetailScreenFamily';
+import HorseDetailScreenSiblingMare from './screens/HorseDetailScreenSiblingMare';
+import HorseDetailScreenSiblingSire from './screens/HorseDetailScreenSiblingSire';
+import HorseDetailScreenTJK from './screens/HorseDetailScreenTJK';
+import HorseDetailScreenSiblingBroodmareSire from './screens/HorseDetailScreenSiblingBroodmareSire';
+import HorseDetailScreenBroodMareSire from './screens/HorseDetailScreenBroodMareSire';
+import HorseDetailScreenTailFemale from './screens/HorseDetailScreenTailFemale';
+import HorseDetailScreenLinebreeding from './screens/HorseDetailScreenLinebreeding';
+import HorseDetailScreenFemaleFamily from './screens/HorseDetailScreenFemaleFamily';
+import MareMotherSiblingsScreen from './screens/MareMotherSiblingsScreen';
+import StallionFatherSiblings from './screens/StallionFatherSiblingsScreen';
+import TailFemale from './screens/TailFemaleScreen';
+import Progeny from './screens/ProgenyScreen';
+import Profile from './screens/ProfileScreen';
+import Linebreeding from './screens/LinebreedingScreen';
+import FemaleFamily from './screens/FemaleFamilyScreen';
+import BroodmareSireSiblings from './screens/BroodmareSireSiblingsScreen';
+import HorseDetailScreenFoalsAsBroodMareSire from './screens/HorseDetailScreenFoalsAsBroodMareSire';
+import FoalsAsBroodMareSire from './screens/FoalsAsBroodMareSireScreen';
+import Search from './screens/SearchScreen';
+import EffectiveNickScreen from './screens/EffectiveNickScreen';
+import CompareHorses from './screens/CompareHorsesScreen';
 export const BASE_URL = 'http://api.pedigreeall.com/';
 
 const Drawer = createDrawerNavigator();
@@ -74,11 +83,6 @@ function MainDrawerNavigation() {
   const [getBottomNavigationBasketName, setBottomNavigationBasketName] = React.useState()
   const [getBottomNavigationSearchName, setBottomNavigationSearchName] = React.useState()
   const [showEdition, setShowEdition] = React.useState(false)
-
-  const [getLanguageLoading, setLanguageLoading] = React.useState(false);
-
-  const refRBSheet = useRef();
-  const [modalVisible, setModalVisible] = useState(false);
   const bottomSheet = useRef();
 
 
@@ -118,362 +122,10 @@ function MainDrawerNavigation() {
     ),
 
   })
-  const BlogOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{}}
-          onPress={() => {
-            navigation.navigate("MyAccount");
-          }}
-
-        >
-          <Ionicons name="person-outline" size={22} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>Blog</Text>
-    ),
-
-  })
-  const BlogItemsOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.navigate('Blog');
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{}}
-          onPress={() => {
-            navigation.navigate("MyAccount");
-          }}
-
-        >
-          <Ionicons name="person-outline" size={22} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>Blog Items</Text>
-    ),
-
-  })
-  const AddDrawerOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>Add A Horse</Text>
-    ),
-
-  })
-  const EditDrawerOptionHandler = ({ navigation }) => ({
-    style: {
-      shadowOpacity: 0, shadowOffset: { height: 0, width: 0, }, shadowRadius: 0, borderBottomWidth: 0
-    },
-    headerShown: true,
-    style: {
-      shadowColor: '#2e3f6e',
-      borderBottomWidth: 5
-    },
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-      borderBottomWidth: 2, borderBottomColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>Edit A Horse</Text>
-    ),
-
-  })
-  const MyAddingDrawerOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>My Adding Requests</Text>
-    ),
-
-  })
-  const MyEditDrawerOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-      borderBottomWidth: 2
-    },
-
-    headerTintColor: '#2e3f6e',
-    headerTitleStyle: {
-      justifyContent: 'center',
-      borderBottomWidth: 2
-
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>My Edit Requests</Text>
-    ),
-
-  })
-  const DeleteDrawerOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>Delete A Horse</Text>
-    ),
-
-  })
-  const MyDeleteDrawerOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>My Delete Requests</Text>
-    ),
-
-  })
   return (
     <>
-
-
       <StatusBar hidden={true} />
       <RBSheet style={{ backgroundColor: '#00000000' }}
-
 
         hasDraggableIcon ref={bottomSheet}
         height={Dimensions.get('window').height / 3}
@@ -522,46 +174,46 @@ function MainDrawerNavigation() {
         <View style={{ flexDirection: 'row' }}>
 
           <Ionicons style={{ left: 20, top: 30 }} name="language-outline" size={24} color="black" />
-        {Global.Language === 1 ?
-          <Text style={styles.SwipeablePanelText}>Diller:</Text>
-          :
-          <Text style={styles.SwipeablePanelText}>Languages:</Text>
-        }
+          {Global.Language === 1 ?
+            <Text style={styles.SwipeablePanelText}>Diller:</Text>
+            :
+            <Text style={styles.SwipeablePanelText}>Languages:</Text>
+          }
         </View>
-          <View style={styles.FlagContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                setLanguageClicking(true)
-                Global.Language = 2;
+        <View style={styles.FlagContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              setLanguageClicking(true)
+              Global.Language = 2;
 
-                setBottomNavigationMainName("Main")
-                setBottomNavigationProfileName("Profile")
-                setBottomNavigationBasketName("Basket")
-                setBottomNavigationSearchName("Search")
+              setBottomNavigationMainName("Main")
+              setBottomNavigationProfileName("Profile")
+              setBottomNavigationBasketName("Basket")
+              setBottomNavigationSearchName("Search")
 
-              }}
-              style={{ marginRight: 5 }}>
-              <Image
-                style={{ height: 40, width: 40, top: -5 }}
-                source={require('./assets/usa.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setLanguageClicking(true)
-                Global.Language = 1;
+            }}
+            style={{ marginRight: 5 }}>
+            <Image
+              style={{ height: 40, width: 40, top: -5 }}
+              source={require('./assets/usa.png')} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setLanguageClicking(true)
+              Global.Language = 1;
 
-                setBottomNavigationMainName("Anasayfa")
-                setBottomNavigationProfileName("Profil")
-                setBottomNavigationBasketName("Sepet")
-                setBottomNavigationSearchName("Arama")
+              setBottomNavigationMainName("Anasayfa")
+              setBottomNavigationProfileName("Profil")
+              setBottomNavigationBasketName("Sepet")
+              setBottomNavigationSearchName("Arama")
 
-              }}
-              style={{ marginRight: 5 }} >
-              <Image
-                style={{ height: 40, width: 40, top: -5 }}
-                source={require('./assets/turkey.png')} />
-            </TouchableOpacity>
-          </View>
+            }}
+            style={{ marginRight: 5 }} >
+            <Image
+              style={{ height: 40, width: 40, top: -5 }}
+              source={require('./assets/turkey.png')} />
+          </TouchableOpacity>
+        </View>
 
       </RBSheet>
       <Drawer.Navigator
@@ -588,6 +240,20 @@ function MainDrawerNavigation() {
         <Stack.Screen name="DeleteAHorse" component={DeleteAHorseScreen} options={navOptionHandler} />
         <Stack.Screen name="MyDeleteRequests" component={MyDeleteRequestsScreen} options={navOptionHandler} />
         <Stack.Screen name="HorseDetail" component={HorseDetailScreen} options={navOptionHandler} />
+        <Drawer.Screen name="PedigreeQuery" component={HomeScreen} options={drawerOptionHandler} />
+        <Drawer.Screen name="HypoMating" component={HomeScreen} options={drawerOptionHandler} />
+        <Drawer.Screen name="MareMotherSiblingsScreen" component={MareMotherSiblingsScreen} options={navOptionHandler} />
+        <Drawer.Screen name="StallionFatherSiblings" component={StallionFatherSiblings} options={navOptionHandler} />
+        <Drawer.Screen name="TailFemale" component={TailFemale} options={navOptionHandler} />
+        <Drawer.Screen name="Progeny" component={Progeny} options={navOptionHandler} />
+        <Drawer.Screen name="Profile" component={Profile} options={navOptionHandler} />
+        <Drawer.Screen name="Linebreeding" component={Linebreeding} options={navOptionHandler} />
+        <Drawer.Screen name="FemaleFamily" component={FemaleFamily} options={navOptionHandler} />
+        <Drawer.Screen name="BroodmareSireSiblings" component={BroodmareSireSiblings} options={navOptionHandler} />
+        <Drawer.Screen name="FoalsAsBroodMareSire" component={FoalsAsBroodMareSire} options={navOptionHandler} />
+        <Drawer.Screen name="Search" component={Search} options={navOptionHandler} />
+        <Drawer.Screen name="CreateMatchReport" component={HomeScreen} options={drawerOptionHandler} />
+        <Drawer.Screen name="CompareHorses" component={CompareHorses} options={navOptionHandler} />
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
 
         </Stack.Group>
@@ -597,24 +263,10 @@ function MainDrawerNavigation() {
   );
 }
 
-
-function ModalScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: 30 }}>This is a modal!</Text>
-      <Button onPress={() => navigation.goBack()} title="Dismiss" />
-    </View>
-  );
-}
-
-
 export default function App({ navigation }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [getLanguageClicking, setLanguageClicking] = React.useState(false)
   const [getUser, setUser] = React.useState(null)
-
-
-
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -624,48 +276,6 @@ export default function App({ navigation }) {
   const [openingScreen, setOpeningScreen] = React.useState("Login");
 
   const bottomSheet2 = useRef();
-
-
-  const BackDrawerOptionHandler = ({ navigation }) => ({
-    headerShown: true,
-    headerLeft: () => (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-    ),
-    headerRight: () => (
-      <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
-        <TouchableOpacity style={{ left: 15 }}
-          onPress={() => bottomSheet2.current.open()}
-
-        >
-          <Ionicons name="options-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-      </View>
-
-    ),
-
-    headerStyle: {
-      backgroundColor: '#2e3f6e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      justifyContent: 'center',
-    },
-    headerTitle: () => (
-      <Text style={{ left: 5, fontSize: 20, color: 'white', fontWeight: 'bold' }}>Profile</Text>
-    ),
-
-  })
 
   const saveData = async (data) => {
     try {
@@ -738,10 +348,7 @@ export default function App({ navigation }) {
 
 
   React.useEffect(() => {
-    //Global.getBasket();
-    //console.log(deviceLanguage)
     readData();
-
     if (getLanguageClicking === false) {
       changeLanguage();
     }
@@ -768,7 +375,6 @@ export default function App({ navigation }) {
   }
 
   return (
-
     <>
       <StatusBar hidden={true} />
       <RBSheet style={{ backgroundColor: '#00000000' }}
@@ -878,9 +484,23 @@ export default function App({ navigation }) {
             <Stack.Group screenOptions={{ presentation: 'modal' }}>
               <Stack.Screen name="SearchModal" component={SearchModal} options={navOptionHandler} />
               <Stack.Screen name="HypotheticalSearchModalSire" component={HypotheticalSearchModalSire} options={navOptionHandler} />
+              <Stack.Screen name="HypotheticalSearchModalMare" component={HypotheticalSearchModalMare} options={navOptionHandler} />
               <Stack.Screen name="EffectiveNickSearchModal" component={EffectiveNickSearchModal} options={navOptionHandler} />
               <Stack.Screen name="HorseDetailScreenPedigree" component={HorseDetailScreenPedigree} options={navOptionHandler} />
               <Stack.Screen name="HorseDetailScreenProfile" component={HorseDetailScreenProfile} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenProgency" component={HorseDetailScreenProgency} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenNick" component={HorseDetailScreenNick} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenFamily" component={HorseDetailScreenFamily} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenSiblingMare" component={HorseDetailScreenSiblingMare} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenSiblingSire" component={HorseDetailScreenSiblingSire} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenTJK" component={HorseDetailScreenTJK} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenSiblingBroodmareSire" component={HorseDetailScreenSiblingBroodmareSire} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenBroodMareSire" component={HorseDetailScreenBroodMareSire} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenTailFemale" component={HorseDetailScreenTailFemale} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenLinebreeding" component={HorseDetailScreenLinebreeding} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenFemaleFamily" component={HorseDetailScreenFemaleFamily} options={navOptionHandler} />
+              <Stack.Screen name="HorseDetailScreenFoalsAsBroodMareSire" component={HorseDetailScreenFoalsAsBroodMareSire} options={navOptionHandler} />
+              <Stack.Screen name="EffectiveNickScreen" component={EffectiveNickScreen} options={navOptionHandler} />
             </Stack.Group>
           </Stack.Navigator>
         )}

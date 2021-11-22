@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
     image: {
         width: AVATAR_SIZE,
         height: AVATAR_SIZE,
-        borderRadius: AVATAR_SIZE,
+        borderRadius: 10,
         marginRight: SPACING / 2
     },
     heightText: {

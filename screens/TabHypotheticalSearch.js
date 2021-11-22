@@ -42,12 +42,12 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
 
   const refRBSheetGeneration = useRef();
   const [GenerationTitle, setGenerationTitle] = React.useState('Generation 5');
-  const [state, setState] = React.useState({checked: [] });
+  const [state, setState] = React.useState({ checked: [] });
   const [chekedItem, setChekedItem] = React.useState(5)
   const [getSireText, setSireText] = React.useState("")
   const [getMareText, setMareText] = React.useState("")
-  const [getSireId, setSireId] = React.useState(0)
-  const [getMareId, setMareId] = React.useState(0)
+  const [getSireId, setSireId] = React.useState(-1)
+  const [getMareId, setMareId] = React.useState(-1)
 
   useEffect(() => {
 
@@ -56,8 +56,8 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
       setSireId(route.params?.HorseId)
 
     } else {
-      setMareText(route.params?.HorseName)
-      setMareId(route.params?.HorseId)
+      setMareText(route.params?.MareName)
+      setMareId(route.params?.MareId)
 
     }
   });
@@ -87,7 +87,7 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
               onPress={() => {
                 navigation.navigate('HypotheticalSearchModalSire', {
                   isSire: true,
-                  HorseId: getSireId
+                  HorseId: getSireId,
                 })
               }}
               style={styles.TwoValueInLineButton}
@@ -109,14 +109,14 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
               />
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('HypotheticalSearchModalSire', {
+                  navigation.navigate('HypotheticalSearchModalMare', {
                     isSire: false,
-                    HorseId: getMareId
+                    MareId: getMareId
                   })
                 }} style={styles.TwoValueInLineButton}
 
               >
-                <Text style={{ alignSelf: 'center'}}>Mare Name: {getMareText}</Text>
+                <Text style={{ alignSelf: 'center' }}>Mare Name: {getMareText}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -136,7 +136,7 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
                 size={22}
               />
               <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{GenerationTitle}</Text>
-              <Feather style={{ paddingLeft: Dimensions.get('screen').width / 2, top: '1%' }} name="chevron-down" color="grey" size={20} />
+              <Feather style={{ paddingLeft: '60%', top: '1%' }} name="chevron-down" color="grey" size={20} />
 
             </TouchableOpacity>
 
@@ -159,11 +159,8 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
 
               <View>
                 <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                  {Global.Language === 1 ?
-                    <Text style={{ fontSize: 22, left: 5 }}>Nesiller:</Text>
-                    :
-                    <Text style={{ fontSize: 22, left: 5 }}>Generations:</Text>
-                  }
+                 
+                    <Text style={{ fontSize: 22, left: 5 }}>Standard:</Text>
 
                 </View>
                 {GenerationData.length > 0 ?
@@ -185,13 +182,10 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
                         }}
                       >
                         <Ionicons name="arrow-forward-outline" size={16} color="black" />
-
                         <View style={{ flexDirection: 'row' }}>
-
                           <Text style={styles.textStyle}>
                             {item.title} {" "}
                           </Text>
-
                         </View>
                       </TouchableOpacity>)}
                     keyExtractor={item => item.id.toString()}
@@ -201,18 +195,27 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
                 }
               </View>
             </RBSheet>
-
           </View>
 
           <MyButton
             Title="Hypothetical Search"
             Icon="search-outline"
             IconSize={18}
-            onPress={() => navigation.navigate('HorseDetail', {
-              HORSE_NAME: route.params?.HorseName,
-              HORSE_ID: route.params?.HorseId,
-              Generation: chekedItem,
-            })}
+            onPress={() => {
+              if (route.params?.HorseId !== undefined) {
+                navigation.navigate('HorseDetail', {
+                  HORSE_NAME: route.params?.HorseName,
+                  MARE_NAME: route.params?.MareName,
+                  HORSE_ID: route.params?.HorseId,
+                  SECOND_ID: route.params?.MareId,
+                  Generation: chekedItem
+                }
+                )
+              }
+              else {
+                alert('Please search for a name first..')
+              }
+            }}
           >
           </MyButton>
           <HomeComponent />
@@ -314,7 +317,7 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? -10 : -12,
     paddingLeft: 5,
     color: '#05375a',
-    
+
   },
   action: {
     flexDirection: 'row',

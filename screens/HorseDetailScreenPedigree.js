@@ -10,20 +10,21 @@ const PedigreeHTML =
   ;
 
 
-
 // <Text>{Global.HorseDetail.m_cData.PEDIGREE_CELL_LIST[1][0].HORSE_NAME}</Text>
 function HorseDetailScreenPedigree({ navigation, route }) {
   const [time, setTime] = React.useState(true);
   const [getPedigreeReport, setPedigreeReport] = React.useState();
-  const [getHorseId, setHorseId] = React.useState(0);
+  const [getHorseId, setHorseId] = React.useState(-1);
+  const [getMareID, setMareId] = React.useState(-1);
   const { HORSE_ID } = route.params;
+  const { SECOND_ID } = route.params;
   const { Generation } = route.params;
 
   const readPedigreeReport = async () => {
     console.log(Generation)
     try {
       if (Global.Token !== null) {
-        fetch('https://api.pedigreeall.com/Pedigree/GetPedigreeReport?p_iGenerationCount=' + Generation + "&p_iFirstId=" + HORSE_ID + "&p_iSecondId=" + -1, {
+        fetch('https://api.pedigreeall.com/Pedigree/GetPedigreeReport?p_iGenerationCount=' + Generation + "&p_iFirstId=" + HORSE_ID + "&p_iSecondId=" + SECOND_ID, {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -80,6 +81,7 @@ function HorseDetailScreenPedigree({ navigation, route }) {
 
   React.useEffect(() => {
     setHorseId(route.params?.HorseId)
+    setMareId(route.params?.MareId)
     readPedigreeReport();
 
   }, [])
@@ -95,9 +97,9 @@ function HorseDetailScreenPedigree({ navigation, route }) {
   true; // note: this is required, or you'll sometimes get silent failures
 `;
   return (
-    <View style={{ width: '100%', height: '100%' }}>
+    <View style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
       {time ?
-        <ActivityIndicator style={{top: '40%'}} size="large" color="rgba(52, 77, 169, 0.6)" />
+        <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
         :
         <>
           {getPedigreeReport !== undefined &&
@@ -109,22 +111,16 @@ function HorseDetailScreenPedigree({ navigation, route }) {
                 showsHorizontalScrollIndicator={true}
                 automaticallyAdjustContentInsets={false}
                 javaScriptEnabled={true}
-                
+
                 scrollEnabled={true}
                 showsVerticalScrollIndicator={true}
                 injectedJavaScript={webViewScript}
-  
-              />
 
+              />
               <Text style={styles.FamilyText}>Family Summary: {getPedigreeReport[3]}</Text>
             </>
-
           }
-
         </>}
-
-
-        
     </View>
 
   )
@@ -136,7 +132,24 @@ const styles = StyleSheet.create({
   HorseDetailContainer: {
     flex: 1,
   },
-
+  Activity: {
+    top: '40%', shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.27,
+    elevation: 4,
+    backgroundColor: '#fff',
+    width: 50, 
+        height: 50, 
+    paddingLeft: Platform.OS == 'ios' ? 3 : 0,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center'
+  },
   HalfOfScreen: {
     height: Dimensions.get('window').height / 2.5,
     flexDirection: 'row'

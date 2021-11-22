@@ -77,7 +77,6 @@ function HorseDetailScreenProfile({ navigation, route }) {
                     },
                 }).then((response) => response.json())
                     .then((json) => {
-                        //console.log(json)
                         setImageInfo(json.m_cData[0].IMAGE_LIST);
                         setProfileInfo(json.m_cData[0].INFO);
                     })
@@ -126,7 +125,6 @@ function HorseDetailScreenProfile({ navigation, route }) {
                 }}
                 borderRadius={10}
             />
-
         )
         imageArray.push(thisImage)
 
@@ -173,28 +171,8 @@ function HorseDetailScreenProfile({ navigation, route }) {
                 paddingBottom: 23
 
             }}>
-
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={getOpenModal}>
-                <View style={styles.centeredView}>
-                    <View style={[styles.FullScreenContainer]}>
-                        <View style={{ width: '100%', justifyContent: 'flex-end' }}>
-                            <TouchableOpacity
-                                style={{ padding: 10 }}
-                                onPress={() => {
-                                    setOpenModal(false);
-                                }}>
-                                <Icon name="times" size={26} color="silver" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
             {time ?
-                <ActivityIndicator style={{ top: '40%' }} size="large" color="rgba(52, 77, 169, 0.6)" />
+                <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
                 :
 
                 <>
@@ -224,10 +202,9 @@ function HorseDetailScreenProfile({ navigation, route }) {
                                         )}
                                         style={{
                                             borderRadius: 10,
-                                            bottom: 7
+                                            bottom: 0,
                                         }}
                                     >
-
                                         {imageArray}
 
                                     </ScrollView>
@@ -242,7 +219,7 @@ function HorseDetailScreenProfile({ navigation, route }) {
                                     <Text style={styles.ItemTitleText}>Name:</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag code={getHorseInfoByID[0].ICON.toUpperCase()} size={16} />
+                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].HORSE_NAME}</Text>
                                         </View>
                                     </View>
@@ -251,7 +228,7 @@ function HorseDetailScreenProfile({ navigation, route }) {
                                     <Text style={styles.ItemTitleText}>Sire:</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag code={getHorseInfoByID[0].FATHER_ICON.toUpperCase()} size={16} />
+                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].FATHER_ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].FATHER_NAME}</Text>
                                         </View>
                                     </View>
@@ -260,7 +237,7 @@ function HorseDetailScreenProfile({ navigation, route }) {
                                     <Text style={styles.ItemTitleText}>Dam:</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag code={getHorseInfoByID[0].MOTHER_ICON.toUpperCase()} size={16} />
+                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].MOTHER_ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].MOTHER_NAME}</Text>
                                         </View>
                                     </View>
@@ -269,7 +246,7 @@ function HorseDetailScreenProfile({ navigation, route }) {
                                     <Text style={styles.ItemTitleText}>Broodmare Sire:</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag code={getHorseInfoByID[0].BM_SIRE_ICON.toUpperCase()} size={16} />
+                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].BM_SIRE_ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].BM_SIRE_NAME}</Text>
                                         </View>
                                     </View>
@@ -407,6 +384,25 @@ const styles = StyleSheet.create({
     Container: {
         width: '100%',
         height: '100%',
+        backgroundColor: '#fff'
+    },
+    Activity: {
+        top: '40%', shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.27,
+        elevation: 4, 
+        backgroundColor: '#fff', 
+        width: 50, 
+        height: 50, 
+        paddingLeft: Platform.OS == 'ios' ? 3: 0,
+        borderRadius: 30, 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        alignSelf: 'center'
     },
     container: {
         padding: 15,
@@ -507,7 +503,7 @@ const styles = StyleSheet.create({
     ItemFlagNameContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        width: '100%'
+        width: '100%',
     },
     ItemNameText: {
         marginLeft: 10,

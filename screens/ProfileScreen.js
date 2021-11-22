@@ -1,17 +1,14 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, Animated, Keyboard } from 'react-native'
+import { View, platform, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard, Platform } from 'react-native'
 import { SearchBar, ListItem } from "react-native-elements";
-import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from "react-native-vector-icons/FontAwesome5";
 import { Global } from './Global';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import * as Animatable from 'react-native-animatable';
-import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import MyHeader from '../component/MyHeader';
-import MyButton from '../component/MyButton';
+import RBSheet from "react-native-raw-bottom-sheet";
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
 
@@ -20,21 +17,20 @@ const SPACING = 18;
 const AVATAR_SIZE = 55;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
-export function DeleteAHorseScreen({ navigation }) {
+function Profile({ route, navigation }) {
 
-    const BottomSheetLong = useRef();
     const [searchText, setSearchText] = React.useState("");
-
-    const [getHorseGetByName, setHorseGetByName] = React.useState([]);
-    const [getSelectedDeleteHorse, setSelectedDeleteHorse] = React.useState();
+    const [getHorseId, setHorseId] = React.useState(0);
+    const [getHorseData, setHorseData] = React.useState([]);
     const [loader, setLoader] = React.useState(false)
-    const [Isloading, setIsLoading] = React.useState(false)
     const [loaderText, setLoaderText] = React.useState("Lütfen Bekleyin..")
+    const [getData, setData] = React.useState([]);
+    const BottomSheetLong = useRef();
     const [Data, SetData] = useState([]);
 
     const readHorseGetByName = async () => {
 
-        let isMounted = true;
+        let isSubscribed = true;
         try {
             const token = await AsyncStorage.getItem('TOKEN')
             if (token !== null) {
@@ -65,11 +61,12 @@ export function DeleteAHorseScreen({ navigation }) {
                                 IMAGE: i.IMAGE,
                             })
                         ))
-                        SetData(aa)
-                        setLoader(false)
-                        setHorseGetByName(json.m_cData)
-                        setLoaderText('Lütfen Bekleyin..')
-
+                        if (isSubscribed) {
+                            SetData(aa)
+                            setLoader(false)
+                            setHorseData(json.m_cData)
+                            setLoaderText('Lütfen Bekleyin..')
+                        }
                     })
 
                     .catch((error) => {
@@ -81,89 +78,67 @@ export function DeleteAHorseScreen({ navigation }) {
             }
         } catch (e) {
         }
+        return () => isSubscribed = false
     }
+    const readUser = async (text) => {
+        setData([])
 
-    const readDeleteAHorse = async (HORSE_ID) => {
-        try {
-            const token = await AsyncStorage.getItem('TOKEN')
-            if (token !== null) {
-                fetch('https://api.pedigreeall.com/Horse/Delete', {
+        if (text === "")
+            return
+        else {
+            try {
+                fetch('https://api.pedigreeall.com/Horse/GetByName', {
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': "Basic " + token,
+                        'Authorization': "Basic " + "Z2ZydWx1dGFzQGhvdG1haWwuY29tOjE=",
                     },
                     body: JSON.stringify({
-                        "HORSE_ID": HORSE_ID,
-
+                        ID: 1,
+                        NAME: text,
                     })
                 })
                     .then((response) => response.json())
                     .then((json) => {
-                        setLoaderText("Lütfen bekleyin..")
-                        setSearchText("")
+                        var aa = [];
+                        json.m_cData.map((i, index) => (
+                            aa.push({
+                                HORSE_DATA: i,
+                                HORSE_ID: i.HORSE_ID,
+
+                            })
+                        ))
+                        setData(aa)
+                        console.log(aa)
+                        setHorseData(json)
                         setLoader(false)
-                        navigation.navigate('Result', {
-                            res: JSON.stringify(json)
-                        })
-                        //setHorseAddRequestData(json.m_cData)
-                        //setTime(false)
-                        //console.log(json.m_cData)
                     })
                     .catch((error) => {
                         console.error(error);
                     })
+
+            } catch (e) {
             }
-            else {
-                console.log("Basarisiz")
-            }
-        } catch (e) {
-            console.log(e)
         }
     }
 
-    const [getSearchPlaceholder, setSearchPlaceholder] = React.useState("")
-    const [getDeleteButtonPlaceholder, setDeleteButtonPlaceholder] = React.useState("")
+    const [getSearchPlaceholder, setSearchPlaceholder] = React.useState("Please type here and press search .. ")
 
     React.useEffect(() => {
+        readUser()
+        setHorseId(route.params?.HorseId)
         setSearchText("")
-        setSearchPlaceholder("Please type here and press search .. ")
-        setDeleteButtonPlaceholder("Search")
+
     }, [])
-
-    const deleteMessage = (HorseID) =>
-        Alert.alert(
-            "Delete Horse",
-            "Are you sure you want to delete this Horse?",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                    onPress: () => {
-                        setLoader(false)
-
-                    }
-                },
-                {
-                    text: "Delete",
-                    onPress: () => readDeleteAHorse(HorseID)
-
-                }
-            ],
-            { cancelable: true }
-        );
-
-
-        const scrollY = React.useRef(new Animated.Value(0)).current;
-
+    const scrollY = React.useRef(new Animated.Value(0)).current;
     return (
         <View>
             <Myloader Show={loader} Text={loaderText} />
             <View style={styles.container}>
 
 
-                <MyHeader Title="Delete A Horse"
+                <MyHeader Title="Profile"
                     onPress={() => navigation.goBack()}
                 >
 
@@ -226,13 +201,14 @@ export function DeleteAHorseScreen({ navigation }) {
                         }}
                     >
                     </MyButtonEditDelete>
+
                     <View style={styles.Container}>
 
-                        {getHorseGetByName.length > 0 ?
+                        {getHorseData.length > 0 ?
 
                             <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseGetByName.length}) records</Text>
+                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseData.length}) records</Text>
                                     <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
                                 </View>
                                 <Animated.FlatList
@@ -243,7 +219,7 @@ export function DeleteAHorseScreen({ navigation }) {
                                         {useNativeDriver: true}
                                     )}
                                     style={styles.flatList}
-                                    data={getHorseGetByName}
+                                    data={getHorseData}
 
                                     renderItem={({ item, index }) => {
                                         const opacityInputRange = [
@@ -267,19 +243,13 @@ export function DeleteAHorseScreen({ navigation }) {
                                             outputRange: [1,1,1,0]
                                         })
                                         return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
-                                            onPress={() => {
-                                                setLoaderText(item.HORSE_NAME + ' işleniyor..')
-                                                setLoader(true)
-                                                BottomSheetLong.current.close();
-                                                setTimeout(() => {
-                                                    setSelectedDeleteHorse(item);
-                                                    deleteMessage(item.HORSE_ID);
-                                                }, 1500);
-
-
-                                                //BottomSheetLong.current.close();
-
-                                            }}
+                                        onPress={() => {
+                                            navigation.navigate('HorseDetailScreenProfile', {
+                                                HORSE_ID: item.HORSE_ID,
+                                                Generation: 5,
+                                                SECOND_ID: -1,
+                                                })
+                                        }}
                                         >
                                             <Image style={styles.image}
                                                 source={{ uri: item.IMAGE }}
@@ -317,13 +287,12 @@ export function DeleteAHorseScreen({ navigation }) {
                             null
                         }
                     </View>
-
                 </MyHeader>
             </View>
         </View>
-
     )
 }
+export default Profile;
 const { height } = Dimensions.get("screen");
 const { width } = Dimensions.get("screen");
 const height_logo = height * 0.1;

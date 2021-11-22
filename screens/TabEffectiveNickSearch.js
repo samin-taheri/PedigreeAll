@@ -20,6 +20,7 @@ import MyButton from "../component/MyButton";
 import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
 import faker from 'faker'
+import RNPickerSelect from 'react-native-picker-select';
 
 faker.seed(10);
 const SPACING = 18;
@@ -28,28 +29,16 @@ const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const GenerationData = [
     {
-        id: "4",
-        title: "Generation 4",
+        id: "Standard",
+        title: "Standard",
     },
     {
-        id: "5",
-        title: "Generation 5",
+        id: "Advanced",
+        title: "Advanced",
     },
     {
-        id: "6",
-        title: "Generation 6",
-    },
-    {
-        id: "7",
-        title: "Generation 7",
-    },
-    {
-        id: "8",
-        title: "Generation 8",
-    },
-    {
-        id: "9",
-        title: "Generation 9",
+        id: "Professional",
+        title: "Professional",
     },
 ];
 
@@ -71,19 +60,58 @@ export function TabEffectiveNickSearch({ navigation, route }) {
     const [getRegisteredStallions, setRegisteredStallions] = React.useState([]);
     const [getRegisteredStallionsName, setRegisteredStallionsName] = React.useState("Stallion");
     const [getBottomSheetText, setBottomSheetText] = React.useState();
+    const [CounrtyList, setCountryList] = useState([])
+    const [getCountryID, setCountryID] = React.useState(1);
 
     const [getData, setData] = React.useState([]);
 
     const [getFirstHorseID, setFirstHorseID] = React.useState();
     const refRBSheetGeneration = useRef();
-    const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
+    const [GenerationTitle, setGenerationTitle] = React.useState("Standard");
 
-    const readRegisteredStallions = async () => {
+    const readDataCountryList = async () => {
+        let isMounted = true;
+        let isActive = true;
+        const abortCtrl = new AbortController();
+        const opts = {
+            signal: abortCtrl.signal,
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+        };
+        fetch('https://api.pedigreeall.com/Country/GetStallionGroupCountry', opts)
+            .then((response) => response.json())
+            .then((json) => {
+                var list = [];
+                json.m_cData.map(item => (
+                    list.push({
+                        label: item.COUNTRY_EN,
+                        value: item.COUNTRY_ID,
+                        key: item.COUNTRY_ID.toString()
+
+                    })
+                ))
+                if (isActive) {
+                    setCountryList(list)
+                }
+
+
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+        return () => { abortCtrl.abort(), isActive = false, isMounted = false };
+
+    }
+    const readRegisteredStallions = async (countryID) => {
+        setRegisteredStallions([])
+
         try {
             const token = await AsyncStorage.getItem('TOKEN')
             if (token !== null) {
-                //console.log(atob('Z2ZydWx1dGFzQGhvdG1haWwuY29tOjEyMw=='))
-                fetch('https://api.pedigreeall.com/StallionPage/GetLastSeasonRegisteredStallions?p_iRaceId=' + 1, {
+                fetch('https://api.pedigreeall.com/StallionGroup/Get?p_iId=-1&p_sCountryId=' + countryID, {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
@@ -95,7 +123,9 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                     .then((response) => response.json())
                     .then((json) => {
                         setRegisteredStallions(json.m_cData)
+                        setRegisteredStallionsName(json.m_cData[0].HORSE_NAME);
                         setLoader(false);
+
                     })
                     .catch((error) => {
                         console.error(error);
@@ -153,7 +183,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
         try {
             const token = await AsyncStorage.getItem('TOKEN')
             if (token !== null) {
-                fetch('https://api.pedigreeall.com/Registration/GetAsNameIdForStallion?p_iHorseId=' + ID + '&p_iLanguage=' + Global.Language, {
+                fetch('https://api.pedigreeall.com/Registration/GetAsNameIdForStallion?p_iHorseId=' + ID + '&p_iLanguage=2', {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
@@ -180,8 +210,8 @@ export function TabEffectiveNickSearch({ navigation, route }) {
 
     React.useEffect(() => {
         setData([])
-        readRegisteredStallions();
         readHorseData([]);
+        readDataCountryList()
 
     }, [])
     const scrollY = React.useRef(new Animated.Value(0)).current;
@@ -212,25 +242,22 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                     >
                         <View>
                             <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                                {Global.Language === 1 ?
-                                    <Text style={{ fontSize: 22, left: 5 }}>Aygır:</Text>
-                                    :
-                                    <Text style={{ fontSize: 22, left: 5 }}>Stallions:</Text>
-                                }
+
+                                <Text style={{ fontSize: 22, left: 5 }}>Stallions:</Text>
 
                             </View>
                             {getBottomSheetText === "RegisteredStallions" &&
                                 <>
+                                   
                                     {getRegisteredStallions.length > 0 ?
-
                                         <Animated.FlatList
                                             scrollEnabled={true}
                                             bounces={false}
                                             onScroll={Animated.event(
-                                                [{nativeEvent: {contentOffset: {y: scrollY}}}],
-                                                {useNativeDriver: true}
+                                                [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                                                { useNativeDriver: true }
                                             )}
-                                            
+
                                             style={styles.flatList2}
                                             data={getRegisteredStallions}
                                             renderItem={({ item, index }) => {
@@ -238,37 +265,37 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                                     -1,
                                                     0,
                                                     ITEM_SIZE * index,
-                                                    ITEM_SIZE * ( index + .5)
+                                                    ITEM_SIZE * (index + .5)
                                                 ]
                                                 const inputRange = [
                                                     -1,
                                                     0,
                                                     ITEM_SIZE * index,
-                                                    ITEM_SIZE * ( index + 2)
+                                                    ITEM_SIZE * (index + 2)
                                                 ]
-                                                 const scale = scrollY.interpolate({
-                                                     inputRange,
-                                                     outputRange: [1,1,1,0]
-                                                 })
-                                                 const opacity = scrollY.interpolate({
-                                                    inputRange: opacityInputRange,
-                                                    outputRange: [1,1,1,0]
+                                                const scale = scrollY.interpolate({
+                                                    inputRange,
+                                                    outputRange: [1, 1, 1, 0]
                                                 })
-                                                return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
+                                                const opacity = scrollY.interpolate({
+                                                    inputRange: opacityInputRange,
+                                                    outputRange: [1, 1, 1, 0]
+                                                })
+                                                return <TouchableOpacity style={[styles.latestItem, { opacity, transform: [{ scale }] }]}
                                                     onPress={() => {
                                                         OpenFullBottomSheet.current.close();
-                                                        setRegisteredStallionsName(item.HORSE_NAME);
                                                         setRegisteredStallionsItemData(item);
                                                         setFirstHorseID(item.HORSE_ID);
                                                         readGetAsNameIdForStallion(item.HORSE_ID);
                                                     }}
                                                 >
-
                                                     {item.REGISTRATION_ID === 3 &&
                                                         <View style={{ backgroundColor: '#21ba45', justifyContent: 'center', width: 25, height: 25, borderRadius: 0 }}>
                                                             <Text style={{ color: '#fff', fontWeight: '700', alignSelf: 'center', margin: 'auto' }}>P</Text>
                                                         </View>
+
                                                     }
+
                                                     <View style={{ flexDirection: 'column' }}>
                                                         {item.REGISTRATION_ID === 2 &&
                                                             <View style={{ backgroundColor: '#fbbd08', justifyContent: 'center', width: 25, height: 25, borderRadius: 0 }}>
@@ -280,12 +307,21 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                                         <View style={{ backgroundColor: '#db2828', justifyContent: 'center', width: 25, height: 25, borderRadius: 0 }}>
                                                             <Text style={{ color: '#fff', fontWeight: '700', alignSelf: 'center', margin: 'auto' }}>S</Text>
                                                         </View>
+                                                    } 
+                                                    {item.REGISTRATION_ID === 0 &&
+                                                        <View style={{ backgroundColor: '#B6BABF', justifyContent: 'center', width: 25, height: 25, borderRadius: 0 }}>
+                                                            <Text style={{ color: '#fff', fontWeight: '700', alignSelf: 'center', margin: 'auto' }}>D</Text>
+                                                        </View>
                                                     }
                                                     <Text style={{ left: 20 }}>{item.HORSE_NAME}</Text>
 
 
-                                                </TouchableOpacity>}}
-                                            keyExtractor={item => item.HORSE_ID.toString()}
+                                                </TouchableOpacity>
+                                            }
+
+                                            }
+                                            keyExtractor={(item, index) => index.toString()}
+
                                         />
 
                                         :
@@ -324,11 +360,8 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                         >
 
                             <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                                {Global.Language === 1 ?
-                                    <Text style={{ fontSize: 22, left: 5 }}>Nesiller: </Text>
-                                    :
-                                    <Text style={{ fontSize: 22, left: 5 }}>Generations: </Text>
-                                }
+
+                                <Text style={{ fontSize: 22, left: 5 }}>Situation: </Text>
 
                             </View>
                             {GenerationData.length > 0 ?
@@ -344,19 +377,17 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                             onPress={() => {
                                                 setState({ checked: [state, item.id] });
                                                 setChekedItem(item.id)
-                                                setGenerationTitle("Generation " + item.id)
+                                                setGenerationTitle(item.id)
                                                 refRBSheetGeneration.current.close();
 
                                             }}
                                         >
                                             <Ionicons name="arrow-forward-outline" size={16} color="black" />
-
                                             <View style={{ flexDirection: 'row' }}>
 
                                                 <Text style={styles.textStyle}>
                                                     {item.title} {" "}
                                                 </Text>
-
                                             </View>
                                         </TouchableOpacity>)}
                                     keyExtractor={item => item.id.toString()}
@@ -364,11 +395,30 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                 :
                                 null
                             }
-
-
                         </RBSheet>
                     </View>
-                    <View style={{ top: 5 }}>
+                    <View style={[styles.action, { top: 5 }]}>
+                        <Ionicons name="flag-outline" size={22} color="#2e3f6e" />
+
+                        <RNPickerSelect
+                            placeholder={{}}
+                            style={
+                                pickerSelectStyles
+                            }
+                            Icon={() => {
+                                return <Feather style={{ paddingRight: Platform.OS == 'ios' ? '12%' : '15%', top: '1%' }} name="chevron-down" color="grey" size={20} />
+                            }}
+                            useNativeAndroidPickerStyle={false}
+                            onValueChange={(value) => {
+                                setCountryID(value)
+                                readRegisteredStallions(value);
+                            }}
+                            items={CounrtyList}
+                            value={getCountryID}
+                            key={getCountryID}
+                        />
+                    </View>
+                    <View style={{ top: 0 }}>
 
                         <TouchableOpacity
                             style={styles.action}
@@ -383,12 +433,12 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                 size={22}
                             />
                             <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{getRegisteredStallionsName}</Text>
-                            <Feather style={{ paddingLeft: Dimensions.get('screen').width / 1.7, top: '1%' }} name="chevron-down" color="grey" size={20} />
+                            <Feather style={{ paddingLeft: '68%', top: '1%' }} name="chevron-down" color="grey" size={20} />
 
                         </TouchableOpacity>
 
                     </View>
-                    <View style={{ top: 0 }}>
+                    <View style={{ bottom: 5 }}>
 
                         <View style={styles.InputContainer}>
                             <Feather
@@ -409,7 +459,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                         </View>
 
                     </View>
-                    <View style={{ bottom: 5 }}>
+                    <View style={{ bottom: 10 }}>
 
                         <TouchableOpacity
                             style={styles.action}
@@ -418,26 +468,35 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                             }}>
                             <Ionicons
                                 style={{ marginRight: 9, top: 3 }}
-                                name="aperture-outline"
+                                name="menu-outline"
                                 color="#2e3f6e"
                                 size={22}
                             />
                             <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{GenerationTitle}</Text>
-                            <Feather style={{ paddingLeft: Dimensions.get('screen').width / 2, top: '1%' }} name="chevron-down" color="grey" size={20} />
+                            <Feather style={{ paddingLeft: '65%', top: '1%' }} name="chevron-down" color="grey" size={20} />
 
                         </TouchableOpacity>
                     </View>
-                    <View style={{ bottom: 3 }}>
+                    <View style={{ bottom: 10 }}>
                         <MyButton
-                            Title="EffectiveNick Search"
+                            Title="Reoprt"
                             Icon="search-outline"
                             IconSize={18}
-                            onPress={() => navigation.navigate('HorseDetail', {
-                                HORSE_NAME: route.params?.horseEffectiveNick,
-                                HORSE_ID: route.params?.HorseId,
-                                Generation: chekedItem,
-                                Stallion: getRegisteredStallionsName
-                            })}
+                            onPress={() => {
+                                if (route.params?.HorseId !== undefined) {
+                                    navigation.navigate('EffectiveNickScreen', {
+                                        HORSE_NAME: route.params?.horseEffectiveNick,
+                                        HORSE_ID: route.params?.HorseId,
+                                        Generation: chekedItem,
+                                        Stallion: getRegisteredStallionsName,
+                                        SECOND_ID: -1
+                                    }
+                                    )
+                                }
+                                else {
+                                    alert('Please search for a name first..')
+                                }
+                            }}
                         >
                         </MyButton>
                     </View>
@@ -465,7 +524,6 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        backgroundColor: '#fff',
         width: '100%',
         borderRadius: 8,
         marginTop: 0,
@@ -547,8 +605,8 @@ const styles = StyleSheet.create({
         marginTop: Platform.OS === 'ios' ? -10 : -12,
         paddingLeft: 5,
         color: '#05375a',
-        
-      },
+
+    },
     latestItem: {
         flexDirection: 'row',
         width: 360,
@@ -833,4 +891,30 @@ const styles = StyleSheet.create({
         backgroundColor: '#e8edf1'
     },
 
+});
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: windowWidth + 40,
+        bottom: 5,
+        left: 15,
+        flex: 1,
+        marginTop: 10,
+        paddingLeft: 0,
+        paddingTop: 8,
+        color: '#000',
+    },
+    inputAndroid: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: windowWidth + 60,
+        flex: 1,
+        marginBottom: -23,
+        paddingLeft: 0,
+        paddingTop: 8,
+        color: '#000',
+        left: 15
+    },
+    placeholder: { color: '#9a9aa1', fontSize: 14, bottom: 10 },
 });

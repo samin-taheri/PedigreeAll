@@ -1,17 +1,26 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard } from 'react-native'
+import { View, Easing, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, SafeAreaView, Button, Keyboard, Platform } from 'react-native'
 import { SearchBar, ListItem } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Global } from './Global';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
+import faker from 'faker'
+
+faker.seed(10);
+const SPACING = 18;
+const AVATAR_SIZE = 55;
+const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const HypotheticalSearchModalMare = ({ route, navigation }) => {
 
     const [searchText, setSearchText] = React.useState("");
     const [IsSire, setIsSire] = React.useState(false);
-    const [getHorseId, setHorseId] = React.useState(0);
+    const [getHorseId, setHorseId] = React.useState(-1);
+    const [getHorseName, setHorseName] = React.useState('');
+    const [getMareName, setMareName] = React.useState('');
+    const [getMareId, setMareId] = React.useState(-1);
 
     const [getHorseGetByName, setHorseGetByName] = React.useState([]);
     const [loader, setLoader] = React.useState(false)
@@ -76,24 +85,22 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
 
         setIsSire(route.params?.isSire)
         setHorseId(route.params?.HorseId)
+        setMareId(route.params?.MareId)
+        setMareName(route.params?.MareName)
+        setHorseName(route.params?.HorseName)
+        setSearchPlaceholder("Please type here and press search .. ")
+        setDeleteButtonPlaceholder("Search")
 
-        if (Global.Language === 1) {
-            setSearchPlaceholder("Lütfen isim giriniz ve ara butonuna basınız ..")
-            setDeleteButtonPlaceholder("Yükle")
-        }
-        else {
-            setSearchPlaceholder("Please type here and press search .. ")
-            setDeleteButtonPlaceholder("Search")
-        }
     }, [])
+    const scrollY = React.useRef(new Animated.Value(0)).current;
 
     return (
-        <View>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
             <Myloader Show={loader} Text={loaderText} />
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
 
-                    <View style={[styles.headerContainer2, { marginBottom: 'auto', top: 30 }]}>
+                    <View style={[styles.headerContainer2, { marginBottom: 'auto', top: Platform.OS == 'ios' ? 40 : 0 }]}>
                         <SearchBar
                             placeholder={getSearchPlaceholder}
                             lightTheme
@@ -144,25 +151,50 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
 
                     {getHorseGetByName.length > 0 ?
 
-                        <View style={{ paddingLeft: 20, padding: 10, bottom: Platform.OS == 'ios' ? '10%' : '20%' }}>
-                            <View style={{ flexDirection: 'row' }}>
-                            </View>
-                            <FlatList
+                        <View style={{ bottom: Platform.OS == 'ios' ? '10%' : '20%' }}>
+
+                            <Animated.FlatList
                                 scrollEnabled={true}
+                                onScroll={Animated.event(
+                                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                                    { useNativeDriver: true }
+                                )}
                                 bounces={false}
                                 style={styles.flatList}
                                 data={getHorseGetByName}
-
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity style={styles.latestItem}
+                                contentContainerStyle={{
+                                    padding: SPACING,
+                                    paddingTop: StatusBar.currentHeight || 42
+                                }}
+                                renderItem={({ item, index }) => {
+                                    const opacityInputRange = [
+                                        -1,
+                                        0,
+                                        ITEM_SIZE * index,
+                                        ITEM_SIZE * (index + .5)
+                                    ]
+                                    const inputRange = [
+                                        -1,
+                                        0,
+                                        ITEM_SIZE * index,
+                                        ITEM_SIZE * (index + 2)
+                                    ]
+                                    const scale = scrollY.interpolate({
+                                        inputRange,
+                                        outputRange: [1, 1, 1, 0]
+                                    })
+                                    const opacity = scrollY.interpolate({
+                                        inputRange: opacityInputRange,
+                                        outputRange: [1, 1, 1, 0]
+                                    })
+                                    return <TouchableOpacity style={[styles.latestItem, { opacity, transform: [{ scale }] }]}
                                         onPress={() => {
                                             if (searchText) {
                                                 navigation.navigate({
                                                     name: 'TabHypotheticalSearch',
-                                                    params: { HorseName: item.HORSE_NAME, isSire: IsSire, HorseId: item.HORSE_ID },
-
+                                                    params: { MareName: item.HORSE_NAME, isSire: IsSire, MareId: item.HORSE_ID },
+                                                    merge: true,
                                                 });
-
                                             }
                                             else {
                                                 alert("Please search the name first");
@@ -197,7 +229,8 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
 
                                         </View>
 
-                                    </TouchableOpacity>)}
+                                    </TouchableOpacity>
+                                }}
                                 keyExtractor={item => item.HORSE_ID.toString()}
                             />
                         </View>
@@ -205,31 +238,23 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
                         null
                     }
                 </View>
-                <View style={{
-                    flex: 1, flexDirection: 'column',
-                    justifyContent: 'flex-end', marginBottom: 'auto', bottom: 10, width: '95%', left: 10
-                }}>
-                    <TouchableOpacity
-                        onPress={() => navigation.goBack()}
-                        style={[styles.signIn, {
-                            borderColor: '#2e3f6e',
-                            borderWidth: 1,
 
-                        }]}
-                    >
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => navigation.goBack()} >
 
-                        <Text style={[styles.TextStyle, {
-                            color: '#2e3f6e'
-                        }]}>Close</Text>
-                    </TouchableOpacity>
-                </View>
+                    <Text style={[styles.TextStyle, {
+                        color: '#2e3f6e'
+                    }]}>Close</Text>
+                </TouchableOpacity>
             </View>
 
-        </View>
+        </SafeAreaView>
 
     )
 }
 export default HypotheticalSearchModalMare;
+
 const { height } = Dimensions.get("screen");
 const { width } = Dimensions.get("screen");
 const height_logo = height * 0.1;
@@ -239,18 +264,24 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
+        marginTop: Platform.OS == 'android' ? 30 : 0,
+        padding: 10
     },
-    signIn: {
+    closeButton: {
+        bottom: Platform.OS == 'android' ? 35 : 0,
         width: '100%',
-        height: 45,
+        height: 46,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
-        borderWidth: 3,
-        borderColor: '#000',
+        zIndex: 1,
+        borderColor: '#d5dce3',
+        borderWidth: 1,
+        backgroundColor: '#dce3e9'
     },
+
     headerContainer2: {
-        top: '22.5%',
+        top: '0%',
         position: 'absolute',
         backgroundColor: '#fff',
         margin: 'auto',
@@ -259,21 +290,21 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
-        shadowColor: "rgba(0,0,0,0)",
+        shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 5,
+            height: 1,
         },
-        shadowOpacity: 0.34,
-        shadowRadius: 6.27,
+        shadowOpacity: 0.2,
+        shadowRadius: 3.27,
         width: '96%',
         elevation: 10,
         height: 50,
         paddingTop: '4%',
     },
     headerContainer: {
-        backgroundColor: '#2e3f6e',
-        height: '15%',
+        height: '17%',
+        backgroundColor: '#fff'
     },
     InformationText4: {
         fontSize: 15,
@@ -311,9 +342,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#2e3f6e',
         borderRadius: 8,
         width: 52,
-        bottom: '3%',
+        bottom: '2.5%',
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        right: '3%'
     },
     HeaderText2: {
         fontSize: 23,
@@ -335,10 +367,10 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 5,
+            height: 1,
         },
-        shadowOpacity: 0.34,
-        shadowRadius: 6.27,
+        shadowOpacity: 0.2,
+        shadowRadius: 3.27,
         width: '90%',
         padding: 10,
         elevation: 10,
@@ -564,10 +596,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     image: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        marginRight: 10,
+        width: AVATAR_SIZE,
+        height: AVATAR_SIZE,
+        borderRadius: 10,
+        marginRight: SPACING / 2
     },
     heightText: {
         marginTop: 15,
@@ -575,35 +607,30 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     flatList: {
-        paddingBottom: 20,
-        paddingTop: 10,
-        marginTop: '8%',
-        marginLeft: -15,
-        height: Dimensions.get('screen').height / 1.40,
+        height: Dimensions.get('screen').height / (Platform.OS == 'ios' ? 1.40 : 1.30),
+        top: Platform.OS == 'ios' ? 0 : 15
     },
-    item: {
-        flexDirection: 'row',
-        width: 360,
-        left: -15,
-        padding: 10,
-        marginVertical: 7,
-        marginHorizontal: 16,
-        zIndex: 1,
-        borderBottomWidth: 0.5,
-        borderBottomColor: '#d6d3d3',
 
-    },
     title: {
         fontSize: 32,
     },
     latestItem: {
         flexDirection: 'row',
-        width: 360,
-        left: -10,
-        padding: 10,
-        marginVertical: 7,
-        marginHorizontal: 16,
-        zIndex: 1,
+        width: '100%',
+        padding: SPACING,
+        marginBottom: SPACING,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 3.27,
+        elevation: 10,
+
     },
+
 
 })

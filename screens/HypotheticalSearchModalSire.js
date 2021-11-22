@@ -17,7 +17,8 @@ const HypotheticalSearchModalSire = ({ route, navigation }) => {
 
     const [searchText, setSearchText] = React.useState("");
     const [IsSire, setIsSire] = React.useState(false);
-    const [getHorseId, setHorseId] = React.useState(0);
+    const [getHorseId, setHorseId] = React.useState(-1);
+    const [getMareId, setMareId] = React.useState(-1);
 
     const [getHorseGetByName, setHorseGetByName] = React.useState([]);
     const [loader, setLoader] = React.useState(false)
@@ -82,15 +83,10 @@ const HypotheticalSearchModalSire = ({ route, navigation }) => {
 
         setIsSire(route.params?.isSire)
         setHorseId(route.params?.HorseId)
+        setMareId(route.params?.MareId)
+        setSearchPlaceholder("Please type here and press search .. ")
+        setDeleteButtonPlaceholder("Search")
 
-        if (Global.Language === 1) {
-            setSearchPlaceholder("Lütfen isim giriniz ve ara butonuna basınız ..")
-            setDeleteButtonPlaceholder("Yükle")
-        }
-        else {
-            setSearchPlaceholder("Please type here and press search .. ")
-            setDeleteButtonPlaceholder("Search")
-        }
     }, [])
     const scrollY = React.useRef(new Animated.Value(0)).current;
 
@@ -100,7 +96,7 @@ const HypotheticalSearchModalSire = ({ route, navigation }) => {
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
 
-                    <View style={[styles.headerContainer2, { marginBottom: 'auto', top: Platform.OS == 'ios' ? 40: 0}]}>
+                    <View style={[styles.headerContainer2, { marginBottom: 'auto', top: Platform.OS == 'ios' ? 40 : 0 }]}>
                         <SearchBar
                             placeholder={getSearchPlaceholder}
                             lightTheme
@@ -152,50 +148,49 @@ const HypotheticalSearchModalSire = ({ route, navigation }) => {
                     {getHorseGetByName.length > 0 ?
 
                         <View style={{ bottom: Platform.OS == 'ios' ? '10%' : '20%' }}>
-                            
+
                             <Animated.FlatList
-                                    scrollEnabled={true}
-                                    onScroll={Animated.event(
-                                        [{nativeEvent: {contentOffset: {y: scrollY}}}],
-                                        {useNativeDriver: true}
-                                    )}
-                                    bounces={false}
-                                    style={styles.flatList}
-                                    data={getHorseGetByName}
-                                    contentContainerStyle={{
-                                        padding: SPACING,
-                                        paddingTop: StatusBar.currentHeight || 42
-                                    }}
-                                    renderItem={({ item, index }) => {
-                                        const opacityInputRange = [
-                                            -1,
-                                            0,
-                                            ITEM_SIZE * index,
-                                            ITEM_SIZE * ( index + .5)
-                                        ]
-                                        const inputRange = [
-                                            -1,
-                                            0,
-                                            ITEM_SIZE * index,
-                                            ITEM_SIZE * ( index + 2)
-                                        ]
-                                         const scale = scrollY.interpolate({
-                                             inputRange,
-                                             outputRange: [1,1,1,0]
-                                         })
-                                         const opacity = scrollY.interpolate({
-                                            inputRange: opacityInputRange,
-                                            outputRange: [1,1,1,0]
-                                        })
-                                        return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
+                                scrollEnabled={true}
+                                onScroll={Animated.event(
+                                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                                    { useNativeDriver: true }
+                                )}
+                                bounces={false}
+                                style={styles.flatList}
+                                data={getHorseGetByName}
+                                contentContainerStyle={{
+                                    padding: SPACING,
+                                    paddingTop: StatusBar.currentHeight || 42
+                                }}
+                                renderItem={({ item, index }) => {
+                                    const opacityInputRange = [
+                                        -1,
+                                        0,
+                                        ITEM_SIZE * index,
+                                        ITEM_SIZE * (index + .5)
+                                    ]
+                                    const inputRange = [
+                                        -1,
+                                        0,
+                                        ITEM_SIZE * index,
+                                        ITEM_SIZE * (index + 2)
+                                    ]
+                                    const scale = scrollY.interpolate({
+                                        inputRange,
+                                        outputRange: [1, 1, 1, 0]
+                                    })
+                                    const opacity = scrollY.interpolate({
+                                        inputRange: opacityInputRange,
+                                        outputRange: [1, 1, 1, 0]
+                                    })
+                                    return <TouchableOpacity style={[styles.latestItem, { opacity, transform: [{ scale }] }]}
                                         onPress={() => {
                                             if (searchText) {
                                                 navigation.navigate({
                                                     name: 'TabHypotheticalSearch',
                                                     params: { HorseName: item.HORSE_NAME, isSire: IsSire, HorseId: item.HORSE_ID },
-
+                                                    merge: true,
                                                 });
-
                                             }
                                             else {
                                                 alert("Please search the name first");
@@ -230,7 +225,8 @@ const HypotheticalSearchModalSire = ({ route, navigation }) => {
 
                                         </View>
 
-                                    </TouchableOpacity>}}
+                                    </TouchableOpacity>
+                                }}
                                 keyExtractor={item => item.HORSE_ID.toString()}
                             />
                         </View>
@@ -238,22 +234,23 @@ const HypotheticalSearchModalSire = ({ route, navigation }) => {
                         null
                     }
                 </View>
-                
-                    <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={() => navigation.goBack()} >
 
-                        <Text style={[styles.TextStyle, {
-                            color: '#2e3f6e'
-                        }]}>Close</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => navigation.goBack()} >
+
+                    <Text style={[styles.TextStyle, {
+                        color: '#2e3f6e'
+                    }]}>Close</Text>
+                </TouchableOpacity>
+            </View>
 
         </SafeAreaView>
 
     )
 }
 export default HypotheticalSearchModalSire;
+
 const { height } = Dimensions.get("screen");
 const { width } = Dimensions.get("screen");
 const height_logo = height * 0.1;
@@ -264,7 +261,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         marginTop: Platform.OS == 'android' ? 30 : 0,
-        padding:10
+        padding: 10
     },
     closeButton: {
         bottom: Platform.OS == 'android' ? 35 : 0,
@@ -597,7 +594,7 @@ const styles = StyleSheet.create({
     image: {
         width: AVATAR_SIZE,
         height: AVATAR_SIZE,
-        borderRadius: AVATAR_SIZE,
+        borderRadius: 10,
         marginRight: SPACING / 2
     },
     heightText: {
@@ -606,10 +603,10 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     flatList: {
-        height: Dimensions.get('screen').height / (Platform.OS== 'ios' ? 1.40 : 1.30),
+        height: Dimensions.get('screen').height / (Platform.OS == 'ios' ? 1.40 : 1.30),
         top: Platform.OS == 'ios' ? 0 : 15
     },
-  
+
     title: {
         fontSize: 32,
     },

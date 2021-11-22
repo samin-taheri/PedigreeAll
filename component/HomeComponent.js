@@ -3,7 +3,11 @@ import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Image, useWi
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
-const HomeComponent = ({ navigation }) => {
+import { useNavigation } from '@react-navigation/native';
+
+function HomeComponent({ props }) {
+
+    const navigation = useNavigation();
 
     const [Data, SetData] = useState([]);
     const [LatestAddedData, setLatestAddedData] = useState([]);
@@ -16,6 +20,8 @@ const HomeComponent = ({ navigation }) => {
     const separatorWidth2 = 30;
     const totalItemWidth2 = itemWidth2 + separatorWidth2;
     const [loader, setLoader] = React.useState(false)
+    const [getHorseId, setHorseId] = useState(0)
+    const [chekedItem, setChekedItem] = React.useState(5)
 
     const myFunctionRegistered = async () => {
         let isActive = true;
@@ -103,7 +109,7 @@ const HomeComponent = ({ navigation }) => {
         let isActive = true;
         const abortCtrl = new AbortController();
         const opts = {
-          
+
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -136,17 +142,17 @@ const HomeComponent = ({ navigation }) => {
                         HORSE_ID: i.HORSE_ID,
                         ADS_ID: i.ADS_ID,
                         HEADER: i.HEADER,
-                        ADS_CATEGORY:i.ADS_CATEGORY,
-                        IMAGE_LIST:i.IMAGE_LIST,
-                        LAST_TIME_TEXT:i.LAST_TIME_TEXT,
+                        ADS_CATEGORY: i.ADS_CATEGORY,
+                        IMAGE_LIST: i.IMAGE_LIST,
+                        LAST_TIME_TEXT: i.LAST_TIME_TEXT,
                         SEX: i.SEX,
-                        RACE:i.RACE,
-                        PRICE:i.PRICE,
+                        RACE: i.RACE,
+                        PRICE: i.PRICE,
                         CURRENCY: i.CURRENCY,
-                        HORSE_MOTHER_NAME:i.HORSE_MOTHER_NAME,
+                        HORSE_MOTHER_NAME: i.HORSE_MOTHER_NAME,
 
                     }
-                )))
+                    )))
                 if (isActive) {
                     setHorsesForSale(aa)
 
@@ -169,9 +175,8 @@ const HomeComponent = ({ navigation }) => {
         return () => abortCtrl.abort()
     }, []);
     return (
-        <ScrollView 
-        style={styles.container}
-        >
+        <ScrollView
+            style={styles.container}>
             <Myloader Show={loader} />
             <View style={{ top: 20 }}>
                 <Text style={[styles.heightText]}>Registered Stallions</Text>
@@ -189,12 +194,16 @@ const HomeComponent = ({ navigation }) => {
                     style={styles.flatList}
                     data={Data}
                     renderItem={({ item }) => (
-                        <TouchableOpacity style={styles.item}
-                        onPress={()=> {
-
-                            alert(item.HORSE_NAME)
-                        }}
-                        >
+                        <TouchableOpacity style={styles.item}  
+                            onPress={() => {
+                                navigation.navigate('HorseDetail', {
+                                    HORSE_NAME: item.HORSE_NAME,
+                                    HORSE_ID: item.HORSE_ID,
+                                    SECOND_ID: -1,
+                                    Generation: 5
+                                    })
+                            }}
+                            >
                             <Image style={styles.image}
                                 source={{ uri: item.IMAGE }}
                                 resizeMode="cover"
@@ -247,6 +256,14 @@ const HomeComponent = ({ navigation }) => {
                     data={LatestAddedData}
                     renderItem={({ item }) => (
                         <TouchableOpacity style={styles.latestItem}
+                        onPress={() => {
+                            navigation.navigate('HorseDetail', {
+                                HORSE_NAME: item.HORSE_NAME,
+                                HORSE_ID: item.HORSE_ID,
+                                Generation: 5,
+                                SECOND_ID: -1,
+                                })
+                        }}
                         >
                             <Image style={styles.image}
                                 source={{ uri: item.IMAGE }}
@@ -278,28 +295,24 @@ const HomeComponent = ({ navigation }) => {
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                           
+
                                     <Text style={[styles.textStyle2]}>Gender: </Text>
                                     <Text style={styles.textStyle}>
                                         {item.SEX_OBJECT.SEX_EN}
                                     </Text>
-                                    
-                                    <Text style={[styles.textStyle2, {paddingLeft: 20}]}>Class: </Text>
+
+                                    <Text style={[styles.textStyle2, { paddingLeft: 20 }]}>Class: </Text>
                                     <Text style={styles.textStyle}>
                                         {item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}
                                     </Text>
                                 </View>
-                            
-
-
                             </View>
-
                         </TouchableOpacity>)}
                     keyExtractor={item => item.HORSE_ID.toString()}
                 />
 
                 <Text style={styles.heightText}>Horses For Sale</Text>
-                 <FlatList horizontal={true}
+                <FlatList horizontal={true}
                     pagingEnabled
                     horizontal
                     getItemLayout={(data, index) => ({
@@ -310,10 +323,13 @@ const HomeComponent = ({ navigation }) => {
                     snapToInterval={totalItemWidth}
                     decelerationRate="fast"
                     bounces={false}
-                    style={[styles.flatList, {marginBottom: 25}]}
+                    style={[styles.flatList, { marginBottom: 25 }]}
                     data={HorsesForSale}
                     renderItem={({ item }) => (
                         <TouchableOpacity style={styles.item}
+                            onPress={() => {
+                                alert('Under Construction')
+                            }}
                         >
                             <Image style={styles.image}
                                 source={{ uri: item.IMAGE_LIST[0] }}
@@ -326,21 +342,21 @@ const HomeComponent = ({ navigation }) => {
                                         item.HEADER}
                                 </Text>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Ionicons name='female-outline' size={12} />
+                                    <Ionicons name='female-outline' size={12} />
 
                                     <Text style={styles.textStyle}>
                                         {item.HORSE_MOTHER_NAME}
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Ionicons name='copy-outline' size={12} />
+                                    <Ionicons name='copy-outline' size={12} />
                                     <Text style={styles.textStyle}>
                                         {item.ADS_CATEGORY.ADS_CATEGORY_EN} /{item.RACE.RACE_EN}
 
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Ionicons name='cash-outline' size={12} />
+                                    <Ionicons name='cash-outline' size={12} />
                                     <Text style={styles.textStyle}>
                                         {item.PRICE} {item.CURRENCY.ICON}
 
@@ -357,7 +373,6 @@ const HomeComponent = ({ navigation }) => {
         </ScrollView>
     );
 }
-
 const styles = StyleSheet.create({
     HorseName: {
         marginBottom: 10,
@@ -419,7 +434,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.34,
         shadowRadius: 4,
         elevation: 8,
-        zIndex:1
+        zIndex: 1
     },
     title: {
         fontSize: 32,
@@ -442,7 +457,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.34,
         shadowRadius: 4,
         elevation: 8,
-        zIndex:1
+        zIndex: 1
     },
 
 });

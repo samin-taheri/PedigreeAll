@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Linking, Dimensions, Animated, Platform, Modal, ActivityIndicator } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, Image, StyleSheet, ScrollView, Linking, Dimensions, Pressable, Platform, Modal, ActivityIndicator } from 'react-native';
+import { gestureHandlerRootHOC, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { Global } from './Global';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MyHeader from '../component/MyHeader';
@@ -10,10 +10,22 @@ import { Ionicons } from '@expo/vector-icons';
 import LoginScreen from './LoginScreen';
 import HorseDetailScreenPedigree from './HorseDetailScreenPedigree';
 import HorseDetailScreenProfile from './HorseDetailScreenProfile';
+import HorseDetailScreenProgency from './HorseDetailScreenProgency';
+import HorseDetailScreenNick from './HorseDetailScreenNick';
+import HorseDetailScreenFamily from './HorseDetailScreenFamily';
+import HorseDetailScreenSiblingMare from './HorseDetailScreenSiblingMare';
+import HorseDetailScreenSiblingSire from './HorseDetailScreenSiblingSire';
+import HorseDetailScreenTJK from './HorseDetailScreenTJK';
+import HorseDetailScreenSiblingBroodmareSire from './HorseDetailScreenSiblingBroodmareSire';
+import HorseDetailScreenBroodMareSire from './HorseDetailScreenBroodMareSire';
+import HorseDetailScreenTailFemale from './HorseDetailScreenTailFemale';
+import HorseDetailScreenLinebreeding from './HorseDetailScreenLinebreeding';
+import HorseDetailScreenFemaleFamily from './HorseDetailScreenFemaleFamily';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import WebView from 'react-native-webview';
+import Flag from "react-native-flags";
 
 const Tab = createMaterialTopTabNavigator();
 const windowWidth = Dimensions.get('window').width / 3;
@@ -21,25 +33,29 @@ const windowWidth = Dimensions.get('window').width / 3;
 const HorseDetailScreen = ({ route, navigation }) => {
 
   const { HORSE_NAME } = route.params;
+  const { MARE_NAME } = route.params;
   const { HORSE_ID } = route.params;
-  const { HORSE_NAME2 } = route.params;
+  const { SECOND_ID } = route.params;
   const { Generation } = route.params;
   const { Stallion } = route.params;
 
-  const [getHorseId, setHorseId] = React.useState(0);
+  const [getHorseId, setHorseId] = React.useState(-1);
+  const [getMareId, setMareId] = React.useState(-1);
 
-  const [HorseInformationData, setSearchHorseData] = useState();
-  Global.Generation = Generation;
+  const [HorseInformationData, setSearchHorseData] = React.useState();
   const [getData, setData] = React.useState([]);
   const [ModalText, setModalText] = useState();
   const [modalVisible, setModalVisible] = useState(false);
   const [FullScreenVisible, setFullScreenVisible] = useState(false);
   const [HorseInfo, setHorseInfo] = React.useState();
+  const [SocialMedia, setSocialMedia] = React.useState([]);
+  const [GenerationCount, setGenerationCount] = React.useState();
   const [getHorseGetByName, setHorseGetByName] = useState();
   const [getStatisticInfo, setStatisticInfo] = React.useState();
   const [getFoalInfo, setFoalInfo] = React.useState();
   const [getFoalNum, setFoalNum] = React.useState(1);
   const [time, setTime] = React.useState(true);
+  const [header, setHeader] = React.useState([]);
 
   const [getScreenName, setScreenName] = React.useState("Pedigree")
   const scrollRef = useRef(ScrollView);
@@ -79,13 +95,47 @@ const HorseDetailScreen = ({ route, navigation }) => {
 
   const [getFamilyLineColor, setFamilyLineColor] = React.useState("#fff");
   const [getFamilyColor, setFamilyColor] = React.useState("#000");
+  const [getHorseData, setHorseData] = React.useState(HORSE_ID)
+  const [isTJK, setIsTJK] = React.useState(false);
+  const [showHeader, setShowHeader] = useState(false)
+  const [Type, setType] = useState(1)
 
+  const readUser = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/Pedigree/GetPedigree?p_iGenerationCount=' + Generation + '&p_iFirstId=' + HORSE_ID + '&p_iSecondId=' + SECOND_ID, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            setHeader(json)
+            setSearchHorseData(json)
 
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+
+      }
+      else {
+        console.log("Basarisiz")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
   const readHorseInfo = async () => {
     try {
       const token = await AsyncStorage.getItem('TOKEN')
       if (token !== null) {
         fetch('https://api.pedigreeall.com/ImageInfo/GetById?p_iHorseId=' + HORSE_ID, {
+
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -94,8 +144,53 @@ const HorseDetailScreen = ({ route, navigation }) => {
           },
         }).then((response) => response.json())
           .then((json) => {
-            //console.log(json);
             setHorseInfo(json.m_cData);
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+      }
+      else { console.log("Basarisiz") }
+    }
+    catch (e) { console.log(e) }
+  }
+  const readSocialMedia = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/BitMap/GetSocialMediaImageForAllHorses?p_iHorseId=' + HORSE_ID + '&p_iLanguageId=2&p_iType=2', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        }).then((response) => response.json())
+          .then((json) => {
+            setSocialMedia(json);
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+      }
+      else { console.log("Basarisiz") }
+    }
+    catch (e) { console.log(e) }
+  }
+  const readGenerationCount = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/Pedigree/GetPedigree?p_iGenerationCount=1&p_iFirstId=' + HORSE_ID + '&p_iSecondId=' + SECOND_ID, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        }).then((response) => response.json())
+          .then((json) => {
+            setGenerationCount(json.m_cData);
           })
           .catch((error) => {
             console.error(error);
@@ -109,7 +204,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
     try {
       const token = await AsyncStorage.getItem('TOKEN')
       if (token !== null) {
-        fetch('https://api.pedigreeall.com/ParentPage/GetByIdAsNameAndId?p_iHorseId=' + HORSE_ID + "&p_iLanguageId=" + Global.Language, {
+        fetch('https://api.pedigreeall.com/ParentPage/GetByIdAsNameAndId?p_iHorseId=' + HORSE_ID + "&p_iLanguageId=2", {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -132,7 +227,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
     try {
       const token = await AsyncStorage.getItem('TOKEN')
       if (token !== null) {
-        fetch('https://api.pedigreeall.com/HorseInfo/GetFoals?p_iHorseId=' + HORSE_ID + "&p_iTypeId=" + FoalNum, {
+        fetch('https://api.pedigreeall.com/HorseInfo/GetFoals?p_iHorseId=' + HORSE_ID + "&p_iTypeId=1", {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -157,7 +252,6 @@ const HorseDetailScreen = ({ route, navigation }) => {
     try {
       const token = await AsyncStorage.getItem('TOKEN')
       if (token !== null) {
-        //console.log(atob('Z2ZydWx1dGFzQGhvdG1haWwuY29tOjEyMw=='))
         fetch('https://api.pedigreeall.com/Horse/GetByName', {
           method: 'POST',
           headers: {
@@ -172,6 +266,15 @@ const HorseDetailScreen = ({ route, navigation }) => {
         })
           .then((response) => response.json())
           .then((json) => {
+            setSearchHorseData(json)
+            var aa = [];
+            json.m_cData.map((i) => (
+              aa.push({
+                HORSE_DATA: i,
+                HORSE_ID: i.HORSE_ID
+              })
+            ))
+            setData(aa)
             setHorseGetByName(json.m_cData)
             setLoader(false)
           })
@@ -186,60 +289,199 @@ const HorseDetailScreen = ({ route, navigation }) => {
     }
   }
 
-  const myFunction = async () => {
-    let isActive = true;
-    let isSubscribed = true;
-    const abortCtrl = new AbortController();
-    const opts = {
-      signal: abortCtrl.signal,
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': "Basic " + "Z2ZydWx1dGFzQGhvdG1haWwuY29tOjE=",
-      },
-      body: JSON.stringify({
-        ID: 1,
-        NAME: HORSE_NAME,
-      })
-    };
-    fetch('https://api.pedigreeall.com/Horse/GetByName', opts)
-      .then((response) => response.json())
-      .then((json) => {
-        setSearchHorseData(json)
-        var aa = [];
-        json.m_cData.map((i, index) => (
-          aa.push({
-            HORSE_DATA: i,
-            HORSE_ID: i.HORSE_ID
-          })
-        ))
-
-        if (isSubscribed) {
-          setData(aa)
-          //console.log(aa)
-        }
-
-      })
-      .catch((error) => {
-
-        console.error(error);
-
-      })
-
-    return () => { abortCtrl.abort(), isActive = false, isSubscribed = false };
-  };
 
   useEffect(() => {
     setHorseId(route.params?.HorseId)
-    myFunction()
+    setMareId(route.params?.MareId)
+    readUser()
     readHorseGetByName()
     readHorseInfo();
     readFoalInfo();
+    readGenerationCount()
+    readStatisticInfo()
+    readSocialMedia()
   }, []);
+
 
   return (
     <View style={styles.Container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+
+        <View style={styles.FullScreenContainer}>
+          <View style={{ width: '100%', justifyContent: 'flex-end' }}>
+
+            <Pressable
+              style={{ paddingLeft: Platform.OS== 'ios'? 25: 10, paddingTop: Platform.OS== 'ios'? 25: 10, paddingBottom: Platform.OS== 'ios'? 0: 5, borderBottomWidth: 0.6, borderBottomColor: '#dedfe1', flexDirection: 'row' }}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Ionicons name="close-outline" size={35} color="black" />
+              <Text style={{ padding: Platform.OS== 'ios'? 15: 8, left: 10, fontSize: 15, fontWeight: 'bold' }}>{ModalText}</Text>
+            </Pressable>
+          </View>
+
+          {ModalText === "Information" &&
+            <>
+              {HorseInfo !== undefined ?
+                <View style={styles.ModalItemContainer}>
+                  <WebView
+                    source={{ html: "<body class='scrollHeight'>" + HorseInfo[0].INFO + "</body>" }}
+                    startInLoadingState={true}
+                    bounces={true}
+                    style={{ width: '100%', height: '100%' }}
+                    automaticallyAdjustContentInsets={true}
+                    javaScriptEnabledAndroid={true}
+                    scrollEnabled={true}
+                    renderLoading={() => (
+                      <ActivityIndicator
+                        style={styles.Activity}
+                        color='rgba(52, 77, 169, 0.6)'
+                        size='large'
+                      />)} />
+                </View>
+                : <Text>There is no information</Text>
+              }
+
+            </>
+            || ModalText === "Image" &&
+
+            <>
+              <Image style={styles.HorseImage} source={{ uri: HorseInfo[0].IMAGE_LIST[0] }} />
+            </>
+            || ModalText === "Instagram" &&
+
+            <>
+              <Image style={styles.HorseImage} source={{ uri: SocialMedia }} />
+            </>
+            || ModalText === "Statistics" &&
+            <>
+              {time ?
+                <ActivityIndicator style={styles.Activity} color="rgba(52, 77, 169, 0.6)" size="large" />
+                :
+                <>
+                  <ScrollView horizontal>
+                    <DataTable>
+                      <DataTable.Header>
+                        <DataTable.Title style={{ width: 350 }}>Name</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>Class</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>Point</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.2%' }]}>Earning</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.2%' }]}>Fam</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>Color</DataTable.Title>
+                        <DataTable.Title style={{ width: 400, left: '0.1%' }}>Dam</DataTable.Title>
+                        <DataTable.Title style={{ width: 400, left: '0.5%' }}>BroodMare Sire</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.9%' }]}>Birth D.</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.8%' }]}>Start</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.7%' }]}>1st</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.7%' }]}>1st %</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.6%' }]}>2nd</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.6%' }]}>2nd %</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.5%' }]}>3rd</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.5%' }]}>3rd %</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>4th</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>4th %</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>Price</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>Dr. RM</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>ANZ</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>PedigreeAll</DataTable.Title>
+                        <DataTable.Title style={{ width: 150, left: '0.2%' }}>Owner</DataTable.Title>
+                        <DataTable.Title style={{ width: 150, left: '0.2%' }}>Breeder</DataTable.Title>
+                        <DataTable.Title style={{ width: 150, left: '0.15%' }}>Coach</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>Dead</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>Update D.</DataTable.Title>
+                      </DataTable.Header>
+
+                      {getStatisticInfo.map((item, index) => (
+                        <View key={index}>
+                          <DataTable.Row centered={true} key={index}>
+                            <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
+                              <Flag code={item.ICON.toUpperCase()} size={16} />
+                            </DataTable.Cell>
+                            <DataTable.Cell
+                              onPress={() => { alert(item.HORSE_NAME) }}
+                              style={{ width: 350, left: '0.4%' }}>
+                              {item.HORSE_NAME}
+                            </DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+
+                            <DataTable.Cell style={styles.DataTableText}>{item.POINT}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText} >{item.EARN} {item.EARN_ICON}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.FAMILY_TEXT}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.COLOR_TEXT}</DataTable.Cell>
+                            <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
+                              <Flag code={item.MOTHER_ICON.toUpperCase()} size={16} />
+                            </DataTable.Cell>
+                            <DataTable.Cell
+                              onPress={() => { alert(item.MOTHER_NAME) }}
+                              style={{ width: 400, left: '0.4%' }}>
+                              {item.MOTHER_NAME}
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
+                              <Flag code={item.BM_SIRE_ICON.toUpperCase()} size={16} />
+                            </DataTable.Cell>
+                            <DataTable.Cell
+                              onPress={() => { alert(item.BM_SIRE_NAME) }}
+                              style={{ width: 400, left: '0.4%' }}>
+                              {item.BM_SIRE_NAME}
+                            </DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.HORSE_BIRTH_DATE_TEXT}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.START_COUNT}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.FIRST}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.FIRST_PERCENTAGE} %</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.SECOND}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.SECOND_PERCENTAGE} %</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.THIRD}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.THIRD_PERCENTAGE} %</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.FOURTH}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.FOURTH_PERCENTAGE} %</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.PRICE} {item.PRICE_ICON}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.RM}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.ANZ}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{item.PA}</DataTable.Cell>
+                            <DataTable.Cell
+                              onPress={() => { alert(item.OWNER) }}
+                              style={{ width: 150 }}>
+                              {item.OWNER}
+                            </DataTable.Cell>
+                            <DataTable.Cell
+                              onPress={() => { alert(item.BREEDER) }}
+                              style={{ width: 150 }}>
+                              {item.BREEDER}
+                            </DataTable.Cell>
+                            <DataTable.Cell
+                              onPress={() => { alert(item.COACH) }}
+                              style={{ width: 150 }}>
+                              {item.COACH}
+                            </DataTable.Cell>
+                            {item.IS_DEAD ?
+                              <>
+                                <DataTable.Cell style={styles.DataTableText}>DEAD</DataTable.Cell>
+                              </>
+                              :
+                              <>
+                                <DataTable.Cell style={styles.DataTableText}>ALIVE</DataTable.Cell>
+                              </>
+                            }
+                            <DataTable.Cell style={styles.DataTableText}>{item.EDIT_DATE_TEXT}</DataTable.Cell>
+                          </DataTable.Row>
+                        </View>
+                      ))}
+                    </DataTable>
+                  </ScrollView>
+                </>}
+            </>
+          }
+        </View>
+
+      </Modal>
+
       <View style={styles.headerContainer}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -252,33 +494,35 @@ const HorseDetailScreen = ({ route, navigation }) => {
             size={30}
           />
         </TouchableOpacity>
+
+
         <View style={{ marginBottom: 'auto', flexDirection: 'row', bottom: '3%', left: '25%' }}>
-          <Text style={styles.textStyles}>{HORSE_NAME}</Text>
-          {/*
-          <Text style={styles.textStyles}> {Generation}</Text>
-          <Text style={styles.textStyles}> {Stallion}</Text>
-        */}
+          {/*<Text style={styles.textStyles}>{HorseInformationData.m_cData.HEADER_OBJECT.ROW1_GENERAL}</Text>*/}
+          <Text style={styles.textStyles}>{HORSE_NAME}  {MARE_NAME}</Text>
         </View>
-
-
 
         <View style={{ bottom: '12%' }}>
           <View style={styles.StabilInformationButtonContainer3Value}>
             <TouchableOpacity
               onPress={() => {
-
+                setModalText("Information");
+                setModalVisible(true)
               }}
               style={styles.StabilInformationButton}>
               <Feather name="info" size={16} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                setModalText("Statistics")
+                setModalVisible(true)
               }}
               style={styles.StabilInformationButton}>
               <Ionicons name="stats-chart-outline" size={16} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                setModalText("Image");
+                setModalVisible(true)
               }}
               style={styles.StabilInformationButton}>
               <Feather name="image" size={16} color="#fff" />
@@ -295,12 +539,14 @@ const HorseDetailScreen = ({ route, navigation }) => {
               style={styles.StabilInformationButton}>
               <Feather name="file-text" size={16} color="#fff" />
             </TouchableOpacity>
+
             <TouchableOpacity
               onPress={() => {
-                //checkPermission();
+                setModalText("Instagram");
+                setModalVisible(true)
               }}
               style={styles.StabilInformationButton}>
-              <Feather name="image" size={16} color="#fff" />
+              <Ionicons name="logo-instagram" size={16} color="#fff" />
             </TouchableOpacity>
           </View>
 
@@ -935,27 +1181,27 @@ const HorseDetailScreen = ({ route, navigation }) => {
           {getScreenName === "Profile" &&
             <HorseDetailScreenProfile BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "Progency" &&
-            <HorseDetailScreenProfile BackButton={false} navigation={navigation} route={route} />
+            <HorseDetailScreenProgency BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "SiblingMare" &&
-            <HorseDetailScreenProfile BackButton={false} navigation={navigation} route={route} />
+            <HorseDetailScreenSiblingMare BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "SiblingSire" &&
-            <HorseDetailScreenProfile BackButton={false} navigation={navigation} route={route} />
+            <HorseDetailScreenSiblingSire BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "SiblingBroodmareSire" &&
-            <HorseDetailScreenProfile />
+            <HorseDetailScreenSiblingBroodmareSire BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "TailFemale" &&
-            <HorseDetailScreenProfile BackButton={false} navigation={navigation} route={route} />
+            <HorseDetailScreenTailFemale BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "BroodmareSire" &&
-            <HorseDetailScreenProfile />
+            <HorseDetailScreenBroodMareSire BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "Linebreeding" &&
-            <HorseDetailScreenProfile BackButton={false} navigation={navigation} route={route} />
+            <HorseDetailScreenLinebreeding BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "FemaleFamily" &&
-            <HorseDetailScreenProfile BackButton={false} navigation={navigation} route={route} />
+            <HorseDetailScreenFemaleFamily BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "TJK" &&
-            <HorseDetailScreenProfile />
+            <HorseDetailScreenTJK BackButton={false} navigation={navigation} route={route} />
             || getScreenName === "Nick" &&
-            <HorseDetailScreenProfile />
+            <HorseDetailScreenNick navigation={navigation} route={route} />
             || getScreenName === "Family" &&
-            <HorseDetailScreenProfile />
+            <HorseDetailScreenFamily navigation={navigation} route={route} />
           }
         </Animatable.View>
 
@@ -1130,6 +1376,102 @@ const styles = StyleSheet.create({
     height: '80%',
     resizeMode: 'contain',
     marginBottom: 20
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  FullScreenContainer: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    shadowColor: "#000",
+  },
+  ModalItemContainer: {
+    width: '100%',
+    padding: 15,
+    height: '95%',
+  },
+  DataTableText: {
+    width: 100
+  },
+  Activity: {
+    bottom: '50%', shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.27,
+    elevation: 4,
+    backgroundColor: '#fff',
+    width: '12%',
+    height: Platform.OS == 'ios' ? '5.5%' : '7%',
+    paddingLeft: Platform.OS == 'ios' ? 3 : 0,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center'
+  },
+  StatisticFoalContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignSelf: 'baseline',
+    padding: 10,
+    borderBottomWidth: 0.5,
+  },
+  StatisticFoalButtonText: {
+    fontWeight: '700',
+    fontSize: 15,
+    color: '#000'
+  },
+  StatisticFoalButton: {
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: 'silver',
+    marginLeft: 5,
+    backgroundColor: '#2169ab',
+    elevation: 2
   },
 })
 

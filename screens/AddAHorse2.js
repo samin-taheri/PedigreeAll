@@ -1315,24 +1315,17 @@ export function AddAHorse2({ navigation }) {
 
                 <RNPickerSelect
                   placeholder={{}}
-
-
                   style={
                     pickerSelectStyles
                   }
                   Icon={() => {
                     return <Ionicons style={{ paddingRight: '20%' }} name="chevron-down-outline" size={20} color="silver" />;
-
                   }}
-
-
                   useNativeAndroidPickerStyle={false}
                   onValueChange={(value) => { setCountryID(value); }}
                   items={CounrtyList}
                   value={getCountryID}
                   key={getCountryID}
-
-
                 />
               </View>
 

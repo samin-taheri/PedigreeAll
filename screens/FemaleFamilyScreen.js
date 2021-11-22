@@ -1,40 +1,67 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, Animated, Keyboard } from 'react-native'
+import { View, platform, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard, Platform } from 'react-native'
 import { SearchBar, ListItem } from "react-native-elements";
-import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from "react-native-vector-icons/FontAwesome5";
 import { Global } from './Global';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import * as Animatable from 'react-native-animatable';
-import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import MyHeader from '../component/MyHeader';
-import MyButton from '../component/MyButton';
+import RBSheet from "react-native-raw-bottom-sheet";
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
+import Feather from 'react-native-vector-icons/Feather';
 
+const GenerationData = [
+    {
+        id: "4",
+        title: "Generation",
+    },
+    {
+        id: "5",
+        title: "Generation",
+    },
+    {
+        id: "6",
+        title: "Generation",
+    },
+    {
+        id: "7",
+        title: "Generation",
+    },
+    {
+        id: "8",
+        title: "Generation",
+    },
+    {
+        id: "9",
+        title: "Generation",
+    },
+];
 faker.seed(10);
 const SPACING = 18;
 const AVATAR_SIZE = 55;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
-export function DeleteAHorseScreen({ navigation }) {
+function FemaleFamily({ route, navigation }) {
 
-    const BottomSheetLong = useRef();
     const [searchText, setSearchText] = React.useState("");
-
-    const [getHorseGetByName, setHorseGetByName] = React.useState([]);
-    const [getSelectedDeleteHorse, setSelectedDeleteHorse] = React.useState();
+    const [getHorseId, setHorseId] = React.useState(0);
+    const [getHorseData, setHorseData] = React.useState([]);
     const [loader, setLoader] = React.useState(false)
-    const [Isloading, setIsLoading] = React.useState(false)
     const [loaderText, setLoaderText] = React.useState("Lütfen Bekleyin..")
+    const [getData, setData] = React.useState([]);
+    const BottomSheetLong = useRef();
     const [Data, SetData] = useState([]);
+    const refRBSheetGeneration = useRef();
+    const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
+    const [state, setState] = React.useState({ checked: [] });
+    const [chekedItem, setChekedItem] = React.useState(5)
 
     const readHorseGetByName = async () => {
 
-        let isMounted = true;
+        let isSubscribed = true;
         try {
             const token = await AsyncStorage.getItem('TOKEN')
             if (token !== null) {
@@ -65,11 +92,12 @@ export function DeleteAHorseScreen({ navigation }) {
                                 IMAGE: i.IMAGE,
                             })
                         ))
-                        SetData(aa)
-                        setLoader(false)
-                        setHorseGetByName(json.m_cData)
-                        setLoaderText('Lütfen Bekleyin..')
-
+                        if (isSubscribed) {
+                            SetData(aa)
+                            setLoader(false)
+                            setHorseData(json.m_cData)
+                            setLoaderText('Lütfen Bekleyin..')
+                        }
                     })
 
                     .catch((error) => {
@@ -81,89 +109,67 @@ export function DeleteAHorseScreen({ navigation }) {
             }
         } catch (e) {
         }
+        return () => isSubscribed = false
     }
+    const readUser = async (text) => {
+        setData([])
 
-    const readDeleteAHorse = async (HORSE_ID) => {
-        try {
-            const token = await AsyncStorage.getItem('TOKEN')
-            if (token !== null) {
-                fetch('https://api.pedigreeall.com/Horse/Delete', {
+        if (text === "")
+            return
+        else {
+            try {
+                fetch('https://api.pedigreeall.com/Horse/GetByName', {
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': "Basic " + token,
+                        'Authorization': "Basic " + "Z2ZydWx1dGFzQGhvdG1haWwuY29tOjE=",
                     },
                     body: JSON.stringify({
-                        "HORSE_ID": HORSE_ID,
-
+                        ID: 1,
+                        NAME: text,
                     })
                 })
                     .then((response) => response.json())
                     .then((json) => {
-                        setLoaderText("Lütfen bekleyin..")
-                        setSearchText("")
+                        var aa = [];
+                        json.m_cData.map((i, index) => (
+                            aa.push({
+                                HORSE_DATA: i,
+                                HORSE_ID: i.HORSE_ID,
+
+                            })
+                        ))
+                        setData(aa)
+                        console.log(aa)
+                        setHorseData(json)
                         setLoader(false)
-                        navigation.navigate('Result', {
-                            res: JSON.stringify(json)
-                        })
-                        //setHorseAddRequestData(json.m_cData)
-                        //setTime(false)
-                        //console.log(json.m_cData)
                     })
                     .catch((error) => {
                         console.error(error);
                     })
+
+            } catch (e) {
             }
-            else {
-                console.log("Basarisiz")
-            }
-        } catch (e) {
-            console.log(e)
         }
     }
 
-    const [getSearchPlaceholder, setSearchPlaceholder] = React.useState("")
-    const [getDeleteButtonPlaceholder, setDeleteButtonPlaceholder] = React.useState("")
+    const [getSearchPlaceholder, setSearchPlaceholder] = React.useState("Please type here and press search .. ")
 
     React.useEffect(() => {
+        readUser()
+        setHorseId(route.params?.HorseId)
         setSearchText("")
-        setSearchPlaceholder("Please type here and press search .. ")
-        setDeleteButtonPlaceholder("Search")
+
     }, [])
-
-    const deleteMessage = (HorseID) =>
-        Alert.alert(
-            "Delete Horse",
-            "Are you sure you want to delete this Horse?",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                    onPress: () => {
-                        setLoader(false)
-
-                    }
-                },
-                {
-                    text: "Delete",
-                    onPress: () => readDeleteAHorse(HorseID)
-
-                }
-            ],
-            { cancelable: true }
-        );
-
-
-        const scrollY = React.useRef(new Animated.Value(0)).current;
-
+    const scrollY = React.useRef(new Animated.Value(0)).current;
     return (
         <View>
             <Myloader Show={loader} Text={loaderText} />
             <View style={styles.container}>
 
 
-                <MyHeader Title="Delete A Horse"
+                <MyHeader Title="Female Family"
                     onPress={() => navigation.goBack()}
                 >
 
@@ -210,7 +216,91 @@ export function DeleteAHorseScreen({ navigation }) {
                         }}
                     />
 
+                    <View style={{ bottom: 5 }}>
+                        <TouchableOpacity
+                            style={styles.action}
+                            onPress={() => {
+                                refRBSheetGeneration.current.open()
+                            }}>
 
+                            <Ionicons
+                                style={{ marginRight: 9, top: 3 }}
+                                name="aperture-outline"
+                                color="#2e3f6e"
+                                size={22}
+                            />
+                            <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{GenerationTitle}</Text>
+                            <Feather style={{ paddingLeft: '60%', top: '1%' }} name="chevron-down" color="grey" size={20} />
+
+                        </TouchableOpacity>
+
+
+                        <RBSheet hasDraggableIcon
+                            ref={refRBSheetGeneration}
+                            height={Dimensions.get('window').height / 2}
+                            animationType='fade'
+                            closeOnDragDown={true}
+                            closeOnPressMask={true}
+                            animationType='fade'
+                            customStyles={{
+                                container: {
+                                    borderTopLeftRadius: 10,
+                                    borderTopRightRadius: 10
+                                },
+
+                            }}
+                        >
+                            <View>
+                                <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
+                                    {Global.Language === 1 ?
+                                        <Text style={{ fontSize: 22, left: 5 }}>Nesiller:</Text>
+                                        :
+                                        <Text style={{ fontSize: 22, left: 5 }}>Generations:</Text>
+                                    }
+
+                                </View>
+                                <>
+
+                                    {GenerationData.length > 0 ?
+
+                                        <FlatList
+                                            scrollEnabled={true}
+                                            bounces={false}
+                                            style={styles.flatList}
+                                            data={GenerationData}
+
+                                            renderItem={({ item, i }) => (
+                                                <TouchableOpacity style={styles.latestItem}
+                                                    onPress={() => {
+                                                        setState({ checked: [state, item.id] });
+                                                        setChekedItem(item.id)
+                                                        setGenerationTitle("Generation " + item.id)
+                                                        refRBSheetGeneration.current.close();
+
+                                                    }}
+                                                >
+                                                    <Ionicons name="arrow-forward-outline" size={16} color="black" />
+
+                                                    <View style={{ flexDirection: 'row' }}>
+
+                                                        <Text style={styles.textStyle}>
+                                                            {item.title} {" "}
+                                                        </Text>
+                                                        <Text style={styles.textStyle}>
+                                                            {item.id}
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>)}
+                                            keyExtractor={item => item.id.toString()}
+                                        />
+                                        :
+                                        null
+                                    }
+                                </>
+                            </View>
+                        </RBSheet>
+
+                    </View>
                     <MyButtonEditDelete
                         Title="Search"
                         Icon="search-outline"
@@ -226,59 +316,54 @@ export function DeleteAHorseScreen({ navigation }) {
                         }}
                     >
                     </MyButtonEditDelete>
+
                     <View style={styles.Container}>
 
-                        {getHorseGetByName.length > 0 ?
+                        {getHorseData.length > 0 ?
 
                             <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseGetByName.length}) records</Text>
+                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseData.length}) records</Text>
                                     <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
                                 </View>
                                 <Animated.FlatList
                                     scrollEnabled={true}
                                     bounces={false}
                                     onScroll={Animated.event(
-                                        [{nativeEvent: {contentOffset: {y: scrollY}}}],
-                                        {useNativeDriver: true}
+                                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                                        { useNativeDriver: true }
                                     )}
                                     style={styles.flatList}
-                                    data={getHorseGetByName}
+                                    data={getHorseData}
 
                                     renderItem={({ item, index }) => {
                                         const opacityInputRange = [
                                             -1,
                                             0,
                                             ITEM_SIZE * index,
-                                            ITEM_SIZE * ( index + .5)
+                                            ITEM_SIZE * (index + .5)
                                         ]
                                         const inputRange = [
                                             -1,
                                             0,
                                             ITEM_SIZE * index,
-                                            ITEM_SIZE * ( index + 2)
+                                            ITEM_SIZE * (index + 2)
                                         ]
-                                         const scale = scrollY.interpolate({
-                                             inputRange,
-                                             outputRange: [1,1,1,0]
-                                         })
-                                         const opacity = scrollY.interpolate({
-                                            inputRange: opacityInputRange,
-                                            outputRange: [1,1,1,0]
+                                        const scale = scrollY.interpolate({
+                                            inputRange,
+                                            outputRange: [1, 1, 1, 0]
                                         })
-                                        return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
+                                        const opacity = scrollY.interpolate({
+                                            inputRange: opacityInputRange,
+                                            outputRange: [1, 1, 1, 0]
+                                        })
+                                        return <TouchableOpacity style={[styles.latestItem, { opacity, transform: [{ scale }] }]}
                                             onPress={() => {
-                                                setLoaderText(item.HORSE_NAME + ' işleniyor..')
-                                                setLoader(true)
-                                                BottomSheetLong.current.close();
-                                                setTimeout(() => {
-                                                    setSelectedDeleteHorse(item);
-                                                    deleteMessage(item.HORSE_ID);
-                                                }, 1500);
-
-
-                                                //BottomSheetLong.current.close();
-
+                                                navigation.navigate('HorseDetailScreenFemaleFamily', {
+                                                    HORSE_ID: item.HORSE_ID,
+                                                    Generation: chekedItem,
+                                                    SECOND_ID: -1,
+                                                })
                                             }}
                                         >
                                             <Image style={styles.image}
@@ -309,7 +394,8 @@ export function DeleteAHorseScreen({ navigation }) {
 
                                             </View>
 
-                                        </TouchableOpacity>}}
+                                        </TouchableOpacity>
+                                    }}
                                     keyExtractor={item => item.HORSE_ID.toString()}
                                 />
                             </View>
@@ -317,13 +403,12 @@ export function DeleteAHorseScreen({ navigation }) {
                             null
                         }
                     </View>
-
                 </MyHeader>
             </View>
         </View>
-
     )
 }
+export default FemaleFamily;
 const { height } = Dimensions.get("screen");
 const { width } = Dimensions.get("screen");
 const height_logo = height * 0.1;
@@ -633,13 +718,11 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     flatList: {
-        paddingBottom: 20,
-        paddingTop: 8,
-        borderTopWidth: 0.5,
-        borderTopColor: '#CFCFD5',
+        paddingBottom: 10,
+        paddingTop: 4,
         marginTop: 10,
         marginLeft: -15,
-        maxHeight: Dimensions.get('screen').height / 2.2,
+        maxHeight: Dimensions.get('screen').height / 2.8,
 
     },
     flatList2: {
@@ -668,13 +751,28 @@ const styles = StyleSheet.create({
     latestItem: {
         flexDirection: 'row',
         width: 360,
-        left: -10,
-        padding: 10,
+        left: 10,
+        padding: 7,
         marginVertical: 7,
         marginHorizontal: 16,
         zIndex: 1,
         borderBottomWidth: 0.5,
         borderBottomColor: '#d6d3d3',
     },
-
+    action: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        width: '95%',
+        left: '15%',
+        borderRadius: 8,
+        marginTop: 0,
+        height: 45,
+        borderWidth: 1,
+        borderColor: '#d4d2d2',
+        borderBottomWidth: 1,
+        padding: 8,
+        paddingRight: 'auto',
+        marginBottom: 15,
+        zIndex: 99,
+    },
 })
