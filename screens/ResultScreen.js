@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Image, TextInput, ToastAndroid, StyleSheet, StatusBar, ScrollView, Platform, TouchableOpacity, Dimensions } from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
-import RNPickerSelect from 'react-native-picker-select';
-import { Global } from './Global';
+import { View, Text, Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

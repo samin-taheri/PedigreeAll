@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
-  StatusBar,
   Linking,
   Text,
   Platform
@@ -16,7 +15,6 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
 import { SocialIcon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
 
 function CustomDrawerContent(props) {
 

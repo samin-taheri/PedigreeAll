@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
-import { FlatList, TextInput } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { Global } from './Global';
 import HomeComponent from '../component/HomeComponent';
 import { Ionicons } from '@expo/vector-icons';
 import MyButton from '../component/MyButton';
@@ -123,12 +122,8 @@ const TabSearch = ({ route, navigation }) => {
               >
                 <View>
                   <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                    {Global.Language === 1 ?
-                      <Text style={{ fontSize: 22, left: 5 }}>Nesiller:</Text>
-                      :
                       <Text style={{ fontSize: 22, left: 5 }}>Generations:</Text>
-                    }
-
+                    
                   </View>
                   <>
 

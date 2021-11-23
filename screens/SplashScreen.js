@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {View, ImageBackground, Image, StyleSheet,ActivityIndicator} from 'react-native'
-import * as Animatable from 'react-native-animatable';
 
 export function SplashScreen({navigation}) {
    
@@ -17,12 +16,8 @@ export function SplashScreen({navigation}) {
           source={require('../assets/logoWhite.png')}
           style={styles.image}>
           </Image>
-       
         </View>
-        
       </ImageBackground>
-
-      
     )
   }
 

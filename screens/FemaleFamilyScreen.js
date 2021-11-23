@@ -1,12 +1,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { View, platform, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard, Platform } from 'react-native'
-import { SearchBar, ListItem } from "react-native-elements";
+import { SearchBar } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Global } from './Global';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import MyHeader from '../component/MyHeader';
 import RBSheet from "react-native-raw-bottom-sheet";
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
@@ -252,12 +250,8 @@ function FemaleFamily({ route, navigation }) {
                         >
                             <View>
                                 <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                                    {Global.Language === 1 ?
-                                        <Text style={{ fontSize: 22, left: 5 }}>Nesiller:</Text>
-                                        :
                                         <Text style={{ fontSize: 22, left: 5 }}>Generations:</Text>
-                                    }
-
+                                    
                                 </View>
                                 <>
 

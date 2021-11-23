@@ -1,9 +1,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Easing, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, SafeAreaView, Button, Keyboard, Platform } from 'react-native'
+import { View, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, SafeAreaView, Button, Keyboard, Platform } from 'react-native'
 import { SearchBar, ListItem } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Global } from './Global';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
 import faker from 'faker'

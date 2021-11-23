@@ -2,16 +2,10 @@ import React, { useState, useRef, useEffect } from 'react'
 import { View, Linking, Text, StyleSheet, Image, Dimensions, ScrollView, Platform, TouchableOpacity, TextInput, Alert, StatusBar } from 'react-native'
 import Icon from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Animatable from 'react-native-animatable';
-import { Global } from './Global';
 import { SocialIcon } from 'react-native-elements';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
 import * as Haptics from 'expo-haptics';
-import { showMessage } from '../Helpers';
-import { Ionicons } from '@expo/vector-icons';
-import { CardStyleInterpolators } from '@react-navigation/stack';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
 
@@ -63,14 +57,9 @@ export function ContactScreen({ navigation }) {
   const [getSubmitButton, setSubmitButton] = React.useState("")
 
   React.useLayoutEffect(() => {
-    if (Global.Language === 1) {
-      setMessagePlaceholder("Mesaj")
-      setSubmitButton("Gönder")
-    }
-    else {
-      setMessagePlaceholder("Message")
-      setSubmitButton("Submit")
-    }
+    setMessagePlaceholder("Message")
+    setSubmitButton("Submit")
+
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
@@ -135,166 +124,166 @@ export function ContactScreen({ navigation }) {
         onPress={() => navigation.goBack()}
         Title="Contact Us"
       >
-            <View style={{ padding: 20 }}>
-            <ScrollView >
+        <View style={{ padding: 20 }}>
+          <ScrollView >
 
-        <Text style={styles.text_footer}>Name</Text>
-        <View style={styles.action}>
-          <Feather
-            name="user"
-            color="#2e3f6e"
-            size={20}
-          />
-          <TextInput
-            placeholder="Your Name"
-            name={"username"}
-            value={getName}
-            onChangeText={setName}
-            style={styles.textInput}
-          />
+            <Text style={styles.text_footer}>Name</Text>
+            <View style={styles.action}>
+              <Feather
+                name="user"
+                color="#2e3f6e"
+                size={20}
+              />
+              <TextInput
+                placeholder="Your Name"
+                name={"username"}
+                value={getName}
+                onChangeText={setName}
+                style={styles.textInput}
+              />
 
-        </View>
+            </View>
 
-        <View >
-          <Text style={styles.text_footer}>Email & Phone</Text>
-          <View style={styles.action}>
-            <Feather
-              name="mail"
-              color="#2e3f6e"
-              size={20}
-            />
-            <TextInput
-              placeholder="Your Email & Phone"
-              keyboardType={"email-address"}
-              name={"mail"}
-              value={getEmail}
-              onChangeText={setEmail}
-              style={styles.textInput}
-            />
-          </View>
+            <View >
+              <Text style={styles.text_footer}>Email & Phone</Text>
+              <View style={styles.action}>
+                <Feather
+                  name="mail"
+                  color="#2e3f6e"
+                  size={20}
+                />
+                <TextInput
+                  placeholder="Your Email & Phone"
+                  keyboardType={"email-address"}
+                  name={"mail"}
+                  value={getEmail}
+                  onChangeText={setEmail}
+                  style={styles.textInput}
+                />
+              </View>
 
-        </View>
+            </View>
 
-        <View >
-          <Text style={styles.text_footer}>Message</Text>
-          <View style={[styles.action, { height: 70 }]}>
-            <Feather
-              name="message-square"
-              color="#2e3f6e"
-              size={20}
-              style={{ marginBottom: 'auto' }}
-            />
-            <TextInput
-              style={[styles.textInput, { marginBottom: 'auto' }]}
-              placeholder="Type a Message"
-              name={"message"}
-              value={getMessage}
-              onChangeText={setMessage}
-              multiline={true}
+            <View >
+              <Text style={styles.text_footer}>Message</Text>
+              <View style={[styles.action, { height: 70 }]}>
+                <Feather
+                  name="message-square"
+                  color="#2e3f6e"
+                  size={20}
+                  style={{ marginBottom: 'auto' }}
+                />
+                <TextInput
+                  style={[styles.textInput, { marginBottom: 'auto' }]}
+                  placeholder="Type a Message"
+                  name={"message"}
+                  value={getMessage}
+                  onChangeText={setMessage}
+                  multiline={true}
 
-            />
-          </View>
+                />
+              </View>
 
-        </View>
+            </View>
 
-        <View style={{ marginTop: 10 }}>
-          
-          <MyButton
-              Title="Submit"
-              Icon="checkmark-circle-outline"
-              IconSize={24}
-              onPress={async (e) => {
-                if (Platform.OS != "web")
-                  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
-                if (getEmail === '' || getEmail === '' || getMessage === '') {
-                  Toast.show({
-                    type: 'error',
-                    position: 'top',
-                    text1: 'Hata',
-                    text2: 'Please fill the blanks before you submit!',
-                    visibilityTime: 4000,
-                    autoHide: true,
-                    topOffset: StatusBar.currentHeight || 42,
-                    bottomOffset: 40,
-                    onShow: () => { },
-                    onHide: () => { },
-                    onPress: () => { }
-                  })
-                }
-                else {
+            <View style={{ marginTop: 10 }}>
+
+              <MyButton
+                Title="Submit"
+                Icon="checkmark-circle-outline"
+                IconSize={24}
+                onPress={async (e) => {
                   if (Platform.OS != "web")
-                    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-                  Toast.show({
-                    type: 'success',
-                    position: 'top',
-                    text1: 'başarılı',
-                    text2: 'Congrats! You have submitted successfully.',
-                    visibilityTime: 4000,
-                    autoHide: true,
-                    topOffset: StatusBar.currentHeight || 42,
-                    bottomOffset: 40,
-                    onShow: () => { navigation.navigate("Home") },
-                    onHide: () => { },
-                    onPress: () => { }
-  
-                  })
-                  readSendEmail();
+                    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+                  if (getEmail === '' || getEmail === '' || getMessage === '') {
+                    Toast.show({
+                      type: 'error',
+                      position: 'top',
+                      text1: 'Hata',
+                      text2: 'Please fill the blanks before you submit!',
+                      visibilityTime: 4000,
+                      autoHide: true,
+                      topOffset: StatusBar.currentHeight || 42,
+                      bottomOffset: 40,
+                      onShow: () => { },
+                      onHide: () => { },
+                      onPress: () => { }
+                    })
+                  }
+                  else {
+                    if (Platform.OS != "web")
+                      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+                    Toast.show({
+                      type: 'success',
+                      position: 'top',
+                      text1: 'başarılı',
+                      text2: 'Congrats! You have submitted successfully.',
+                      visibilityTime: 4000,
+                      autoHide: true,
+                      topOffset: StatusBar.currentHeight || 42,
+                      bottomOffset: 40,
+                      onShow: () => { navigation.navigate("Home") },
+                      onHide: () => { },
+                      onPress: () => { }
+
+                    })
+                    readSendEmail();
+                  }
                 }
-              }
-  
-              }
-            >
-            </MyButton>
-        </View>
-        <View style={{ alignItems: 'center', top: 20, color: '#2e3f6e', fontSize: 15 }}>
-          <Text>Thank You For Contacting Us!</Text>
-        </View>
-        <View style={styles.Socialcontainer}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{ flexDirection: 'column' }}>
+
+                }
+              >
+              </MyButton>
+            </View>
+            <View style={{ alignItems: 'center', top: 20, color: '#2e3f6e', fontSize: 15 }}>
+              <Text>Thank You For Contacting Us!</Text>
+            </View>
+            <View style={styles.Socialcontainer}>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <View style={{ flexDirection: 'column' }}>
 
 
-                <SocialIcon style={{ width: 40, height: 40, }}
-                  type="facebook"
-                  light
-                  onPress={() => { Linking.openURL('https://www.facebook.com/pedigreeallcom'); }}
+                    <SocialIcon style={{ width: 40, height: 40, }}
+                      type="facebook"
+                      light
+                      onPress={() => { Linking.openURL('https://www.facebook.com/pedigreeallcom'); }}
 
-                />
-              </View>
-              <View style={{ flexDirection: 'column' }}>
-                <SocialIcon style={{ width: 40, height: 40 }}
-                  type="instagram"
-                  light
-                  onPress={() => { Linking.openURL('https://www.instagram.com/pedigreeallcom/'); }}
-                />
-              </View>
-              <View style={{ flexDirection: 'column' }}>
-                <SocialIcon style={{ width: 40, height: 40 }}
-                  type="linkedin"
-                  light
-                  onPress={() => { Linking.openURL('https://www.linkedin.com/company/pedigreeall'); }}
-                />
-              </View>
+                    />
+                  </View>
+                  <View style={{ flexDirection: 'column' }}>
+                    <SocialIcon style={{ width: 40, height: 40 }}
+                      type="instagram"
+                      light
+                      onPress={() => { Linking.openURL('https://www.instagram.com/pedigreeallcom/'); }}
+                    />
+                  </View>
+                  <View style={{ flexDirection: 'column' }}>
+                    <SocialIcon style={{ width: 40, height: 40 }}
+                      type="linkedin"
+                      light
+                      onPress={() => { Linking.openURL('https://www.linkedin.com/company/pedigreeall'); }}
+                    />
+                  </View>
 
-              <View style={{ flexDirection: 'column' }}>
-                <SocialIcon style={{ width: 40, height: 40 }}
-                  type="twitter"
-                  light
-                  onPress={() => { Linking.openURL('https://twitter.com/pedigreeall'); }}
-                />
+                  <View style={{ flexDirection: 'column' }}>
+                    <SocialIcon style={{ width: 40, height: 40 }}
+                      type="twitter"
+                      light
+                      onPress={() => { Linking.openURL('https://twitter.com/pedigreeall'); }}
+                    />
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
-        </ScrollView>
-        </View>
-           
+
       </MyHeader>
     </View>
 

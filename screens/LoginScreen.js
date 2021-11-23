@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Alert, Text, Modal, Error, TextInput, StyleSheet, StatusBar, Platform, Dimensions, ImageBackground, Button } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { showMessage } from '../Helpers';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { decode as atob, encode as btoa } from 'base-64'
@@ -17,7 +15,6 @@ const STORAGE_KEY = "USER"
 //const axios = require('axios').default;
 
 const LoginScreen = ({ navigation }) => {
-
 
   const [data, setData] = React.useState({
 
@@ -44,9 +41,6 @@ const LoginScreen = ({ navigation }) => {
   const [getSignUpText, setSignUpText] = React.useState("")
   const [getEmailPlaceholderText, setEmailPlaceholderText] = React.useState("")
   const [getPasswordPlaceholderText, setPasswordPlaceholderText] = React.useState("")
-
-  const [getForgotPasswordPopup, setForgotPasswordPopup] = React.useState(false);
-
 
   const saveData = async (data, email, password) => {
     try {
@@ -81,33 +75,19 @@ const LoginScreen = ({ navigation }) => {
       ]
     );
   React.useEffect(() => {
-    if (Global.Language === 1) {
-      setEmailPlaceholder("Epostanızı Giriniz")
-      setPasswordPlaceholder("Şifrenizi Giriniz")
-      setFotgotPasswordText("Şifremi Unuttum")
-      setSignInButtonText("Giriş Yap")
-      setNewToPedigreeText("PedigreeAll'da Yeni Misin?")
-      setSignUpText("Üye Ol")
-      setEmailPlaceholderText("Eposta")
-      setPasswordPlaceholderText("Şifre")
-    }
-    else {
-      setEmailPlaceholder("Enter Your Email")
-      setPasswordPlaceholder("Enter Your Password")
-      setFotgotPasswordText("Forgot Password ?")
-      setSignInButtonText("Sign In")
-      setNewToPedigreeText("New to PedigreeAll")
-      setSignUpText("Sign Up")
-      setEmailPlaceholderText("Email")
-      setPasswordPlaceholderText("Password")
-    }
+    setEmailPlaceholder("Enter Your Email")
+    setPasswordPlaceholder("Enter Your Password")
+    setFotgotPasswordText("Forgot Password ?")
+    setSignInButtonText("Sign In")
+    setNewToPedigreeText("New to PedigreeAll")
+    setSignUpText("Sign Up")
+    setEmailPlaceholderText("Email")
+    setPasswordPlaceholderText("Password")
+
   }, []);
 
   return (
     <View style={styles.container}>
-
-
-
       <MyHeader
         showLogoWithoutBack={true}
       >

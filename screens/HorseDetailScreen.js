@@ -1,13 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Linking, Dimensions, Pressable, Platform, Modal, ActivityIndicator } from 'react-native';
-import { gestureHandlerRootHOC, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { Global } from './Global';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/FontAwesome5";
-import MyHeader from '../component/MyHeader';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { DataTable } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import LoginScreen from './LoginScreen';
 import HorseDetailScreenPedigree from './HorseDetailScreenPedigree';
 import HorseDetailScreenProfile from './HorseDetailScreenProfile';
 import HorseDetailScreenProgency from './HorseDetailScreenProgency';
@@ -27,9 +23,6 @@ import * as Animatable from 'react-native-animatable';
 import WebView from 'react-native-webview';
 import Flag from "react-native-flags";
 
-const Tab = createMaterialTopTabNavigator();
-const windowWidth = Dimensions.get('window').width / 3;
-
 const HorseDetailScreen = ({ route, navigation }) => {
 
   const { HORSE_NAME } = route.params;
@@ -37,7 +30,6 @@ const HorseDetailScreen = ({ route, navigation }) => {
   const { HORSE_ID } = route.params;
   const { SECOND_ID } = route.params;
   const { Generation } = route.params;
-  const { Stallion } = route.params;
 
   const [getHorseId, setHorseId] = React.useState(-1);
   const [getMareId, setMareId] = React.useState(-1);

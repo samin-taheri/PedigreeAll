@@ -9,8 +9,6 @@ const PedigreeHTML =
   "<style>.pedigree-table { font-size: 13px; line-height: normal; font-weight: bold; border-collapse: collapse; border-spacing: 1px; width: 100%; border: 1px solid #737373; table-layout: fixed; }.pedigree-table td.pedigree-cell { border: 1px solid #737373; padding: 2px; text-align: center; vertical-align: middle; } .background-M, .background-M A { color: #9c4d4d; } .background-M { border-radius: 1px; background-image: linear-gradient(to bottom,#dbe8f3 0,#c7e5ff 100%) } .HorseName { font-family: 'Verdana'; font-size: 7pt; font-weight: 600; color: #000 !important; } td p { font-size: 8pt; } .HorseName:hover { text-decoration: underline; } .background-F { border-radius: 1px; border-color: #ce8080; background-color: #fedcdc; background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgeG1sbnM9Imh0d…0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2xlc3NoYXQtZ2VuZXJhdGVkKSIgLz48L3N2Zz4=); background-image: -webkit-linear-gradient(top,#fff0f0 0,#ffe9e9 100%); background-image: -moz-linear-gradient(top,#fff0f0 0,#ffe9e9 100%); background-image: -o-linear-gradient(top,#fff0f0 0,#ffe9e9 100%); background-image: linear-gradient(to bottom,#fff0f0 0,#ffe9e9 100%); }</style>"
   ;
 
-
-// <Text>{Global.HorseDetail.m_cData.PEDIGREE_CELL_LIST[1][0].HORSE_NAME}</Text>
 function HorseDetailScreenPedigree({ navigation, route }) {
   const [time, setTime] = React.useState(true);
   const [getPedigreeReport, setPedigreeReport] = React.useState();
@@ -61,12 +59,6 @@ function HorseDetailScreenPedigree({ navigation, route }) {
     });
   }
 
-  async function asyncCall() {
-    const result = await resolveAfter2Seconds();
-    setTime(false);
-    // expected output: "resolved"
-  }
-
   React.useEffect(() => {
 
     const unsubscribe = navigation.addListener('focus', () => {
@@ -86,10 +78,6 @@ function HorseDetailScreenPedigree({ navigation, route }) {
 
   }, [])
 
-  const onMessage = (event) => {
-    //setWebViewHeight((event.nativeEvent.data));
-    alert((event.nativeEvent.data))
-  }
   const webViewScript = `
   setTimeout(function() { 
     window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight); 
@@ -126,7 +114,6 @@ function HorseDetailScreenPedigree({ navigation, route }) {
   )
 }
 export default HorseDetailScreenPedigree;
-//c7e5ff, fedcdc
 const styles = StyleSheet.create({
 
   HorseDetailContainer: {

@@ -3,17 +3,11 @@ import { View, Text, Image, TextInput, ToastAndroid, StyleSheet, StatusBar, Scro
 import * as Animatable from 'react-native-animatable';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
 import RNPickerSelect from 'react-native-picker-select';
-import { Global } from './Global';
-import Flag from "react-native-flags";
-//import { Checkbox } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import * as Haptics from 'expo-haptics';
-import { SearchBar } from 'react-native-elements';
 import CheckBox1 from '../component/CheckBox1';
 import CheckBox2 from '../component/CheckBox2';
-//import { showMessage } from '../Helpers';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
 
@@ -57,9 +51,6 @@ function showMessage(data, navigation) {
     });
   }
 }
-
-
-
 
 export function MyAccountScreen({ route, navigation }) {
 
@@ -107,7 +98,8 @@ export function MyAccountScreen({ route, navigation }) {
   const [getKurumsalText, setKurumsalText] = React.useState("")
   const [getSaveButtonText, setSaveButtonText] = React.useState("")
   const [CounrtyList, setCountryList] = useState([])
-  
+  const [getProfileData, setProfileData] = useState([])
+
   const readDataCountryList = async (data) => {
     fetch('https://api.pedigreeall.com/Country/Get', {
       method: 'GET',
@@ -117,8 +109,6 @@ export function MyAccountScreen({ route, navigation }) {
       },
 
     })
-
-
       .then((response) => response.json())
       .then((json) => {
         var list = [];
@@ -137,65 +127,65 @@ export function MyAccountScreen({ route, navigation }) {
       })
   }
 
-  React.useEffect(() => {
-    readDataCountryList();
+  const readUser = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/SystemUser/GetByProfile', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            setProfileData(json.m_cData)
+          })
+          .catch((error) => {
+            console.error(error);
+          })
 
-    if (Global.Language === 1) {
-      setEmailPlaceholder("Epostanızı Giriniz")
-      setPasswordPlaceholder("Şifrenizi Giriniz")
-      setPasswordAgainPlaceholder("Şifrenizi Tekrar Giriniz")
-      setNamePlaceholder("Adınızı Giriniz")
-      setSurnamePlaceholder("Soyadınızı Giriniz")
-      setTitlePlaceholder("ÜnvanInınzı Giriniz")
-      setPassportPlaceholder("ID/Passport/Tax No'nuzu Giriniz")
-      setTaxOfficePlaceholder("Tax Office'nizi Giriniz")
-      setAddressPlaceholder("Adresinizi Giriniz")
-      setPhonePlaceholder("Telefonnunuzu Giriniz")
-      setSelectACountryText("Ülke Seçiniz")
-      setEmailText("Eposta")
-      setPasswordText("Şifre")
-      setPasswordAgainText("Şifre Tekrar")
-      setNameText("Ad")
-      setSurnameText("Soyad")
-      setTitleText("Ünvan")
-      setPassportText("ID/Passport/Tax No")
-      setTaxOfficeText("Tax Office")
-      setAddressText("Adres")
-      setPhoneText("telefon")
-      setCountryText("Ülke")
-      setMemberTypeText("Üye Tipi")
-      setBireyselText("Bireysel")
-      setKurumsalText("Kurumsal")
-      setSaveButtonText("Kaydet")
+      }
+      else {
+        console.log("Basarisiz")
+      }
+    } catch (e) {
+      console.log(e)
     }
-    else {
-      setEmailPlaceholder("Enter Your Email")
-      setPasswordPlaceholder("Enter Your Password")
-      setPasswordAgainPlaceholder("Your Password Again")
-      setNamePlaceholder("Enter Your Name")
-      setSurnamePlaceholder("Enter Your Surname")
-      setTitlePlaceholder("Enter Your Title")
-      setPassportPlaceholder("Enter Your ID/Passport/Tax No")
-      setTaxOfficePlaceholder("Enter Your Tax Office")
-      setAddressPlaceholder("Enter Your Address")
-      setPhonePlaceholder("Enter Your Telephone")
-      setSelectACountryText("Select Your Country")
-      setEmailText("Email")
-      setPasswordText("Password")
-      setPasswordAgainText("Confirm Password")
-      setNameText("Name")
-      setSurnameText("Surname")
-      setTitleText("Title")
-      setPassportText("ID/Passport/Tax No")
-      setTaxOfficeText("Tax Office")
-      setAddressText("Address")
-      setPhoneText("Telephone")
-      setCountryText("Country")
-      setMemberTypeText("Member Type")
-      setBireyselText("Personal")
-      setKurumsalText("Legal Entity")
-      setSaveButtonText("Save")
-    }
+  }
+
+  React.useEffect(() => {
+    readUser();
+    readDataCountryList();
+    setEmailPlaceholder("Enter Your Email")
+    setPasswordPlaceholder("Enter Your Password")
+    setPasswordAgainPlaceholder("Your Password Again")
+    setNamePlaceholder("Enter Your Name")
+    setSurnamePlaceholder("Enter Your Surname")
+    setTitlePlaceholder("Enter Your Title")
+    setPassportPlaceholder("Enter Your ID/Passport/Tax No")
+    setTaxOfficePlaceholder("Enter Your Tax Office")
+    setAddressPlaceholder("Enter Your Address")
+    setPhonePlaceholder("Enter Your Telephone")
+    setSelectACountryText("Select Your Country")
+    setEmailText("Email")
+    setPasswordText("Password")
+    setPasswordAgainText("Confirm Password")
+    setNameText("Name")
+    setSurnameText("Surname")
+    setTitleText("Title")
+    setPassportText("ID/Passport/Tax No")
+    setTaxOfficeText("Tax Office")
+    setAddressText("Address")
+    setPhoneText("Telephone")
+    setCountryText("Country")
+    setMemberTypeText("Member Type")
+    setBireyselText("Personal")
+    setKurumsalText("Legal Entity")
+    setSaveButtonText("Save")
+
   }, []);
 
 
@@ -224,22 +214,6 @@ export function MyAccountScreen({ route, navigation }) {
 
   };
   */
-  const textInputChange = (val) => {
-    if (val.length !== 0) {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: true
-      });
-    } else {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: false
-      });
-    }
-  }
-
   const updateSecureTextEntry = () => {
     setData({
       ...data,
@@ -257,7 +231,6 @@ export function MyAccountScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-
 
       <MyHeader
         onPress={() => navigation.goBack()}
@@ -311,8 +284,6 @@ export function MyAccountScreen({ route, navigation }) {
                   name={"password"}
                   value={password}
                   onChangeText={setPassword}
-                //onChangeText={(val) => handlePasswordChange(val)}
-
                 />
                 <TouchableOpacity
                   onPress={updateSecureTextEntry}
@@ -352,7 +323,6 @@ export function MyAccountScreen({ route, navigation }) {
                   name={"password"}
                   value={password_again}
                   onChangeText={setPassword_again}
-                //onChangeText={(val) => handleConfirmPasswordChange(val)}
                 />
                 <TouchableOpacity
                   onPress={updateConfirmSecureTextEntry}
@@ -386,7 +356,6 @@ export function MyAccountScreen({ route, navigation }) {
                   style={styles.textInput}
                   value={name}
                   onChangeText={setname}
-                //onChangeText={(val) => textInputChange(val)}
                 />
                 {data.check_textInputChange ?
                   <Animatable.View
@@ -518,9 +487,6 @@ export function MyAccountScreen({ route, navigation }) {
 
 
             <View >
-
-
-
               <Text style={styles.text_footer}>{getCountryText}</Text>
               <View style={styles.action}>
                 <Feather
@@ -544,7 +510,6 @@ export function MyAccountScreen({ route, navigation }) {
                     />;
 
                   }}
-
 
                   useNativeAndroidPickerStyle={false}
                   onValueChange={(value) => { setCountryID(value); }}
@@ -670,16 +635,6 @@ export function MyAccountScreen({ route, navigation }) {
                     .then((response) => response.json())
                     .then((json) => {
                       showMessage(json, navigation);
-                      // alert(json.m_lUserMessageList[0])
-                      //console.log(name)
-                      //console.log(surname)
-                      //console.log(email)
-                      //console.log(password)
-                      //console.log(password_again)
-                      //console.log(checked_1)
-                      //console.log(checked_2)
-                      //console.log(countryID)
-                      //navigation.navigate("MainDrawer")
                     })
                     .catch((error) => {
                       console.error(error);
@@ -707,36 +662,36 @@ export default MyAccountScreen;
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-      paddingHorizontal: 16,
-      fontSize: 15,
-      flex: 1,
-      marginTop: -20,
-      minHeight: 56,
-      maxHeight: 56,
-      width: '100%',
-      bottom: 5,
-      left: 15,
-      borderRadius: 4,
-      marginBottom: 0,
-      justifyContent: 'center',
-      paddingTop: 5,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    flex: 1,
+    marginTop: -20,
+    minHeight: 56,
+    maxHeight: 56,
+    width: '100%',
+    bottom: 5,
+    left: 15,
+    borderRadius: 4,
+    marginBottom: 0,
+    justifyContent: 'center',
+    paddingTop: 5,
   },
   viewContainer: {
-      flex: 1,
+    flex: 1,
   },
   inputAndroid: {
-      marginLeft: 10,
-      color: 'black',
-      marginTop: -20,
-      fontSize: 15,
-      flex: 1,
-      minHeight: 56,
-      maxHeight: 56,
-      width: windowWidth,
-      borderRadius: 4,
-      justifyContent: 'center',
-      paddingTop: 8,
-      left: 0,
+    marginLeft: 10,
+    color: 'black',
+    marginTop: -20,
+    fontSize: 15,
+    flex: 1,
+    minHeight: 56,
+    maxHeight: 56,
+    width: windowWidth,
+    borderRadius: 4,
+    justifyContent: 'center',
+    paddingTop: 8,
+    left: 0,
   },
   placeholder: { color: '#9a9aa1', fontSize: 14 },
 });

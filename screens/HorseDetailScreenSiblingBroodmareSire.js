@@ -5,7 +5,7 @@ import { DataTable } from 'react-native-paper';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Flag from "react-native-flags";
 
-function HorseDetailScreenSiblingBroodmareSire({ BackButton, navigation, route }) {
+function HorseDetailScreenSiblingBroodmareSire({ navigation, route }) {
     const [time, setTime] = React.useState(true);
     const [getSiblingBroodmareSire, setSiblingBroodmareSire] = React.useState([]);
     const { HORSE_ID } = route.params;

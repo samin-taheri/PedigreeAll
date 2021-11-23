@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform, ScrollView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
-import { Global } from './Global';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import HomeComponent from '../component/HomeComponent';

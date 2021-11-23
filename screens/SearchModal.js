@@ -1,13 +1,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Easing, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard, Platform } from 'react-native'
-import { SearchBar, ListItem } from "react-native-elements";
+import { View, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard, Platform } from 'react-native'
+import { SearchBar } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Global } from './Global';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MyHeader from '../component/MyHeader';
 import faker from 'faker'
 
 faker.seed(10);

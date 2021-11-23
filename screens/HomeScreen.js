@@ -1,16 +1,11 @@
 import React, { Component, useState } from 'react'
-import { View, StatusBar, Modal, Dimensions, Image, StyleSheet, Platform, ScrollView } from 'react-native';
-import  TabSearch  from './TabSearch';
+import { View, Dimensions, Image, StyleSheet, Platform, ScrollView } from 'react-native';
+import TabSearch from './TabSearch';
 import { TabHypotheticalSearch } from './TabHypotheticalSearch';
 import { TabEffectiveNickSearch } from './TabEffectiveNickSearch';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import * as Animatable from 'react-native-animatable';
 import * as Haptics from 'expo-haptics';
-
-import { Global } from './Global';
-import Animated from 'react-native-reanimated';
-import { Text } from 'react-native';
-
 
 const Tab = createMaterialTopTabNavigator();
 const windowWidth = Dimensions.get('window').width / 3;
@@ -23,16 +18,10 @@ function HomeScreen() {
   const [bgCount, SetbgCount] = React.useState(1)
 
   React.useEffect(() => {
-    if (Global.Language === 1) {
-      setSearchTabBarText("Search")
-      setHypotheticalTabBarText("Hypothetcal")
-      setEffectiveNickTabBarText("EffectiveNick")
-    }
-    else {
-      setSearchTabBarText("Arama")
-      setHypotheticalTabBarText("Varsayımsal Eşleştirme")
-      setEffectiveNickTabBarText("EffectiveNick")
-    }
+    setSearchTabBarText("Arama")
+    setHypotheticalTabBarText("Varsayımsal Eşleştirme")
+    setEffectiveNickTabBarText("EffectiveNick")
+
   }, []);
 
   return (
@@ -52,7 +41,7 @@ function HomeScreen() {
             shadowOffset: {
               width: 0,
               height: 4,
-              
+
             },
             shadowOpacity: 0.30,
             shadowRadius: 4.65,

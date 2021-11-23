@@ -4,19 +4,14 @@ import {
     StyleSheet,
     Text,
     ScrollView,
-    ImageBackground,
     Animated,
     Dimensions,
-    useWindowDimensions,
-    TouchableOpacity,
     ActivityIndicator,
-    Modal,
     Platform
 } from 'react-native'
 import { Global } from './Global'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Flag from "react-native-flags";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import Progress from 'react-native-progress'
 import Image from 'react-native-image-progress'
 

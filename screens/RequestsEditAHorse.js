@@ -1066,22 +1066,6 @@ export function RequestsEditAHorse({ navigation }) {
             readHorseGetByIdForUpdate();
 
         }
-
-        if (Global.Language === 1) {
-            setSearchPlaceholder("Lütfen isim giriniz ve ara butonuna basınız .. ")
-            setEditButtonName("Ara")
-            setFirstPlaceholder("1'incilik Sayısı")
-            setSecondPlaceholder("2'ncilik Sayısı")
-            setThirdPlaceholder("3'üncülük Sayısı")
-            setFourthPlaceholder("3'üncülük Sayısı")
-            setStartPlaceholder("Toplam Yarış Sayısı")
-            setEarningPlaceholder("Kazanç")
-            setPricePlaceholder("Fiyat")
-            setHeaderPlaceholder("Başlık")
-            setParagraphPlaceholder("Paragraf")
-            setDeadCheckName("Ölü")
-        }
-        else {
             setSearchPlaceholder("Please type here and press enter .. ")
             setEditButtonName("Search")
             setFirstPlaceholder("First Place")
@@ -1094,7 +1078,7 @@ export function RequestsEditAHorse({ navigation }) {
             setHeaderPlaceholder("Header")
             setParagraphPlaceholder("Paragraph")
             setDeadCheckName("Dead")
-        }
+        
         return () => { abortCtrl.abort(), isActive = false, isMounted = false };
     }, [])
     const scrollY = React.useRef(new Animated.Value(0)).current;
@@ -1780,12 +1764,8 @@ export function RequestsEditAHorse({ navigation }) {
                                                             }}
                                                         >
                                                             <View style={{ borderBottomWidth: 0.5, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 10, bottom: 5 }}>
-                                                                {Global.Language === 1 ?
-                                                                    <Text style={{ fontSize: 22 }}>Doğum Tarihi</Text>
-                                                                    :
                                                                     <Text style={{ fontSize: 22 }}>Birth Date</Text>
-                                                                }
-
+                                                                
                                                             </View>
                                                             {show && (
                                                                 <DateTimePicker style={{ width: Dimensions.get('window').width }}

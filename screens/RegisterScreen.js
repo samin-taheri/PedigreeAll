@@ -3,18 +3,11 @@ import { View, Text, Image, TextInput, ToastAndroid, StyleSheet, StatusBar, Scro
 import * as Animatable from 'react-native-animatable';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
 import RNPickerSelect from 'react-native-picker-select';
-import { Global } from './Global';
-import Flag from "react-native-flags";
-//import { Checkbox } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import * as Haptics from 'expo-haptics';
-import { SearchBar } from 'react-native-elements';
 import CheckBox1 from '../component/CheckBox1';
 import CheckBox2 from '../component/CheckBox2';
-//import { showMessage } from '../Helpers';
-import { Ionicons } from '@expo/vector-icons';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
 
@@ -126,25 +119,6 @@ const RegisterScreen = ({ route, navigation }) => {
     React.useEffect(() => {
         readDataCountryList();
 
-        if (Global.Language === 1) {
-            setEmailPlaceholder("Epostanızı Giriniz")
-            setPasswordPlaceholder("Şifrenizi Giriniz")
-            setPasswordAgainPlaceholder("Şifrenizi Tekrar Giriniz")
-            setNamePlaceholder("Adınızı Giriniz")
-            setSurnamePlaceholder("Soyadınızı Giriniz")
-            setSelectACountryText("Ülke Seçiniz")
-            setEmailText("Eposta")
-            setPasswordText("Şifre")
-            setPasswordAgainText("Şifre Tekrar")
-            setNameText("Ad")
-            setSurnameText("Soyad")
-            setCountryText("Ülke")
-            setMemberTypeText("Üye Tipi")
-            setBireyselText("Bireysel")
-            setKurumsalText("Kurumsal")
-            setRegisterButtonText("Üye Ol")
-        }
-        else {
             setEmailPlaceholder("Enter Your Email")
             setPasswordPlaceholder("Enter Your Password")
             setPasswordAgainPlaceholder("Your Password Again")
@@ -161,7 +135,7 @@ const RegisterScreen = ({ route, navigation }) => {
             setBireyselText("Personal")
             setKurumsalText("Legal Entity")
             setRegisterButtonText("Register")
-        }
+        
     }, []);
 
 
@@ -175,36 +149,6 @@ const RegisterScreen = ({ route, navigation }) => {
         isValidPassword: true,
         confirm_secureTextEntry: true,
     });
-
-
-    //const axios = require('axios').default;
-    /*
-    const loginUser = () => {
-        axios.post(global.ApiUrl + 'SystemUser/Login', {
-            EMAIL: email,
-            PASSWORD: password
-        })
-            .then(function (response) {
-                global.ShowMessage(response.data);
-            })
-
-    };
-    */
-    const textInputChange = (val) => {
-        if (val.length !== 0) {
-            setData({
-                ...data,
-                username: val,
-                check_textInputChange: true
-            });
-        } else {
-            setData({
-                ...data,
-                username: val,
-                check_textInputChange: false
-            });
-        }
-    }
 
     const updateSecureTextEntry = () => {
         setData({
@@ -276,8 +220,6 @@ const RegisterScreen = ({ route, navigation }) => {
                                     name={"password"}
                                     value={password}
                                     onChangeText={setPassword}
-                                //onChangeText={(val) => handlePasswordChange(val)}
-
                                 />
                                 <TouchableOpacity
                                     onPress={updateSecureTextEntry}
@@ -317,7 +259,6 @@ const RegisterScreen = ({ route, navigation }) => {
                                     name={"password"}
                                     value={password_again}
                                     onChangeText={setPassword_again}
-                                //onChangeText={(val) => handleConfirmPasswordChange(val)}
                                 />
                                 <TouchableOpacity
                                     onPress={updateConfirmSecureTextEntry}
@@ -351,7 +292,6 @@ const RegisterScreen = ({ route, navigation }) => {
                                     style={styles.textInput}
                                     value={name}
                                     onChangeText={setname}
-                                //onChangeText={(val) => textInputChange(val)}
                                 />
                                 {data.check_textInputChange ?
                                     <Animatable.View
@@ -395,12 +335,7 @@ const RegisterScreen = ({ route, navigation }) => {
                             </View>
                         </View>
 
-
-
                         <View>
-
-
-
                             <Text style={styles.text_footer}>{getCountryText}</Text>
                             <View style={styles.action}>
                                 <Feather
@@ -491,16 +426,6 @@ const RegisterScreen = ({ route, navigation }) => {
                                         .then((response) => response.json())
                                         .then((json) => {
                                             showMessage(json, navigation);
-                                            // alert(json.m_lUserMessageList[0])
-                                            //console.log(name)
-                                            //console.log(surname)
-                                            //console.log(email)
-                                            //console.log(password)
-                                            //console.log(password_again)
-                                            //console.log(checked_1)
-                                            //console.log(checked_2)
-                                            //console.log(countryID)
-                                            //navigation.navigate("MainDrawer")
                                         })
                                         .catch((error) => {
                                             console.error(error);

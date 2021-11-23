@@ -1,10 +1,7 @@
 import React, { useState, useRef, useEffect, Component } from 'react'
 import { View, Text, StyleSheet, Switch, TouchableOpacity, Platform, FlatList, Image, TextInput, ActivityIndicator, SafeAreaView, StatusBar } from 'react-native'
 import { SearchBar, ListItem, Input } from "react-native-elements";
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import * as Animatable from 'react-native-animatable';
 import Flag from "react-native-flags";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -14,11 +11,8 @@ import { Alert } from 'react-native';
 import { Global } from './Global';
 import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
-import { Checkbox } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import Toast from 'react-native-toast-message';
-import * as Haptics from 'expo-haptics';
 import RNPickerSelect from 'react-native-picker-select';
 import InputSpinner from "react-native-input-spinner";
 import MyHeader from '../component/MyHeader';
@@ -28,12 +22,9 @@ import Myloader from '../constants/Myloader';
 
 export function AddAHorse2({ navigation }) {
 
-  const refRBSheet = useRef();
   const BottomSheetRef = useRef();
   const [isDetail, setIsDetail] = useState(false);
-  const [name, setName] = React.useState("");
 
-  const [image1, setImage1] = useState(null);
   const [imageList, setImagelist] = useState([]);
   const [sexList, setSexList] = useState([])
   const [sexText, setSexText] = useState("Select a Gender")
@@ -664,28 +655,27 @@ export function AddAHorse2({ navigation }) {
           .then((json) => {
             var dataDisplay = null;
             var aa = [];
-            if(json && json.m_cData){
+            if (json && json.m_cData) {
               dataDisplay = json.m_cData.map((i, index) => (
-              aa.push({
-                HORSE_DATA: i,
-                HORSE_ID: i.HORSE_ID,
-                HORSE_NAME: i.HORSE_NAME,
-                FATHER_NAME: i.FATHER_NAME,
-                MOTHER_NAME: i.MOTHER_NAME,
-                IMAGE: i.IMAGE,
-              })
-            ))
+                aa.push({
+                  HORSE_DATA: i,
+                  HORSE_ID: i.HORSE_ID,
+                  HORSE_NAME: i.HORSE_NAME,
+                  FATHER_NAME: i.FATHER_NAME,
+                  MOTHER_NAME: i.MOTHER_NAME,
+                  IMAGE: i.IMAGE,
+                })
+              ))
             }
             setCheckHorseAvaibleData(json)
-            if (json !== undefined) {
-              if (json.m_cDetail.m_eProcessState < 1) {
-                saveImage();
-              }
-              else {
-                Alert("Kayit Bulundu")
-              }
-
+            if (json.m_cDetail.m_eProcessState < 1) {
+              saveImage();
             }
+            else {
+              Alert("Kayit Bulundu")
+            }
+
+
           })
           .catch((error) => {
             console.error(error);
@@ -714,17 +704,9 @@ export function AddAHorse2({ navigation }) {
     readUser()
     readGetOwnerBreeder()
 
-    if (Global.Language === 1) {
-      setOwnerText("Sahip")
-      setBreederText("Yetiştirici")
-      setCoach("Antrenör")
-    }
-    else {
-      setOwnerText("Owner")
-      setBreederText("Breeder")
-      setCoach("Coach")
-
-    }
+    setOwnerText("Owner")
+    setBreederText("Breeder")
+    setCoach("Coach")
     return () => { abortCtrl.abort() };
 
   }, [])
@@ -767,22 +749,12 @@ export function AddAHorse2({ navigation }) {
                           bottomDivider
                           button
                           onPress={() => {
-                            if (Global.Language === 1) {
-                              setWinnerText(item.WINNER_TYPE_TR)
-                            }
-                            else {
-                              setWinnerText(item.WINNER_TYPE_EN)
-                            }
+                            setWinnerText(item.WINNER_TYPE_EN)
                             setWinnerTypeID(item.WINNER_TYPE_ID)
                             BottomSheetRef.current.close()
                           }} >
                           <ListItem.Content>
-                            {Global.Language === 1 ?
-                              <ListItem.Title>{item.WINNER_TYPE_TR}</ListItem.Title>
-                              :
-                              <ListItem.Title>{item.WINNER_TYPE_EN}</ListItem.Title>
-                            }
-
+                            <ListItem.Title>{item.WINNER_TYPE_EN}</ListItem.Title>
                           </ListItem.Content>
                           <ListItem.Chevron />
                         </ListItem>
@@ -833,24 +805,13 @@ export function AddAHorse2({ navigation }) {
                             bottomDivider
                             button
                             onPress={() => {
-                              if (Global.Language === 1) {
-                                setCounrtyText(item.COUNTRY_TR)
-                              }
-                              else {
-                                setCounrtyText(item.COUNTRY_EN)
-                              }
-
+                              setCounrtyText(item.COUNTRY_EN)
                               setCountryID(item.COUNTRY_ID)
                               BottomSheetRef.current.close()
                             }} >
                             <Flag code={item.ICON.toUpperCase()} size={24} />
                             <ListItem.Content>
-                              {Global.Language === 1 ?
-                                <ListItem.Title>{item.COUNTRY_TR}</ListItem.Title>
-                                :
                                 <ListItem.Title>{item.COUNTRY_EN}</ListItem.Title>
-                              }
-
                             </ListItem.Content>
                             <ListItem.Chevron />
                           </ListItem>
@@ -892,21 +853,8 @@ export function AddAHorse2({ navigation }) {
                     platform="ios"
                     cancelButtonTitle=""
                     inputStyle={{ fontSize: 12, minHeight: 'auto', height: 36 }}
-                    inputContainerStyle={{
-                      width: '95%',
-                      backgroundColor: "#fff",
-                      borderRadius: 8,
-                      flexDirection: 'row',
-                      marginBottom: '0%',
-                      borderWidth: 1,
-                      borderColor: '#d4d2d2',
-                      zIndex: 99,
-                      fontSize: 25,
-                      height: 45,
-                      padding: 8,
-                      borderBottomWidth: 1,
-                      bottom: '1%'
-                  }}
+                    containerStyle={{ backgroundColor: 'transparent', }}
+                    inputContainerStyle={{ backgroundColor: '#F0F1F3', minHeight: 'auto', height: 'auto', top: '3%' }}
                     rightIconContainerStyle={{ margin: 0, padding: 0, minHeight: 'auto', height: 'auto' }}
                     leftIconContainerStyle={{ margin: 0, padding: 0, minHeight: 'auto', height: 'auto' }}
                     value={searchValue}
@@ -1224,7 +1172,7 @@ export function AddAHorse2({ navigation }) {
                 }}
                   style={styles.InputTouchableContainer}>
                   <Ionicons name="calendar-outline" size={22} color="#2e3f6e" />
-                  <Text style={[styles.InformationText, {left: 5}]}>
+                  <Text style={[styles.InformationText, { left: 5 }]}>
                     {moment(date).format("DD.MM.YYYY")}
                   </Text>
 
@@ -1261,12 +1209,7 @@ export function AddAHorse2({ navigation }) {
                       }}
                     >
                       <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 10, bottom: 5 }}>
-                        {Global.Language === 1 ?
-                          <Text style={{ fontSize: 22 }}>Doğum Tarihi</Text>
-                          :
                           <Text style={{ fontSize: 22 }}>Birth Date</Text>
-                        }
-
                       </View>
                       {show && (
                         <DateTimePicker style={{ width: Dimensions.get('window').width }}
@@ -1520,7 +1463,7 @@ export function AddAHorse2({ navigation }) {
 
 
                     useNativeAndroidPickerStyle={false}
-                    onValueChange={(value) => { setEarnCurrencyID(value);}}
+                    onValueChange={(value) => { setEarnCurrencyID(value); }}
                     items={CurrencyTypeList}
                     value={getEarnCurrencyID}
                     key={getEarnCurrencyID}
@@ -1841,7 +1784,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 20,
     marginRight: 'auto',
-},
+  },
   InformationText2: {
     fontSize: 15,
     left: 15,
@@ -2219,7 +2162,7 @@ const pickerMiniStyle = StyleSheet.create({
     paddingTop: 8,
     color: '#000',
     top: 10,
-    
+
   },
   inputAndroid: {
     flexDirection: 'row',
@@ -2230,8 +2173,8 @@ const pickerMiniStyle = StyleSheet.create({
     paddingTop: 8,
     color: '#000',
     top: 10,
-    
-    
+
+
   },
 });
 

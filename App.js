@@ -16,7 +16,6 @@ import { SplashScreen } from './screens/SplashScreen';
 import { ContactScreen } from './screens/ContactScreen';
 import { BlogScreen } from './screens/BlogScreen';
 import { BlogItemScreen } from './screens/BlogItemScreen';
-import { AddAHorse } from './screens/AddAHorse';
 import HorseDetailScreen from './screens/HorseDetailScreen';
 import { Global } from './screens/Global';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -59,6 +58,9 @@ import FoalsAsBroodMareSire from './screens/FoalsAsBroodMareSireScreen';
 import Search from './screens/SearchScreen';
 import EffectiveNickScreen from './screens/EffectiveNickScreen';
 import CompareHorses from './screens/CompareHorsesScreen';
+import HorsesForSale from './screens/HorsesForSaleScreen';
+import RegisteredStallions from './screens/RegisteredStallionScreen';
+import ImportantRaces from './screens/ImportantRacesScreen';
 export const BASE_URL = 'http://api.pedigreeall.com/';
 
 const Drawer = createDrawerNavigator();
@@ -254,6 +256,9 @@ function MainDrawerNavigation() {
         <Drawer.Screen name="Search" component={Search} options={navOptionHandler} />
         <Drawer.Screen name="CreateMatchReport" component={HomeScreen} options={drawerOptionHandler} />
         <Drawer.Screen name="CompareHorses" component={CompareHorses} options={navOptionHandler} />
+        <Drawer.Screen name="HorsesForSale" component={HorsesForSale} options={navOptionHandler} />
+        <Drawer.Screen name="RegisteredStallions" component={RegisteredStallions} options={navOptionHandler} />
+        <Drawer.Screen name="ImportantRaces" component={ImportantRaces} options={navOptionHandler} />
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
 
         </Stack.Group>

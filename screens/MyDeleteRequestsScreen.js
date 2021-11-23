@@ -7,10 +7,6 @@ import { ListItem, Input, SearchBar } from "react-native-elements";
 import { DataTable } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { Global } from './Global';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import * as Animatable from 'react-native-animatable';
-import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -187,22 +183,13 @@ export function MyDeleteRequestsScreen({ navigation }) {
   React.useEffect(() => {
     readDataRequestStatusList();
 
-    if (Global.Language === 1) {
-      setRequestStatusText("Talep Durumu Seçiniz")
-      setStartRequestDatePlaceholder("Talep Tarihi (Başlangıç)")
-      setEndRequestDatePlaceholder("Talep Tarihi (Bitiş)")
-      setStartLastActionDatePlaceholder("Son İşlem Tarihi (Başlangıç)")
-      setEndLastActionDatePlaceholder("Son İşlem Tarihi (Bitiş)")
-      setViewButton("Görüntüle")
-    }
-    else {
-      setRequestStatusText("Select A Request Status")
-      setStartRequestDatePlaceholder("Request Date (Start)")
-      setEndRequestDatePlaceholder("Request Date (End)")
-      setStartLastActionDatePlaceholder("Last Action Date (Start)")
-      setEndLastActionDatePlaceholder("Last Action Date (End)")
-      setViewButton("view")
-    }
+    setRequestStatusText("Select A Request Status")
+    setStartRequestDatePlaceholder("Request Date (Start)")
+    setEndRequestDatePlaceholder("Request Date (End)")
+    setStartLastActionDatePlaceholder("Last Action Date (Start)")
+    setEndLastActionDatePlaceholder("Last Action Date (End)")
+    setViewButton("view")
+
   }, [])
 
   return (
@@ -239,23 +226,12 @@ export function MyDeleteRequestsScreen({ navigation }) {
                     bottomDivider
                     button
                     onPress={() => {
-                      if (Global.Language === 1) {
-                        setRequestStatusText(item.REQUEST_STATUS_TR);
-                      }
-                      else {
-                        setRequestStatusText(item.REQUEST_STATUS_EN);
-                      }
-
+                      setRequestStatusText(item.REQUEST_STATUS_EN);
                       setRequestStatusID(item.REQUEST_STATUS_ID)
                       BottomSheetRequestsStatus.current.close();
                     }} >
                     <ListItem.Content>
-                      {Global.Language === 1 ?
-                        <ListItem.Title>{item.REQUEST_STATUS_TR}</ListItem.Title>
-                        :
                         <ListItem.Title>{item.REQUEST_STATUS_EN}</ListItem.Title>
-                      }
-
                     </ListItem.Content>
                     <ListItem.Chevron />
                   </ListItem>
@@ -317,20 +293,11 @@ export function MyDeleteRequestsScreen({ navigation }) {
               <>
                 {getHorseDeleteRequest.length === 0 ?
                   <View style={styles.ErrorMessageContainer}>
-                    <Icon style={{ marginBottom: 40 }} name="exclamation-circle" size={150} color="#e54f4f" />
-                    {Global.Language === 1 ?
-                      <>
-                        <Text style={styles.ErrorMessageTitle}>Veriler Bulunamadı !</Text>
-                        <Text style={styles.ErrorMessageText}>Hiçbir At Verisi Bulunmamaktadır.</Text>
-                        <Text style={styles.ErrorMessageText}>Tekrar Arama Yapabilirsiniz.</Text>
-                      </>
-                      :
-                      <>
-                        <Text style={styles.ErrorMessageTitle}>Oh No, Data Not Found !</Text>
-                        <Text style={styles.ErrorMessageText}>Could not find any horses.</Text>
-                        <Text style={styles.ErrorMessageText}>You can search again.</Text>
-                      </>
-                    }
+
+                    <>
+                      <Text style={styles.ErrorMessageTitle}>No data found !</Text>
+                    </>
+
                   </View>
                   :
                   <ScrollView horizontal={true}
@@ -338,18 +305,6 @@ export function MyDeleteRequestsScreen({ navigation }) {
                   >
 
                     <DataTable>
-                      {Global.Language === 1 ?
-                        <DataTable.Header>
-                          <DataTable.Title style={{ width: 120 }}>ID</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Adı</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Baba</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Anne</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Talep Durumu</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Talep Tarihi</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Son İşlem Tarihi</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>İşlemler</DataTable.Title>
-                        </DataTable.Header>
-                        :
                         <DataTable.Header>
                           <DataTable.Title style={{ width: 120 }}>ID</DataTable.Title>
                           <DataTable.Title style={{ width: 120 }}>Name</DataTable.Title>
@@ -360,8 +315,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
                           <DataTable.Title style={{ width: 120 }}>Last Action Date</DataTable.Title>
                           <DataTable.Title style={{ width: 120 }}>Action</DataTable.Title>
                         </DataTable.Header>
-                      }
-
+                      
                       {getHorseDeleteRequest.map((item, i) => (
                         <DataTable.Row key={i}>
                           <DataTable.Cell style={{ width: 120 }} >{item.HORSE_ID}</DataTable.Cell>
@@ -1249,8 +1203,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   ErrorMessageContainer: {
-    width: '100%',
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,

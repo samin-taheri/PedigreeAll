@@ -14,7 +14,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { Global } from "./Global";
 import HomeComponent from "../component/HomeComponent";
 import MyButton from "../component/MyButton";
 import Feather from 'react-native-vector-icons/Feather';
@@ -56,19 +55,20 @@ export function TabEffectiveNickSearch({ navigation, route }) {
     const [loader, setLoader] = useState(false)
     const [loaderRegistration, setLoaderRegistration] = React.useState(false);
     const [state, setState] = React.useState({ checked: [] });
-    const [chekedItem, setChekedItem] = React.useState(5)
+    const [chekedItem, setChekedItem] = React.useState(1)
     const [getRegisteredStallions, setRegisteredStallions] = React.useState([]);
     const [getRegisteredStallionsName, setRegisteredStallionsName] = React.useState("Stallion");
+    const [getRegisteredStallionsId, setRegisteredStallionsId] = React.useState(-1);
     const [getBottomSheetText, setBottomSheetText] = React.useState();
     const [CounrtyList, setCountryList] = useState([])
     const [getCountryID, setCountryID] = React.useState(1);
-
+    const [getRegisteredStallionsItemData, setRegisteredStallionsItemData] = React.useState(1);
     const [getData, setData] = React.useState([]);
+    const [getStallionCodeData, setStallionCodeData] = React.useState();
 
     const [getFirstHorseID, setFirstHorseID] = React.useState();
     const refRBSheetGeneration = useRef();
     const [GenerationTitle, setGenerationTitle] = React.useState("Standard");
-
     const readDataCountryList = async () => {
         let isMounted = true;
         let isActive = true;
@@ -124,6 +124,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                     .then((json) => {
                         setRegisteredStallions(json.m_cData)
                         setRegisteredStallionsName(json.m_cData[0].HORSE_NAME);
+                        setRegisteredStallionsId(json.m_cData[0].HORSE_ID);
                         setLoader(false);
 
                     })
@@ -286,7 +287,10 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                                         OpenFullBottomSheet.current.close();
                                                         setRegisteredStallionsItemData(item);
                                                         setFirstHorseID(item.HORSE_ID);
+                                                        setRegisteredStallionsName(item.HORSE_NAME)
+                                                        setRegisteredStallionsId(item.HORSE_ID)
                                                         readGetAsNameIdForStallion(item.HORSE_ID);
+
                                                     }}
                                                 >
                                                     {item.REGISTRATION_ID === 3 &&
@@ -295,7 +299,6 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                                         </View>
 
                                                     }
-
                                                     <View style={{ flexDirection: 'column' }}>
                                                         {item.REGISTRATION_ID === 2 &&
                                                             <View style={{ backgroundColor: '#fbbd08', justifyContent: 'center', width: 25, height: 25, borderRadius: 0 }}>
@@ -483,13 +486,15 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                             Icon="search-outline"
                             IconSize={18}
                             onPress={() => {
-                                if (route.params?.HorseId !== undefined) {
+                                if (getRegisteredStallionsId !== undefined) {
                                     navigation.navigate('EffectiveNickScreen', {
                                         HORSE_NAME: route.params?.horseEffectiveNick,
-                                        HORSE_ID: route.params?.HorseId,
-                                        Generation: chekedItem,
-                                        Stallion: getRegisteredStallionsName,
-                                        SECOND_ID: -1
+                                        HORSE_ID: -1,
+                                        Situation: chekedItem,
+                                        StallionId: getRegisteredStallionsId,
+                                        StallionName: getRegisteredStallionsName,
+                                        SECOND_ID: -1,
+                                        COUNTRY_ID: getCountryID,
                                     }
                                     )
                                 }

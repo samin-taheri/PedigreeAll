@@ -1,17 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, Animated, Keyboard } from 'react-native'
-import { SearchBar, ListItem } from "react-native-elements";
+import { SearchBar } from "react-native-elements";
 import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from "react-native-vector-icons/FontAwesome5";
-import { Global } from './Global';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import * as Animatable from 'react-native-animatable';
-import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
 import MyHeader from '../component/MyHeader';
-import MyButton from '../component/MyButton';
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
 

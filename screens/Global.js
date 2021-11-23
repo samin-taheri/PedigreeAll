@@ -1,10 +1,6 @@
 import React from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Data from './Data';
 import { NativeModules, Platform } from 'react-native';
-import Toast from 'react-native-toast-message';
-import { StatusBar } from "react-native";
-import * as Haptics from 'expo-haptics';
 
 
 export class Global {

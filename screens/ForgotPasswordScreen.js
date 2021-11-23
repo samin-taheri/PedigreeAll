@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Alert, Text, Modal, Image, Error, TextInput, StyleSheet, StatusBar, Platform, Dimensions } from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
+import { View, Text, TextInput, StyleSheet, Platform, Dimensions } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { decode as atob, encode as btoa } from 'base-64'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Global } from './Global';
-import { Ionicons } from '@expo/vector-icons';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
 
@@ -24,16 +16,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
 
   React.useEffect(() => {
-    if (Global.Language === 1) {
-      setEmailPlaceholder("Eposta adresini gir")
-      setSendPasswordButtonText("Şifre Gönder")
-      setEmailText("Eposta")
-    }
-    else {
-      setEmailPlaceholder("Enter your email address")
-      setSendPasswordButtonText("Send Password")
-      setEmailText("Email")
-    }
+    setEmailPlaceholder("Enter your email address")
+    setSendPasswordButtonText("Send Password")
+    setEmailText("Email")
+
   }, []);
 
   return (
@@ -63,7 +49,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
           </View>
           <View style={{ marginTop: 10 }}>
-            
+
             <MyButton
               Title="Send Password"
               Icon="send-outline"
