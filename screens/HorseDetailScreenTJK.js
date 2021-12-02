@@ -6,6 +6,8 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Animatable from 'react-native-animatable';
 import { Ionicons } from '@expo/vector-icons';
 import Feather from 'react-native-vector-icons/Feather';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function HorseDetailScreenTJK({ navigation, route }) {
     const [getTJKReport, setTJKReport] = React.useState();
@@ -15,6 +17,7 @@ function HorseDetailScreenTJK({ navigation, route }) {
     const [showVideo, setShowVideo] = React.useState(false);
     const [videoURL, setVideoURL] = React.useState();
     const [imageURL, setImageURL] = React.useState();
+    const { t, i18n } = useTranslation();
 
     const readTJKReport = async () => {
         try {
@@ -78,13 +81,13 @@ function HorseDetailScreenTJK({ navigation, route }) {
                                     setShowImage(false);
                                 }}>
                                 <Ionicons name="close-outline" size={35} color="black" />
-                                <Text style={{ padding: 8, left: 10, fontSize: 15, fontWeight: 'bold' }}>Image</Text>
+                                <Text style={{ padding: 8, left: 10, fontSize: 15, fontWeight: 'bold' }}>{t('Image')}</Text>
                             </TouchableOpacity>
                         </View>
                         {imageURL !== undefined ?
                             <Image style={styles.HorseImage} source={{ uri: imageURL }} />
                             :
-                            <Text>No Image</Text>}
+                            <Text>{t('No Image')}</Text>}
 
 
                     </View>
@@ -117,7 +120,7 @@ function HorseDetailScreenTJK({ navigation, route }) {
                                 </View>
                                 <View style={styles.columnView}>
 
-                                    <Text style={styles.TableTitle}>1st</Text>
+                                    <Text style={styles.TableTitle}>{t('1st2')}</Text>
 
                                     {getTJKReport[0].HORSE_HEADER.map((item, index) => (
                                         <Text key={index} style={styles.TableText}>{item.BIRINCILIK}</Text>
@@ -125,7 +128,7 @@ function HorseDetailScreenTJK({ navigation, route }) {
                                 </View>
                                 <View style={styles.columnView}>
 
-                                    <Text style={styles.TableTitle}>2nd</Text>
+                                    <Text style={styles.TableTitle}>{t('2nd2')}</Text>
 
                                     {getTJKReport[0].HORSE_HEADER.map((item, index) => (
                                         <Text key={index} style={styles.TableText}>{item.IKINCILIK}</Text>
@@ -133,7 +136,7 @@ function HorseDetailScreenTJK({ navigation, route }) {
                                 </View>
                                 <View style={styles.columnView}>
 
-                                    <Text style={styles.TableTitle}>3rd</Text>
+                                    <Text style={styles.TableTitle}>{t('3rd2')}</Text>
 
                                     {getTJKReport[0].HORSE_HEADER.map((item, index) => (
                                         <Text key={index} style={styles.TableText}>{item.UCUNCULUK}</Text>
@@ -141,7 +144,7 @@ function HorseDetailScreenTJK({ navigation, route }) {
                                 </View>
                                 <View style={styles.columnView}>
 
-                                    <Text style={styles.TableTitle}>4th</Text>
+                                    <Text style={styles.TableTitle}>{t('4th2')}</Text>
 
 
                                     {getTJKReport[0].HORSE_HEADER.map((item, index) => (
@@ -150,7 +153,7 @@ function HorseDetailScreenTJK({ navigation, route }) {
                                 </View>
                                 <View style={styles.columnView}>
 
-                                    <Text style={styles.TableTitle}>Earning</Text>
+                                    <Text style={styles.TableTitle}>{t('EarningText')}</Text>
 
                                     {getTJKReport[0].HORSE_HEADER.map((item, index) => (
                                         <Text key={index} style={styles.TableText}>{item.KAZANC}</Text>
@@ -169,23 +172,23 @@ function HorseDetailScreenTJK({ navigation, route }) {
 
                             <DataTable.Header>
                                 <DataTable.Title>Video</DataTable.Title>
-                                <DataTable.Title>Image</DataTable.Title>
-                                <DataTable.Title style={{right: '0.2%'}}>Date</DataTable.Title>
-                                <DataTable.Title style={{left: '0.1%'}}>City</DataTable.Title>
-                                <DataTable.Title style={{left: '0.6%'}}>Distance</DataTable.Title>
-                                <DataTable.Title style={{right: '0.4%'}}>Runway</DataTable.Title>
+                                <DataTable.Title>{t('Image')}</DataTable.Title>
+                                <DataTable.Title style={{right: '0.2%'}}>{t('Date')}</DataTable.Title>
+                                <DataTable.Title style={{left: '0.1%'}}>{t('City')}</DataTable.Title>
+                                <DataTable.Title style={{left: '0.6%'}}>{t('Distance')}</DataTable.Title>
+                                <DataTable.Title style={{right: '0.4%'}}>{t('Runway')}</DataTable.Title>
                                 <DataTable.Title style={{right: '1%'}}>S</DataTable.Title>
-                                <DataTable.Title style={{left: '0.2%'}}>Degree</DataTable.Title>
+                                <DataTable.Title style={{left: '0.2%'}}>{t('Degree')}</DataTable.Title>
                                 <DataTable.Title style={{right: '0.3%'}}>Kg</DataTable.Title>
                                 <DataTable.Title style={{left: '0.3%'}}>Taki</DataTable.Title>
                                 <DataTable.Title style={{left: '0.9%'}}>Jockey</DataTable.Title>
                                 <DataTable.Title style={{left: '0.4%'}}>St</DataTable.Title>
                                 <DataTable.Title style={{left: '1.5%'}}>Gny</DataTable.Title>
-                                <DataTable.Title style={{left: '1.9%'}}>Group</DataTable.Title>
+                                <DataTable.Title style={{left: '1.9%'}}>{t('Group')}</DataTable.Title>
                                 <DataTable.Title style={{left: '1.7%'}}>K.No-K.Adı</DataTable.Title>
                                 <DataTable.Title style={{left: '0.3%'}}>K. Cinsi</DataTable.Title>
-                                <DataTable.Title style={{right: '0.3%'}}>Coach</DataTable.Title>
-                                <DataTable.Title style={{right: '0.7%'}}>Owner</DataTable.Title>
+                                <DataTable.Title style={{right: '0.3%'}}>{t('CoachText')}</DataTable.Title>
+                                <DataTable.Title style={{right: '0.7%'}}>{t('OwnerText')}</DataTable.Title>
                                 <DataTable.Title style={{right: '0.8%'}}>HP</DataTable.Title>
                                 <DataTable.Title style={{right: '0.2%'}}>Bonus</DataTable.Title>
                                 <DataTable.Title style={{right: '0.4%'}}>S20</DataTable.Title>

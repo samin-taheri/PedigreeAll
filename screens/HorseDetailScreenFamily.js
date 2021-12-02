@@ -1,11 +1,14 @@
 import React from 'react'
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity, Alert, Modal,Platform } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity, Alert, Modal, Platform } from 'react-native'
 import { Global } from './Global'
 import { DataTable, List } from 'react-native-paper';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function HorseDetailFamilyaFamily({ navigaion, route }) {
+    const { t, i18n } = useTranslation();
 
     const [getNickSuccessData, setNickSuccessData] = React.useState()
     const [getLoader, setLoader] = React.useState(true)
@@ -92,32 +95,32 @@ function HorseDetailFamilyaFamily({ navigaion, route }) {
 
                                 <DataTable>
                                     <DataTable.Header removeClippedSubviews={true}>
-                                        <DataTable.Title style={{ width: 300 }}>Name</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Class</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Point</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Earning</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Fam</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Color</DataTable.Title>
-                                        <DataTable.Title style={{ width: 300 }}>Dam</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Birth. Date</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Start</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>1st</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>1st %</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>2nd</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>2nd %</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>3rd</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>3rd %</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>4th</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>4th %</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Prize</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Dr. RM</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>ANZ</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>PedigreeAll</DataTable.Title>
-                                        <DataTable.Title style={{ width: 150 }}>Owner</DataTable.Title>
-                                        <DataTable.Title style={{ width: 150 }}>Breeder</DataTable.Title>
-                                        <DataTable.Title style={{ width: 150 }}>Coach</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Dead</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>Update D.</DataTable.Title>
+                                        <DataTable.Title style={{ width: 300 }}>{t('Name')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Class2')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Point')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('EarningText')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Fam')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('ColorText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 300 }}>{t('Dam')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('BirthD.')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('StartText')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('1st')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('1st%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('2nd')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('2nd%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('3rd')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('3rd%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('4th')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('4th%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('PriceText')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('DR.RM')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('ANZ')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('PedigreeAll')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150 }}>{t('OwnerText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150 }}>{t('BreederText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150 }}>{t('CoachText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('Dead')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('UpdateD.')}</DataTable.Title>
                                     </DataTable.Header>
 
 
@@ -126,7 +129,7 @@ function HorseDetailFamilyaFamily({ navigaion, route }) {
                                         <DataTable.Row centered={true} key={index}>
                                             <DataTable.Cell
                                                 onPress={() => {
-                                                    alertDialog("Name", item.HORSE_NAME)
+                                                    alertDialog(t('Name'), item.HORSE_NAME)
                                                 }}
                                                 style={{ width: 300 }}>{item.HORSE_NAME}
                                             </DataTable.Cell>
@@ -139,7 +142,7 @@ function HorseDetailFamilyaFamily({ navigaion, route }) {
                                             <DataTable.Cell style={styles.DataTableText}>{item.COLOR_TEXT}</DataTable.Cell>
                                             <DataTable.Cell
                                                 onPress={() => {
-                                                    alertDialog("Dam", item.MOTHER_NAME)
+                                                    alertDialog(t('Dam'), item.MOTHER_NAME)
                                                 }}
                                                 style={{ width: 300 }}>
                                                 {item.MOTHER_NAME}
@@ -159,33 +162,33 @@ function HorseDetailFamilyaFamily({ navigaion, route }) {
                                             <DataTable.Cell style={styles.DataTableText}>{item.PA}</DataTable.Cell>
                                             <DataTable.Cell
                                                 onPress={() => {
-                                                    alertDialog("Owner", item.OWNER)
+                                                    alertDialog(t('OwnerText'), item.OWNER)
                                                 }}
                                                 style={{ width: 150 }}>
                                                 {item.OWNER}
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 onPress={() => {
-                                                    alertDialog("Breeder", item.BREEDER)
+                                                    alertDialog(t('BreederText'), item.BREEDER)
                                                 }}
                                                 style={{ width: 150 }}>
                                                 {item.BREEDER}
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 onPress={() => {
-                                                    alertDialog("Coach", item.COACH)
+                                                    alertDialog(t('CoachText'), item.COACH)
                                                 }}
                                                 style={{ width: 150 }}>
                                                 {item.COACH}
                                             </DataTable.Cell>
                                             {item.IS_DEAD ?
                                                 <>
-                                                    <DataTable.Cell style={styles.DataTableText}>DEAD</DataTable.Cell>
+                                                    <DataTable.Cell style={styles.DataTableText}>{t('DEAD')}</DataTable.Cell>
                                                 </>
 
                                                 :
                                                 <>
-                                                    <DataTable.Cell style={styles.DataTableText}>ALIVE</DataTable.Cell>
+                                                    <DataTable.Cell style={styles.DataTableText}>{t('ALIVE')}</DataTable.Cell>
                                                 </>
 
                                             }
@@ -212,68 +215,68 @@ function HorseDetailFamilyaFamily({ navigaion, route }) {
                 <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
                 :
                 <>
-                <ScrollView vertical={true}>
-                    {getNickSuccessData !== undefined &&
+                    <ScrollView vertical={true}>
+                        {getNickSuccessData !== undefined &&
 
-                        <ScrollView horizontal={true}>
+                            <ScrollView horizontal={true}>
 
 
-                            <DataTable>
+                                <DataTable>
 
-                                <DataTable.Header removeClippedSubviews={true}>
-                                    <DataTable.Title style={{ width: 50, justifyContent: 'center' }}> </DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>Family</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>Foals</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>Point</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>Start</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>Top 4</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>Top 4%</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>1st</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>1st %</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle} >2nd</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>2nd %</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>3rd</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>3rd %</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>4th</DataTable.Title>
-                                    <DataTable.Title style={styles.DataTableTitle}>4th %</DataTable.Title>
-                                </DataTable.Header>
+                                    <DataTable.Header removeClippedSubviews={true}>
+                                        <DataTable.Title style={{ width: 50, justifyContent: 'center' }}> </DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Family')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Foals')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Point')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Starts')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Top 4')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('Top 4%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('1st')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('1st%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('2nd')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('2nd%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('3rd')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('3rd%')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('4th')}</DataTable.Title>
+                                        <DataTable.Title style={styles.DataTableTitle}>{t('4th%')}</DataTable.Title>
+                                    </DataTable.Header>
 
-                                {getNickSuccessData.map((item, index) => (
-                                    <View key={index}>
-                                        <DataTable.Row centered={true} key={index}>
-                                            <DataTable.Cell
-                                                onPress={() => {
-                                                    setSelectedItem(item)
-                                                    setMoreInfo(true)
-                                                }}
-                                                style={{ width: 50, justifyContent: 'center', right:'0.3%'}}>
-                                                <Ionicons name="caret-forward-outline" color="#222" size={16} />
+                                    {getNickSuccessData.map((item, index) => (
+                                        <View key={index}>
+                                            <DataTable.Row centered={true} key={index}>
+                                                <DataTable.Cell
+                                                    onPress={() => {
+                                                        setSelectedItem(item)
+                                                        setMoreInfo(true)
+                                                    }}
+                                                    style={{ width: 50, justifyContent: 'center', right: '0.3%' }}>
+                                                    <Ionicons name="caret-forward-outline" color="#222" size={16} />
 
-                                            </DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.FAMILY_TEXT}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.COUNTER}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.POINT}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.START}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.TOP4}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.TOP4_PERCENTAGE}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.FOURTH}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.FOURTH_PERCENTAGE}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.THIRD}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.THIRD_PERCENTAGE}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.SECOND}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.SECOND_PERCENTAGE}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.FIRST}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableText}>{item.FIRST_PERCENTAGE}</DataTable.Cell>
+                                                </DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.FAMILY_TEXT}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.COUNTER}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.POINT}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.START}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.TOP4}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.TOP4_PERCENTAGE}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.FOURTH}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.FOURTH_PERCENTAGE}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.THIRD}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.THIRD_PERCENTAGE}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.SECOND}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.SECOND_PERCENTAGE}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.FIRST}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{item.FIRST_PERCENTAGE}</DataTable.Cell>
 
-                                        </DataTable.Row>
+                                            </DataTable.Row>
 
-                                    </View>
-                                ))}
+                                        </View>
+                                    ))}
 
-                            </DataTable>
-                        </ScrollView>
+                                </DataTable>
+                            </ScrollView>
 
-                    }
+                        }
                     </ScrollView>
                 </>
             }
@@ -298,9 +301,9 @@ const styles = StyleSheet.create({
         shadowRadius: 1.27,
         elevation: 4,
         backgroundColor: '#fff',
-        width: 50, 
-        height: 50, 
-        paddingLeft: Platform.OS == 'ios' ? 3: 0,
+        width: 50,
+        height: 50,
+        paddingLeft: Platform.OS == 'ios' ? 3 : 0,
         borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',

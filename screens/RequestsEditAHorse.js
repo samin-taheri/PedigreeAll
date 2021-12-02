@@ -11,16 +11,15 @@ import RNPickerSelect from 'react-native-picker-select';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import InputSpinner from "react-native-input-spinner";
-import { LinearGradient } from 'expo-linear-gradient';
-import * as Animatable from 'react-native-animatable';
 import Myloader from '../constants/Myloader';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import MyHeader from '../component/MyHeader';
 import * as ImagePicker from 'expo-image-picker';
 import MyButtonWhite from '../component/MyButtonWhite';
 import MyButton from '../component/MyButton';
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 faker.seed(10);
 const SPACING = 18;
@@ -65,7 +64,7 @@ export function RequestsEditAHorse({ navigation }) {
     ]
     const BottomSheetLong = React.useRef();
     const BottomSheetRef = useRef();
-
+    const { t, i18n } = useTranslation();
     const [searchText, setSearchText] = React.useState("");
     const [searchValue, setSearchValue] = React.useState("")
     const [showEdition, setShowEdition] = React.useState(false)
@@ -255,7 +254,6 @@ export function RequestsEditAHorse({ navigation }) {
                 })
                     .then((response) => response.json())
                     .then((json) => {
-                        console.log(json)
 
 
                         readAddAHorse(json)
@@ -1088,30 +1086,9 @@ export function RequestsEditAHorse({ navigation }) {
             <Myloader Show={loader} Text={loaderText} />
 
             <View style={styles.container}>
-                <MyHeader Title="Edit A Horse"
+                <MyHeader Title={t('EditAHorse')}
                     onPress={() => navigation.goBack()}
                 >
-                    {/*
-                    <RBSheet
-                        hasDraggableIcon={true}
-                        ref={BottomSheetLong}
-                        height={Dimensions.get('window').height - 50}
-                        closeOnDragDown={true}
-                        closeOnPressMask={true}
-                        animationType='fade'
-                        customStyles={{
-                            container: {
-                                borderTopLeftRadius: 10,
-                                borderTopRightRadius: 10
-                            },
-
-                        }}
-
-                    >
-                    */}
-
-                    {/*
-                    </RBSheet>*/}
                     <RBSheet
                         ref={BottomSheetRef}
                         closeOnDragDown={true}
@@ -1375,21 +1352,21 @@ export function RequestsEditAHorse({ navigation }) {
                                                             />
                                                             <View style={{ flexDirection: 'column' }}>
                                                                 <View style={{ flexDirection: 'row' }}>
-                                                                    <Text style={[styles.textStyle2]}>Horse: </Text>
+                                                                    <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                                                                     <Text style={styles.textStyle}>
                                                                         {item.HORSE_NAME}
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row' }}>
-                                                                    <Text style={[styles.textStyle2]}>Sire: </Text>
+                                                                    <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                                                                     <Text style={styles.textStyle}>
                                                                         {item.FATHER_NAME}
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row' }}>
-                                                                    <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                                    <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                                                                     <Text style={styles.textStyle}>
                                                                         {item.MOTHER_NAME}
                                                                     </Text>
@@ -1415,12 +1392,8 @@ export function RequestsEditAHorse({ navigation }) {
 
                                                         {loader === false &&
                                                             <View style={styles.ErrorMessageContainer}>
-                                                                <Icon style={{ marginBottom: 40 }} name="exclamation-circle" size={150} color="#e54f4f" />
-                                                                <Text style={styles.ErrorMessageTitle}>Oh No, Data Not Found !</Text>
-                                                                <Text style={styles.ErrorMessageText}>Could not find any horses.</Text>
-                                                                <Text style={styles.ErrorMessageText}>You can search again.</Text>
-                                                                <View style={styles.ErrorMessageButtonContainer}>
-                                                                </View>
+                                                                <Text style={styles.ErrorMessageTitle}>No data found !</Text>
+                                                             
                                                             </View>
                                                         }
                                                     </>
@@ -1642,7 +1615,7 @@ export function RequestsEditAHorse({ navigation }) {
                                         resizeMode="contain"
                                     />
 
-                                    <Text style={{ fontSize: 16, marginLeft: 10, left: 10, alignSelf: 'center', color: 'white', marginTop: Platform.OS == 'ios' ? -5 : -4 }}>Back to Search</Text>
+                                    <Text style={{ fontSize: 16, marginLeft: 10, left: 10, alignSelf: 'center', color: 'white', marginTop: Platform.OS == 'ios' ? -5 : -4 }}>{t('BackToSearch')}</Text>
 
 
                                 </TouchableOpacity>
@@ -1653,7 +1626,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                     <ScrollView>
                                         <View style={{ padding: 10, top: 15 }}>
-                                            <Text style={styles.text_footer}>Name</Text>
+                                            <Text style={styles.text_footer}>{t('NameText')}</Text>
 
                                             <View style={styles.action}>
                                                 <Ionicons name="person-outline" size={25} color="#2e3f6e" />
@@ -1666,7 +1639,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                 />
 
                                             </View>
-                                            <Text style={styles.text_footer}>Sire</Text>
+                                            <Text style={styles.text_footer}>{t('SireText')}</Text>
 
                                             <View style={styles.action}>
                                                 <TouchableOpacity
@@ -1682,7 +1655,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                     <Ionicons name="add-outline" size={24} color="silver" />
                                                 </TouchableOpacity>
                                             </View>
-                                            <Text style={styles.text_footer}>Mare</Text>
+                                            <Text style={styles.text_footer}>{t('MareText')}</Text>
 
                                             <View style={styles.action}>
 
@@ -1698,22 +1671,9 @@ export function RequestsEditAHorse({ navigation }) {
                                                     <Ionicons name="add-outline" size={24} color="silver" />
                                                 </TouchableOpacity>
                                             </View>
-                                            {/*
-                                <View style={[styles.action, { marginTop: 30 }]}>
-                                    <Ionicons name="calendar-outline" size={24} color="#2e3f6e" />
-                                    <TextInput
-                                        style={styles.HalfInputStyle}
-                                        placeholder={"Set a Birth Date"}
-                                        name={"BirthDate"}
-                                        keyboardType="numeric"
-                                        value={getHorseBirthDate.toString()}
-                                        onChangeText={setHorseBirthDate}
-                                    />
-                                </View>
-*/}
 
 
-                                            <Text style={styles.text_footer}>Birth Date</Text>
+                                            <Text style={styles.text_footer}>{t('BirthDateText')}</Text>
                                             <View style={styles.action}>
                                                 <TouchableOpacity onPress={() => {
 
@@ -1764,7 +1724,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                             }}
                                                         >
                                                             <View style={{ borderBottomWidth: 0.5, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 10, bottom: 5 }}>
-                                                                    <Text style={{ fontSize: 22 }}>Birth Date</Text>
+                                                                    <Text style={{ fontSize: 22 }}>{t('BirthDateText')}</Text>
                                                                 
                                                             </View>
                                                             {show && (
@@ -1783,7 +1743,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                 </TouchableOpacity>
 
                                             </View>
-                                            <Text style={styles.text_footer}>Sex</Text>
+                                            <Text style={styles.text_footer}>{t('SexText')}</Text>
                                             <View style={styles.action}>
                                                 <Ionicons name="transgender-outline" size={22} color="#2e3f6e" />
 
@@ -1817,7 +1777,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                 </RNPickerSelect>
 
                                             </View>
-                                            <Text style={styles.text_footer}>Country</Text>
+                                            <Text style={styles.text_footer}>{t('CountryText')}</Text>
 
                                             <View style={styles.action}>
                                                 <Ionicons name="flag-outline" size={22} color="#2e3f6e" />
@@ -1854,7 +1814,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                             </View>
 
-                                            <Text style={styles.text_footer}>Class</Text>
+                                            <Text style={styles.text_footer}>{t('ClassText')}</Text>
                                             <View style={styles.action}>
                                                 <Ionicons name="list-outline" size={22} color="#2e3f6e" />
 
@@ -1890,7 +1850,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                             </View>
 
-                                            <Text style={styles.text_footer}>Color</Text>
+                                            <Text style={styles.text_footer}>{t('ColorText')}</Text>
 
                                             <View style={styles.action}>
                                                 <Ionicons name="color-filter-outline" size={22} color="#2e3f6e" />
@@ -1927,7 +1887,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                             </View>
 
-                                            <Text style={[styles.text_footer, { top: 25 }]}>First Place</Text>
+                                            <Text style={[styles.text_footer, { top: 25 }]}>{t('FirstPlaceText')}</Text>
                                             <View style={[styles.action5]}>
 
                                                 <InputSpinner
@@ -1947,7 +1907,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                     }}
                                                 />
                                             </View>
-                                            <Text style={[styles.text_footer, { top: 25 }]}>Second Place</Text>
+                                            <Text style={[styles.text_footer, { top: 25 }]}>{t('SecondPlaceText')}</Text>
                                             {/*<Feather name="award" size={22} color="#2e3f6e" />*/}
                                             <View style={styles.action5}>
 
@@ -1968,7 +1928,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                     }}
                                                 />
                                             </View>
-                                            <Text style={[styles.text_footer, { top: 25 }]}>Third Place</Text>
+                                            <Text style={[styles.text_footer, { top: 25 }]}>{t('ThirdPlaceText')}</Text>
                                             <View style={styles.action5}>
                                                 <InputSpinner
                                                     step={1}
@@ -1988,7 +1948,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                 />
                                             </View>
 
-                                            <Text style={[styles.text_footer, { top: 25 }]}>Forth Place</Text>
+                                            <Text style={[styles.text_footer, { top: 25 }]}>{t('FourthPlaceText')}</Text>
                                             <View style={styles.action5}>
                                                 <InputSpinner
                                                     step={1}
@@ -2008,7 +1968,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                 />
                                             </View>
 
-                                            <Text style={[styles.text_footer, { top: 25 }]}>Start</Text>
+                                            <Text style={[styles.text_footer, { top: 25 }]}>{t('StartText')}</Text>
                                             <View style={styles.action5}>
                                                 <InputSpinner
                                                     step={1}
@@ -2029,7 +1989,7 @@ export function RequestsEditAHorse({ navigation }) {
 
 
                                             <View style={[styles.action, { bottom: 30, paddingTop: 40 }]}>
-                                                <Text style={styles.text_footer}>Dead: </Text>
+                                                <Text style={styles.text_footer}>{t('DeadText')}</Text>
                                                 <Switch
                                                     trackColor={{ false: "#D6D6D6", true: "#2e3f6e" }}
                                                     thumbColor={DeadCheckBox ? "#fff" : "#fff"}
@@ -2041,7 +2001,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                             </View>
 
-                                            <Text style={styles.text_footer}>Earning</Text>
+                                            <Text style={styles.text_footer}>{t('EarningText')}</Text>
 
                                             <View style={styles.action4}>
                                                 <View style={{ top: 10 }}>
@@ -2085,7 +2045,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                                 </RNPickerSelect>
                                             </View>
-                                            <Text style={styles.text_footer}>Price</Text>
+                                            <Text style={styles.text_footer}>{t('PriceText')}</Text>
 
                                             <View style={styles.action4}>
                                                 <View style={{ top: 10 }}>
@@ -2133,7 +2093,7 @@ export function RequestsEditAHorse({ navigation }) {
 
 
 
-                                            <Text style={styles.text_footer}>Owner</Text>
+                                            <Text style={styles.text_footer}>{t('OwnerText')}</Text>
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     setBottomSheet("Owner")
@@ -2146,7 +2106,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                 <Text style={styles.InformationText4}>{getOwnerText}</Text>
                                                 <Ionicons name="add-outline" size={24} color="silver" />
                                             </TouchableOpacity>
-                                            <Text style={styles.text_footer}>Coach</Text>
+                                            <Text style={styles.text_footer}>{t('CoachText')}</Text>
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     setBottomSheet("Owner")
@@ -2158,7 +2118,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                 <Text style={styles.InformationText4}>{getCoachText}</Text>
                                                 <Ionicons name="add-outline" size={24} color="silver" />
                                             </TouchableOpacity>
-                                            <Text style={styles.text_footer}>Breeder</Text>
+                                            <Text style={styles.text_footer}>{t('BreederText')}</Text>
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     setBottomSheet("Owner")
@@ -2171,27 +2131,19 @@ export function RequestsEditAHorse({ navigation }) {
                                                 <Ionicons name="add-outline" size={24} color="silver" />
                                             </TouchableOpacity>
                                             <View style={{ marginVertical: 15 }}>
-                                                <Text style={styles.text_footer}>Header</Text>
+                                                <Text style={styles.text_footer}>{t('HeaderText')}</Text>
 
 
                                                 <TextInput
                                                     style={styles.action}
-                                                    placeholder={getHeaderPlaceholder}
+                                                    placeholder={t('HeaderText')}
                                                     name={"Header"}
                                                     value={getHeader}
                                                     onChangeText={setHeader}
                                                     numberOfLines={1}
                                                 />
                                             </View>
-                                            <Text style={styles.text_footer}>Paragraph</Text>
-                                            <TextInput
-                                                style={[styles.action, { height: 100, textAlignVertical: 'top', }]}
-                                                placeholder="Paragraph"
-                                                name={"Paragraph"}
-                                                value={getInfo.toString()}
-                                                onChangeText={setInfo}
-                                                multiline={true}
-                                            />
+                                            
 
                                             <ScrollView horizontal={true}>
                                                 <View style={{
@@ -2222,7 +2174,6 @@ export function RequestsEditAHorse({ navigation }) {
                                                                     onPress={() => {
                                                                         // this doesn't work yet
                                                                         var newList = imageList.filter((item) => item !== prop);
-                                                                        console.log(newList)
 
                                                                         setImagelist(newList);
 
@@ -2237,7 +2188,7 @@ export function RequestsEditAHorse({ navigation }) {
                                             </ScrollView>
 
                                             <MyButtonWhite
-                                                Title="Upload"
+                                                Title={t('UploadButton')}
                                                 Icon="cloud-upload-outline"
                                                 IconSize={24}
                                                 onPress={pickImage}>
@@ -2247,7 +2198,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                             <View style={{ marginTop: '5%', marginBottom: 40, paddingBottom: 40 }}>
                                                 <MyButton
-                                                    Title="Add"
+                                                    Title={t('AddButton')}
                                                     Icon="add-circle-outline"
                                                     IconSize={24}
                                                     onPress={() => {
@@ -2272,7 +2223,7 @@ export function RequestsEditAHorse({ navigation }) {
                             <View >
 
                                 <SearchBar
-                                    placeholder={getSearchPlaceholder}
+                                    placeholder={t('SearchPlaceholder')}
                                     lightTheme
                                     platform="ios"
                                     cancelButtonTitle=""
@@ -2304,9 +2255,8 @@ export function RequestsEditAHorse({ navigation }) {
                                     }}
                                 />
 
-
                                 <MyButtonEditDelete
-                                    Title="Search"
+                                    Title={t('Search')}
                                     Icon="search-outline"
                                     IconSize={18}
                                     onPress={() => {
@@ -2316,7 +2266,7 @@ export function RequestsEditAHorse({ navigation }) {
                                             Keyboard.dismiss()
                                             readHorseGetByName();
                                         } else {
-                                            alert("Please search the name first");
+                                            alert(t('TabSearchAlert'))
                                         }
                                     }}
                                 >
@@ -2329,7 +2279,7 @@ export function RequestsEditAHorse({ navigation }) {
 
                                             <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseGetByName.length}) records</Text>
+                                                    <Text style={{ fontSize: 12 }}>{t('SearchResultsFound')} ({getHorseGetByName.length}) {t('records')}</Text>
                                                     <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
                                                 </View>
                                                 <Animated.FlatList
@@ -2365,7 +2315,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                         })
                                                         return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
                                                             onPress={() => {
-                                                                setLoaderText(item.HORSE_NAME + "\n" + ' Verileri Yükleniyor..')
+                                                                setLoaderText(item.HORSE_NAME + "\n" + t('VerileriYükleniyor'))
                                                                 setLoader(true)
                                                                 setTimeout(() => {
                                                                     readHorseGetByIdForUpdate(item.HORSE_ID)
@@ -2379,21 +2329,21 @@ export function RequestsEditAHorse({ navigation }) {
                                                             />
                                                             <View style={{ flexDirection: 'column' }}>
                                                                 <View style={{ flexDirection: 'row' }}>
-                                                                    <Text style={[styles.textStyle2]}>Horse: </Text>
+                                                                    <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                                                                     <Text style={styles.textStyle}>
                                                                         {item.HORSE_NAME}
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row' }}>
-                                                                    <Text style={[styles.textStyle2]}>Sire: </Text>
+                                                                    <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                                                                     <Text style={styles.textStyle}>
                                                                         {item.FATHER_NAME}
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row' }}>
-                                                                    <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                                    <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                                                                     <Text style={styles.textStyle}>
                                                                         {item.MOTHER_NAME}
                                                                     </Text>

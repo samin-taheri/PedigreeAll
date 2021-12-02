@@ -20,26 +20,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import { Ionicons } from '@expo/vector-icons';
 import faker from 'faker'
 import RNPickerSelect from 'react-native-picker-select';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
+import { Helper } from "../component/Helper";
 
 faker.seed(10);
 const SPACING = 18;
 const AVATAR_SIZE = 55;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
-
-const GenerationData = [
-    {
-        id: "Standard",
-        title: "Standard",
-    },
-    {
-        id: "Advanced",
-        title: "Advanced",
-    },
-    {
-        id: "Professional",
-        title: "Professional",
-    },
-];
 
 export function TabEffectiveNickSearch({ navigation, route }) {
 
@@ -49,6 +37,8 @@ export function TabEffectiveNickSearch({ navigation, route }) {
         setHorseId(route.params?.HorseId)
 
     });
+    const { t, i18n } = useTranslation();
+
     const [getHorseText, setHorseText] = useState('')
     const [getHorseId, setHorseId] = useState(0)
     const OpenFullBottomSheet = useRef();
@@ -65,10 +55,24 @@ export function TabEffectiveNickSearch({ navigation, route }) {
     const [getRegisteredStallionsItemData, setRegisteredStallionsItemData] = React.useState(1);
     const [getData, setData] = React.useState([]);
     const [getStallionCodeData, setStallionCodeData] = React.useState();
+    const GenerationData = [
+        {
+            id: t('Standard'),
+            title: t('Standard'),
+        },
+        {
+            id: t('Advanced'),
+            title: t('Advanced'),
+        },
+        {
+            id: t('Professional'),
+            title: t('Professional'),
+        },
+    ];
 
     const [getFirstHorseID, setFirstHorseID] = React.useState();
     const refRBSheetGeneration = useRef();
-    const [GenerationTitle, setGenerationTitle] = React.useState("Standard");
+    const [GenerationTitle, setGenerationTitle] = React.useState("Standart");
     const readDataCountryList = async () => {
         let isMounted = true;
         let isActive = true;
@@ -210,6 +214,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
     }
 
     React.useEffect(() => {
+
         setData([])
         readHorseData([]);
         readDataCountryList()
@@ -244,12 +249,12 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                         <View>
                             <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
 
-                                <Text style={{ fontSize: 22, left: 5 }}>Stallions:</Text>
+                                <Text style={{ fontSize: 22, left: 5 }}>{t('Situation')}</Text>
 
                             </View>
                             {getBottomSheetText === "RegisteredStallions" &&
                                 <>
-                                   
+
                                     {getRegisteredStallions.length > 0 ?
                                         <Animated.FlatList
                                             scrollEnabled={true}
@@ -310,7 +315,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                                         <View style={{ backgroundColor: '#db2828', justifyContent: 'center', width: 25, height: 25, borderRadius: 0 }}>
                                                             <Text style={{ color: '#fff', fontWeight: '700', alignSelf: 'center', margin: 'auto' }}>S</Text>
                                                         </View>
-                                                    } 
+                                                    }
                                                     {item.REGISTRATION_ID === 0 &&
                                                         <View style={{ backgroundColor: '#B6BABF', justifyContent: 'center', width: 25, height: 25, borderRadius: 0 }}>
                                                             <Text style={{ color: '#fff', fontWeight: '700', alignSelf: 'center', margin: 'auto' }}>D</Text>
@@ -364,7 +369,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
 
                             <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
 
-                                <Text style={{ fontSize: 22, left: 5 }}>Situation: </Text>
+                                <Text style={{ fontSize: 22, left: 5 }}>{t('Situation')} </Text>
 
                             </View>
                             {GenerationData.length > 0 ?
@@ -457,7 +462,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                     })
                                 }}
                                 style={styles.TwoValueInLineButton}>
-                                <Text style={{ alignSelf: 'center' }}>Mare Name: {getHorseText}</Text>
+                                <Text style={{ alignSelf: 'center' }}>{t('MareNameTextTab')} {getHorseText}</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -480,32 +485,29 @@ export function TabEffectiveNickSearch({ navigation, route }) {
 
                         </TouchableOpacity>
                     </View>
-                    <View style={{ bottom: 10 }}>
-                        <MyButton
-                            Title="Reoprt"
-                            Icon="search-outline"
-                            IconSize={18}
-                            onPress={() => {
-                                if (getRegisteredStallionsId !== undefined) {
-                                    navigation.navigate('EffectiveNickScreen', {
-                                        HORSE_NAME: route.params?.horseEffectiveNick,
-                                        HORSE_ID: -1,
-                                        Situation: chekedItem,
-                                        StallionId: getRegisteredStallionsId,
-                                        StallionName: getRegisteredStallionsName,
-                                        SECOND_ID: -1,
-                                        COUNTRY_ID: getCountryID,
-                                    }
-                                    )
+                    <MyButton
+                        Title={t('Report')}
+                        Icon="search-outline"
+                        IconSize={18}
+                        onPress={() => {
+                            if (getRegisteredStallionsId !== undefined) {
+                                navigation.navigate('EffectiveNickScreen', {
+                                    HORSE_NAME: route.params?.horseEffectiveNick,
+                                    HORSE_ID: -1,
+                                    Situation: chekedItem,
+                                    StallionId: getRegisteredStallionsId,
+                                    StallionName: getRegisteredStallionsName,
+                                    SECOND_ID: -1,
+                                    COUNTRY_ID: getCountryID,
                                 }
-                                else {
-                                    alert('Please search for a name first..')
-                                }
-                            }}
-                        >
-                        </MyButton>
-                    </View>
-
+                                )
+                            }
+                            else {
+                                alert(t('TabSearchAlert'))
+                            }
+                        }}
+                    >
+                    </MyButton>
                     <HomeComponent />
                 </Animatable.View>
             </Animatable.View>

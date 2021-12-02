@@ -22,8 +22,11 @@ import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import WebView from 'react-native-webview';
 import Flag from "react-native-flags";
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 const HorseDetailScreen = ({ route, navigation }) => {
+  const { t, i18n } = useTranslation();
 
   const { HORSE_NAME } = route.params;
   const { MARE_NAME } = route.params;
@@ -311,15 +314,15 @@ const HorseDetailScreen = ({ route, navigation }) => {
           <View style={{ width: '100%', justifyContent: 'flex-end' }}>
 
             <Pressable
-              style={{ paddingLeft: Platform.OS== 'ios'? 25: 10, paddingTop: Platform.OS== 'ios'? 25: 10, paddingBottom: Platform.OS== 'ios'? 0: 5, borderBottomWidth: 0.6, borderBottomColor: '#dedfe1', flexDirection: 'row' }}
+              style={{ paddingLeft: Platform.OS == 'ios' ? 25 : 10, paddingTop: Platform.OS == 'ios' ? 25 : 10, paddingBottom: Platform.OS == 'ios' ? 0 : 5, borderBottomWidth: 0.6, borderBottomColor: '#dedfe1', flexDirection: 'row' }}
               onPress={() => setModalVisible(!modalVisible)}
             >
               <Ionicons name="close-outline" size={35} color="black" />
-              <Text style={{ padding: Platform.OS== 'ios'? 15: 8, left: 10, fontSize: 15, fontWeight: 'bold' }}>{ModalText}</Text>
+              <Text style={{ padding: Platform.OS == 'ios' ? 15 : 8, left: 10, fontSize: 15, fontWeight: 'bold' }}>{ModalText}</Text>
             </Pressable>
           </View>
 
-          {ModalText === "Information" &&
+          {ModalText === "Açıklama" &&
             <>
               {HorseInfo !== undefined ?
                 <View style={styles.ModalItemContainer}>
@@ -338,11 +341,11 @@ const HorseDetailScreen = ({ route, navigation }) => {
                         size='large'
                       />)} />
                 </View>
-                : <Text>There is no information</Text>
+                : <Text>{t('Nodatafound')}</Text>
               }
 
             </>
-            || ModalText === "Image" &&
+            || ModalText === "Resim" &&
 
             <>
               <Image style={styles.HorseImage} source={{ uri: HorseInfo[0].IMAGE_LIST[0] }} />
@@ -352,7 +355,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
             <>
               <Image style={styles.HorseImage} source={{ uri: SocialMedia }} />
             </>
-            || ModalText === "Statistics" &&
+            || ModalText === "İstatistik" &&
             <>
               {time ?
                 <ActivityIndicator style={styles.Activity} color="rgba(52, 77, 169, 0.6)" size="large" />
@@ -361,33 +364,33 @@ const HorseDetailScreen = ({ route, navigation }) => {
                   <ScrollView horizontal>
                     <DataTable>
                       <DataTable.Header>
-                        <DataTable.Title style={{ width: 350 }}>Name</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>Class</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>Point</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.2%' }]}>Earning</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.2%' }]}>Fam</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>Color</DataTable.Title>
-                        <DataTable.Title style={{ width: 400, left: '0.1%' }}>Dam</DataTable.Title>
-                        <DataTable.Title style={{ width: 400, left: '0.5%' }}>BroodMare Sire</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.9%' }]}>Birth D.</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.8%' }]}>Start</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.7%' }]}>1st</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.7%' }]}>1st %</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.6%' }]}>2nd</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.6%' }]}>2nd %</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.5%' }]}>3rd</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.5%' }]}>3rd %</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>4th</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>4th %</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>Price</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>Dr. RM</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>ANZ</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>PedigreeAll</DataTable.Title>
-                        <DataTable.Title style={{ width: 150, left: '0.2%' }}>Owner</DataTable.Title>
-                        <DataTable.Title style={{ width: 150, left: '0.2%' }}>Breeder</DataTable.Title>
-                        <DataTable.Title style={{ width: 150, left: '0.15%' }}>Coach</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>Dead</DataTable.Title>
-                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>Update D.</DataTable.Title>
+                        <DataTable.Title style={{ width: 350 }}>{t('Name')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>{t('Class2')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>{t('Point')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.2%' }]}>{t('EarningText')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.2%' }]}>{t('Fam')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>{t('ColorText')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 400, left: '0.1%' }}>{t('Dam')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 400, left: '0.5%' }}>{t('BroodmareSire')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.9%' }]}>{t('BirthD.')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.8%' }]}>{t('StartText')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.7%' }]}>{t('1st')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.7%' }]}>{t('1st%')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.6%' }]}>{t('2nd')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.6%' }]}>{t('2nd%')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.5%' }]}>{t('3rd')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.5%' }]}>{t('3rd%')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>{t('4th')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>{t('4th%')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.4%' }]}>{t('PriceText')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>{t('DR.RM')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>{t('ANZ')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.3%' }]}>{t('PedigreeAll')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 150, left: '0.2%' }}>{t('OwnerText')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 150, left: '0.2%' }}>{t('BreederText')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 150, left: '0.15%' }}>{t('CoachText')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>{t('Dead')}</DataTable.Title>
+                        <DataTable.Title style={[styles.DataTableText, { left: '0.1%' }]}>{t('UpdateD.')}</DataTable.Title>
                       </DataTable.Header>
 
                       {getStatisticInfo.map((item, index) => (
@@ -454,11 +457,11 @@ const HorseDetailScreen = ({ route, navigation }) => {
                             </DataTable.Cell>
                             {item.IS_DEAD ?
                               <>
-                                <DataTable.Cell style={styles.DataTableText}>DEAD</DataTable.Cell>
+                                <DataTable.Cell style={styles.DataTableText}>{t('DEAD')}</DataTable.Cell>
                               </>
                               :
                               <>
-                                <DataTable.Cell style={styles.DataTableText}>ALIVE</DataTable.Cell>
+                                <DataTable.Cell style={styles.DataTableText}>{t('ALIVE')}</DataTable.Cell>
                               </>
                             }
                             <DataTable.Cell style={styles.DataTableText}>{item.EDIT_DATE_TEXT}</DataTable.Cell>
@@ -490,14 +493,21 @@ const HorseDetailScreen = ({ route, navigation }) => {
 
         <View style={{ marginBottom: 'auto', flexDirection: 'row', bottom: '3%', left: '25%' }}>
           {/*<Text style={styles.textStyles}>{HorseInformationData.m_cData.HEADER_OBJECT.ROW1_GENERAL}</Text>*/}
-          <Text style={styles.textStyles}>{HORSE_NAME}  {MARE_NAME}</Text>
+
+          <Animatable.Image
+            animation="fadeIn"
+            style={{ width: '100%', height: '100%', marginLeft: 'auto', right: '50%', bottom: '0%', position: 'absolute', zIndex: -1, resizeMode: 'center' }}
+            source={require('../assets/ver.png')}
+          />
+          <Animatable.Text animation="fadeIn" style={styles.textStyles}>{HORSE_NAME}  {MARE_NAME}</Animatable.Text>
+
         </View>
 
         <View style={{ bottom: '12%' }}>
           <View style={styles.StabilInformationButtonContainer3Value}>
             <TouchableOpacity
               onPress={() => {
-                setModalText("Information");
+                setModalText("Açıklama");
                 setModalVisible(true)
               }}
               style={styles.StabilInformationButton}>
@@ -505,7 +515,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                setModalText("Statistics")
+                setModalText("İstatistik")
                 setModalVisible(true)
               }}
               style={styles.StabilInformationButton}>
@@ -513,7 +523,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                setModalText("Image");
+                setModalText("Resim");
                 setModalVisible(true)
               }}
               style={styles.StabilInformationButton}>
@@ -646,7 +656,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="id-card" size={14} color={getProfileColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getProfileColor, paddingLeft: 5 }}>Profile</Text>
+              <Text style={{ color: getProfileColor, paddingLeft: 5 }}>{t('Profile')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getProgencyLineColor }]}
@@ -695,7 +705,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getProgencyColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getProgencyColor, paddingLeft: 5 }}>Progeny</Text>
+              <Text style={{ color: getProgencyColor, paddingLeft: 5 }}>{t('Progeny')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getNickLineColor }]}
@@ -788,7 +798,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getFamilyColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getFamilyColor, paddingLeft: 5 }}>Family</Text>
+              <Text style={{ color: getFamilyColor, paddingLeft: 5 }}>{t('Family')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getSiblingsMareLineColor }]}
@@ -829,7 +839,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getSiblingsMareColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getSiblingsMareColor, paddingLeft: 5 }}>Sibling (Mare)</Text>
+              <Text style={{ color: getSiblingsMareColor, paddingLeft: 5 }}>{t('Sibling(Mare)')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getSiblingsSireLineColor }]}
@@ -873,7 +883,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getSiblingsSireColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getSiblingsSireColor, paddingLeft: 5 }}>Sibling (Sire)</Text>
+              <Text style={{ color: getSiblingsSireColor, paddingLeft: 5 }}>{t('Sibling(Sire)')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getSiblingsBroodmareSireLineColor }]}
@@ -919,7 +929,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getSiblingsBroodmareSireColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getSiblingsBroodmareSireColor, paddingLeft: 5 }}>Sibling (Broodmare Sire)</Text>
+              <Text style={{ color: getSiblingsBroodmareSireColor, paddingLeft: 5 }}>{t('Sibling(Broodmare Sire)')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getTailFemaleLineColor }]}
@@ -964,7 +974,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getTailFemaleColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getTailFemaleColor, paddingLeft: 5 }}>Tail Female</Text>
+              <Text style={{ color: getTailFemaleColor, paddingLeft: 5 }}>{t('TailFemale')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getBroodmareSireLineColor }]}
@@ -1012,7 +1022,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getBroodmareSireColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getBroodmareSireColor, paddingLeft: 5 }}>Broodmare Sire</Text>
+              <Text style={{ color: getBroodmareSireColor, paddingLeft: 5 }}>{t('BroodmareSire')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getLinebreedingLineColor }]}
@@ -1104,7 +1114,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
               }}
             >
               <Icon name="cloudsmith" size={14} color={getFemaleFamilyColor} style={{ alignSelf: 'center' }} />
-              <Text style={{ color: getFemaleFamilyColor, paddingLeft: 5 }}>Female Family</Text>
+              <Text style={{ color: getFemaleFamilyColor, paddingLeft: 5 }}>{t('FemaleFamily')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.TabNavigationItem, { borderColor: getTJKLineColor }]}
@@ -1272,6 +1282,7 @@ const styles = StyleSheet.create({
   textStyles: {
     color: 'white',
     fontSize: 15,
+    left: '90%'
   },
   TabNavigationContainer: {
     padding: 5,
@@ -1435,8 +1446,8 @@ const styles = StyleSheet.create({
     shadowRadius: 1.27,
     elevation: 4,
     backgroundColor: '#fff',
-    width: '12%',
-    height: Platform.OS == 'ios' ? '5.5%' : '7%',
+    width: 50,
+    height: 50,
     paddingLeft: Platform.OS == 'ios' ? 3 : 0,
     borderRadius: 30,
     alignItems: 'center',

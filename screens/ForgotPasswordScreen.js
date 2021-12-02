@@ -3,6 +3,8 @@ import { View, Text, TextInput, StyleSheet, Platform, Dimensions } from 'react-n
 import Feather from 'react-native-vector-icons/Feather';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -13,6 +15,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [getEmailPlaceholder, setEmailPlaceholder] = React.useState("")
   const [getSendPasswordButtonText, setSendPasswordButtonText] = React.useState("")
   const [getEmailText, setEmailText] = React.useState("")
+  const { t, i18n } = useTranslation();
 
 
   React.useEffect(() => {
@@ -30,7 +33,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
       >
         <View style={{ padding: 20 }}>
 
-          <Text style={styles.text_footer}>{getEmailText}</Text>
+          <Text style={styles.text_footer}>{t('EmailText')}</Text>
           <View style={styles.action}>
             <Feather
               name="mail"
@@ -38,7 +41,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
               size={20}
             />
             <TextInput
-              placeholder={getEmailPlaceholder}
+              placeholder={t('EnterYourEmail')}
               name={"username"}
               value={email}
               keyboardType='email-address'
@@ -51,7 +54,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           <View style={{ marginTop: 10 }}>
 
             <MyButton
-              Title="Send Password"
+              Title={t('SendPassword')}
               Icon="send-outline"
               IconSize={18}
               onPress={async () => {

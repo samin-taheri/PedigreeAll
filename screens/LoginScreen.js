@@ -10,7 +10,8 @@ import { Global } from './Global';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
 import MyButtonWhite from '../component/MyButtonWhite';
-
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 const STORAGE_KEY = "USER"
 //const axios = require('axios').default;
 
@@ -32,15 +33,7 @@ const LoginScreen = ({ navigation }) => {
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-
-  const [getEmailPlaceholder, setEmailPlaceholder] = React.useState("")
-  const [getPasswordPlaceholder, setPasswordPlaceholder] = React.useState("")
-  const [getForgotPasswordText, setFotgotPasswordText] = React.useState("")
-  const [getSignInButtonText, setSignInButtonText] = React.useState("")
-  const [getNewToPedigreeText, setNewToPedigreeText] = React.useState("")
-  const [getSignUpText, setSignUpText] = React.useState("")
-  const [getEmailPlaceholderText, setEmailPlaceholderText] = React.useState("")
-  const [getPasswordPlaceholderText, setPasswordPlaceholderText] = React.useState("")
+  const { t, i18n } = useTranslation();
 
   const saveData = async (data, email, password) => {
     try {
@@ -66,23 +59,7 @@ const LoginScreen = ({ navigation }) => {
     }
   }
 
-  const AlertMessage = (Title, Message) =>
-    Alert.alert(
-      Title,
-      Message,
-      [
-        { text: "OK" }
-      ]
-    );
   React.useEffect(() => {
-    setEmailPlaceholder("Enter Your Email")
-    setPasswordPlaceholder("Enter Your Password")
-    setFotgotPasswordText("Forgot Password ?")
-    setSignInButtonText("Sign In")
-    setNewToPedigreeText("New to PedigreeAll")
-    setSignUpText("Sign Up")
-    setEmailPlaceholderText("Email")
-    setPasswordPlaceholderText("Password")
 
   }, []);
 
@@ -92,7 +69,7 @@ const LoginScreen = ({ navigation }) => {
         showLogoWithoutBack={true}
       >
         <View style={{ padding: 20 }}>
-          <Text style={styles.txt_footer}>{getEmailPlaceholderText}</Text>
+          <Text style={styles.txt_footer}>{t('EmailText')}</Text>
 
           <View style={styles.action}>
             <Feather
@@ -101,7 +78,7 @@ const LoginScreen = ({ navigation }) => {
               size={20}
             />
             <TextInput
-              placeholder={getEmailPlaceholder}
+              placeholder={t('EnterYourEmail')}
               //onChangeText={(email) => setEmail(email)}
               name={"username"}
               value={email}
@@ -125,7 +102,7 @@ const LoginScreen = ({ navigation }) => {
           </View>
 
           <View>
-            <Text style={styles.txt_footer}>{getPasswordPlaceholderText}</Text>
+            <Text style={styles.txt_footer}>{t('PasswordText')}</Text>
             <View style={styles.action}>
               <Feather
                 name="lock"
@@ -133,7 +110,7 @@ const LoginScreen = ({ navigation }) => {
                 size={20}
               />
               <TextInput
-                placeholder={getPasswordPlaceholder}
+                placeholder={t('EnterYourPassword')}
                 //onChangeText={(password) => setPassword(password)}
                 secureTextEntry={data.secureTextEntry ? true : false}
                 name={"password"}
@@ -165,7 +142,7 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() => {
               navigation.navigate("ForgotPassword");
             }}>
-              <Text style={{ color: '#2e3f6e', marginTop: 15, marginTop: 0 }}>{getForgotPasswordText}</Text>
+              <Text style={{ color: '#2e3f6e', marginTop: 15, marginTop: 0 }}>{t('ForgotPassword')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -173,7 +150,7 @@ const LoginScreen = ({ navigation }) => {
 
 
             <MyButton
-              Title="Sign In"
+              Title={t('Sign In')}
               Icon="log-in-outline"
               IconSize={24}
               onPress={() =>
@@ -209,9 +186,9 @@ const LoginScreen = ({ navigation }) => {
               }
             ></MyButton>
             <MyButtonWhite
-              Title="Sign Up"
-              Icon="log-in-outline"
-              IconSize={24}
+              Title={t('Sign Up')}
+              Icon="person-circle-outline"
+              IconSize={25}
               onPress={() => navigation.navigate('Register')}>
             </MyButtonWhite>
           </View>

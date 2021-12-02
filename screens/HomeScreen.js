@@ -6,11 +6,15 @@ import { TabEffectiveNickSearch } from './TabEffectiveNickSearch';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import * as Animatable from 'react-native-animatable';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 const Tab = createMaterialTopTabNavigator();
 const windowWidth = Dimensions.get('window').width / 3;
 
 function HomeScreen() {
+
+  const { t, i18n } = useTranslation();
   const [getSearchTabBarText, setSearchTabBarText] = React.useState()
   const [getHypotheticalTabBarText, setHypotheticalTabBarText] = React.useState()
   const [getEffectiveNickTabBarText, setEffectiveNickTabBarText] = React.useState()
@@ -62,7 +66,7 @@ function HomeScreen() {
             },
           })}
           name="TabSearch" component={TabSearch} options={{
-            title: 'Search', headerShown: false,
+            title: t('Search'), headerShown: false,
 
           }}
         />
@@ -76,7 +80,7 @@ function HomeScreen() {
                 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
             },
           })}
-          component={TabHypotheticalSearch} options={{ title: 'Hypothetical', headerShown: false }} />
+          component={TabHypotheticalSearch} options={{ title: t('Hypothetical'), headerShown: false }} />
         <Tab.Screen name="TabEffectiveNickSearch"
           listeners={({ navigation, route }) => ({
             focus: e => {
@@ -86,7 +90,7 @@ function HomeScreen() {
                 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
             },
           })}
-          component={TabEffectiveNickSearch} options={{ title: 'EffectiveNick', headerShown: false }} />
+          component={TabEffectiveNickSearch} options={{ title: t('EffectiveNick'), headerShown: false }} />
 
       </Tab.Navigator>
 

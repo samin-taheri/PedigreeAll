@@ -8,6 +8,8 @@ import Myloader from '../constants/Myloader';
 import MyHeader from '../component/MyHeader';
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 faker.seed(10);
 const SPACING = 18;
@@ -15,6 +17,7 @@ const AVATAR_SIZE = 55;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 export function DeleteAHorseScreen({ navigation }) {
+    const { t, i18n } = useTranslation();
 
     const BottomSheetLong = useRef();
     const [searchText, setSearchText] = React.useState("");
@@ -23,7 +26,7 @@ export function DeleteAHorseScreen({ navigation }) {
     const [getSelectedDeleteHorse, setSelectedDeleteHorse] = React.useState();
     const [loader, setLoader] = React.useState(false)
     const [Isloading, setIsLoading] = React.useState(false)
-    const [loaderText, setLoaderText] = React.useState("Lütfen Bekleyin..")
+    const [loaderText, setLoaderText] = React.useState("")
     const [Data, SetData] = useState([]);
 
     const readHorseGetByName = async () => {
@@ -117,22 +120,17 @@ export function DeleteAHorseScreen({ navigation }) {
         }
     }
 
-    const [getSearchPlaceholder, setSearchPlaceholder] = React.useState("")
-    const [getDeleteButtonPlaceholder, setDeleteButtonPlaceholder] = React.useState("")
-
     React.useEffect(() => {
         setSearchText("")
-        setSearchPlaceholder("Please type here and press search .. ")
-        setDeleteButtonPlaceholder("Search")
     }, [])
 
     const deleteMessage = (HorseID) =>
         Alert.alert(
-            "Delete Horse",
-            "Are you sure you want to delete this Horse?",
+            t('DeleteAHorse'),
+            t('AreyousureyouwanttodeletethisHorse'),
             [
                 {
-                    text: "Cancel",
+                    text: t('CancelText'),
                     style: "cancel",
                     onPress: () => {
                         setLoader(false)
@@ -140,7 +138,7 @@ export function DeleteAHorseScreen({ navigation }) {
                     }
                 },
                 {
-                    text: "Delete",
+                    text: t('DeleteText'),
                     onPress: () => readDeleteAHorse(HorseID)
 
                 }
@@ -153,11 +151,11 @@ export function DeleteAHorseScreen({ navigation }) {
 
     return (
         <View>
-            <Myloader Show={loader} Text={loaderText} />
+            <Myloader Show={loader} Text={t('LütfenBekleyin')} />
             <View style={styles.container}>
 
 
-                <MyHeader Title="Delete A Horse"
+                <MyHeader Title={t('DeleteAHorse')}
                     onPress={() => navigation.goBack()}
                 >
 
@@ -176,7 +174,7 @@ export function DeleteAHorseScreen({ navigation }) {
                     ></RBSheet>
 
                     <SearchBar
-                        placeholder={getSearchPlaceholder}
+                        placeholder={t('SearchPlaceholder')}
                         lightTheme
                         platform="ios"
                         cancelButtonTitle=""
@@ -206,7 +204,7 @@ export function DeleteAHorseScreen({ navigation }) {
 
 
                     <MyButtonEditDelete
-                        Title="Search"
+                        Title={t('Search')}
                         Icon="search-outline"
                         IconSize={18}
                         onPress={() => {
@@ -215,7 +213,7 @@ export function DeleteAHorseScreen({ navigation }) {
                                 Keyboard.dismiss()
                                 readHorseGetByName();
                             } else {
-                                alert("Please search the name first");
+                                alert(t('TabSearchAlert'))
                             }
                         }}
                     >
@@ -226,7 +224,7 @@ export function DeleteAHorseScreen({ navigation }) {
 
                             <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseGetByName.length}) records</Text>
+                                    <Text style={{ fontSize: 12 }}>{t('SearchResultsFound')} ({getHorseGetByName.length}) {t('records')}</Text>
                                     <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
                                 </View>
                                 <Animated.FlatList
@@ -262,7 +260,7 @@ export function DeleteAHorseScreen({ navigation }) {
                                         })
                                         return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
                                             onPress={() => {
-                                                setLoaderText(item.HORSE_NAME + ' işleniyor..')
+                                                setLoaderText(item.HORSE_NAME + t('İşleniyor'))
                                                 setLoader(true)
                                                 BottomSheetLong.current.close();
                                                 setTimeout(() => {
@@ -281,21 +279,21 @@ export function DeleteAHorseScreen({ navigation }) {
                                             />
                                             <View style={{ flexDirection: 'column' }}>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Horse: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.HORSE_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Sire: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.FATHER_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                                                     <Text style={styles.textStyle}>
                                                         {item.MOTHER_NAME}
                                                     </Text>

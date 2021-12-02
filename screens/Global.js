@@ -1,7 +1,8 @@
 import React from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeModules, Platform } from 'react-native';
-
+import i18n from "i18next";
+import { useTranslation, initReactI18next } from "react-i18next";
 
 export class Global {
   static IsLogin = false;
@@ -92,7 +93,7 @@ export class Global {
 
     }
   };
-
+  
   static readGetBlogListData = async () => {
     try {
       const token = await AsyncStorage.getItem('TOKEN')

@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
 import faker from 'faker'
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 faker.seed(10);
 const SPACING = 18;
@@ -13,6 +15,7 @@ const AVATAR_SIZE = 55;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const HypotheticalSearchModalMare = ({ route, navigation }) => {
+    const { t, i18n } = useTranslation();
 
     const [searchText, setSearchText] = React.useState("");
     const [IsSire, setIsSire] = React.useState(false);
@@ -101,7 +104,7 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
 
                     <View style={[styles.headerContainer2, { marginBottom: 'auto', top: Platform.OS == 'ios' ? 40 : 0 }]}>
                         <SearchBar
-                            placeholder={getSearchPlaceholder}
+                            placeholder={t('SearchPlaceholder')}
                             lightTheme
                             platform="ios"
                             cancelButtonTitle=""
@@ -136,7 +139,7 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
                                         readHorseGetByName();
                                     }
                                     else {
-                                        alert("Please search the name first");
+                                        alert(t('PleaseSearchTheNameFirst'));
                                     }
                                 }}
                                 style={styles.searchButton}>
@@ -196,7 +199,7 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
                                                 });
                                             }
                                             else {
-                                                alert("Please search the name first");
+                                                alert(t('PleaseSearchTheNameFirst'));
                                             }
                                         }}
                                     >
@@ -206,26 +209,25 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
                                         />
                                         <View style={{ flexDirection: 'column' }}>
                                             <View style={{ flexDirection: 'row' }}>
-                                                <Text style={[styles.textStyle2]}>Horse: </Text>
+                                                <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                                                 <Text style={styles.textStyle}>
                                                     {item.HORSE_NAME}
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
-                                                <Text style={[styles.textStyle2]}>Sire: </Text>
+                                                <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                                                 <Text style={styles.textStyle}>
                                                     {item.FATHER_NAME}
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
-                                                <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                                                 <Text style={styles.textStyle}>
                                                     {item.MOTHER_NAME}
                                                 </Text>
                                             </View>
-
                                         </View>
 
                                     </TouchableOpacity>
@@ -244,7 +246,7 @@ const HypotheticalSearchModalMare = ({ route, navigation }) => {
 
                     <Text style={[styles.TextStyle, {
                         color: '#2e3f6e'
-                    }]}>Close</Text>
+                    }]}>{t('Close')}</Text>
                 </TouchableOpacity>
             </View>
 

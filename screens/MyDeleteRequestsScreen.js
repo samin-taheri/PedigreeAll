@@ -13,8 +13,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import MyHeader from '../component/MyHeader';
 import RNPickerSelect from 'react-native-picker-select';
 import MyButton from '../component/MyButton';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 export function MyDeleteRequestsScreen({ navigation }) {
+  const { t, i18n } = useTranslation();
 
   const refRBSheet = useRef();
   const BottomSheetRequestsStatus = useRef();
@@ -194,7 +197,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
 
   return (
 
-    <MyHeader Title="My Delete Request"
+    <MyHeader Title={t('MyDeleteRequest')}
       onPress={() => navigation.goBack()}
     >
       <RBSheet
@@ -283,7 +286,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
                   resizeMode="contain"
                 />
 
-                <Text style={{ fontSize: 16, marginLeft: 10, left: 10, alignSelf: 'center', color: 'white', marginTop: Platform.OS == 'ios' ? -5 : -4 }}>Back to Search</Text>
+                <Text style={{ fontSize: 16, marginLeft: 10, left: 10, alignSelf: 'center', color: 'white', marginTop: Platform.OS == 'ios' ? -5 : -4 }}>{t('BackToSearch')}</Text>
 
 
               </TouchableOpacity>
@@ -295,7 +298,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
                   <View style={styles.ErrorMessageContainer}>
 
                     <>
-                      <Text style={styles.ErrorMessageTitle}>No data found !</Text>
+                      <Text style={styles.ErrorMessageTitle}>{t('Nodatafound')}</Text>
                     </>
 
                   </View>
@@ -305,16 +308,16 @@ export function MyDeleteRequestsScreen({ navigation }) {
                   >
 
                     <DataTable>
-                        <DataTable.Header>
-                          <DataTable.Title style={{ width: 120 }}>ID</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Name</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Sire</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Dam</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Request Status</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Request Date</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Last Action Date</DataTable.Title>
-                          <DataTable.Title style={{ width: 120 }}>Action</DataTable.Title>
-                        </DataTable.Header>
+                    <DataTable.Header>
+                        <DataTable.Title style={{ width: 120 }}>{t('ID')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 120 }}>{t('Name')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 120 }}>{t('Sire')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 120 }}>{t('Dam')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 120 }}>{t('RequestStatus')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 120 }}>{t('RequestDate')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 120 }}>{t('LastActionDate')}</DataTable.Title>
+                        <DataTable.Title style={{ width: 120 }}>{t('Action')}</DataTable.Title>
+                      </DataTable.Header>
                       
                       {getHorseDeleteRequest.map((item, i) => (
                         <DataTable.Row key={i}>
@@ -345,7 +348,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
 
           <ScrollView style={[styles.header]}>
             <View >
-              <Text style={[styles.text_footer, { marginTop: 10 }]}>ID</Text>
+              <Text style={[styles.text_footer, { marginTop: 10 }]}>{t('ID')}</Text>
               <View style={styles.action}>
                 <Ionicons name="card-outline" size={23} color="#2e3f6e" />
                 <TextInput
@@ -359,7 +362,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
 
 
               </View>
-              <Text style={[styles.text_footer, { marginTop: 10 }]}>Name</Text>
+              <Text style={[styles.text_footer, { marginTop: 10 }]}>{t('Name')}</Text>
               <View style={styles.action}>
                 <Ionicons name="person-outline" size={23} color="#2e3f6e" />
 
@@ -372,7 +375,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
                 />
               </View>
 
-              <Text style={[styles.text_footer, { marginTop: 10 }]}>Sire</Text>
+              <Text style={[styles.text_footer, { marginTop: 10 }]}>{t('Sire')}</Text>
               <View style={styles.action}>
                 <Ionicons name="male-outline" size={23} color="#2e3f6e" />
 
@@ -384,7 +387,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
                   onChangeText={setFatherName}
                 />
               </View>
-              <Text style={[styles.text_footer, { marginTop: 10 }]}>Mare</Text>
+              <Text style={[styles.text_footer, { marginTop: 10 }]}>{t('Dam')}</Text>
               <View style={styles.action}>
                 <Ionicons name="female-outline" size={23} color="#2e3f6e" />
 
@@ -400,7 +403,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
             </View>
 
             <View>
-              <Text style={[styles.text_footer, { marginTop: 30 }]}>Request Status</Text>
+              <Text style={[styles.text_footer, { marginTop: 30 }]}>{t('RequestStatus')}</Text>
               <View style={[styles.action, { paddingTop: 10 }]}>
                 <Ionicons name="stats-chart-outline" size={22} color="#2e3f6e" />
 
@@ -428,7 +431,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
                   <Ionicons name="chevron-down-outline" size={20} color="silver" />
                 </TouchableOpacity>
               </View>
-              <Text style={[styles.text_footer, { marginTop: 30 }]}>Request Date (Start)</Text>
+              <Text style={[styles.text_footer, { marginTop: 30 }]}>{t('RequestDateStart')}</Text>
               <View style={[styles.action, { paddingTop: 10 }]}>
                 <TouchableOpacity onPress={() => {
 
@@ -490,7 +493,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
 
               </View>
             </View>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>Request Date (End)</Text>
+            <Text style={[styles.text_footer, { marginTop: 20 }]}>{t('RequestDateEnd')}</Text>
             <View style={[styles.action, { paddingTop: 10 }]}>
               <TouchableOpacity onPress={() => {
 
@@ -551,7 +554,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
               </TouchableOpacity>
 
             </View>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>Last Action Date (Start)</Text>
+            <Text style={[styles.text_footer, { marginTop: 20 }]}>{t('LastActionDateStart')}</Text>
             <View style={[styles.action, { paddingTop: 10 }]}>
               <TouchableOpacity onPress={() => {
 
@@ -612,7 +615,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
               </TouchableOpacity>
 
             </View>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>Last Action Date (End)</Text>
+            <Text style={[styles.text_footer, { marginTop: 20 }]}>{t('LastActionDateEnd')}</Text>
             <View style={[styles.action, { paddingTop: 10 }]}>
               <TouchableOpacity onPress={() => {
 
@@ -681,7 +684,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
             }}>
 
               <MyButton
-                Title="Search"
+                Title={t('Search')}
                 Icon="search-outline"
                 IconSize={18}
                 onPress={() => {

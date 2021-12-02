@@ -4,9 +4,12 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function HomeComponent({ props }) {
 
+    const { t, i18n } = useTranslation();
     const navigation = useNavigation();
 
     const [Data, SetData] = useState([]);
@@ -123,8 +126,8 @@ function HomeComponent({ props }) {
                 CATEGORY_ID: "",
                 MARE_ID: "",
                 OPEN_OFFER: "",
-                PAGE_COUNT: -1,
-                PAGE_NO: -1,
+                PAGE_COUNT: 10,
+                PAGE_NO: 1,
                 RACE_GENDER_ID: "",
                 RACE_ID: "",
                 SHOW_CASE: 1,
@@ -179,7 +182,7 @@ function HomeComponent({ props }) {
             style={styles.container}>
             <Myloader Show={loader} />
             <View style={{ top: 20 }}>
-                <Text style={[styles.heightText]}>Registered Stallions</Text>
+                <Text style={[styles.heightText]}>{t('RegisteredStallions')}</Text>
                 <FlatList horizontal={true}
                     pagingEnabled
                     horizontal
@@ -240,7 +243,7 @@ function HomeComponent({ props }) {
                     keyExtractor={item => item.HORSE_ID.toString()}
                 />
 
-                <Text style={styles.heightText}>Last Added</Text>
+                <Text style={styles.heightText}>{t('LastAdded')}</Text>
                 <FlatList horizontal={true}
                     pagingEnabled
                     horizontal
@@ -265,7 +268,7 @@ function HomeComponent({ props }) {
                                 })
                         }}
                         >
-                            <Image style={styles.image}
+                            <Image style={styles.image2}
                                 source={{ uri: item.IMAGE }}
                                 resizeMode="cover"
                             />
@@ -277,31 +280,31 @@ function HomeComponent({ props }) {
                                         item.HORSE_NAME}
                                 </Text>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                    <Text style={styles.textStyle2}>Sire: </Text>
+                                    <Text style={styles.textStyle2}>{t('Sire2')}</Text>
                                     <Text style={styles.textStyle}>
                                         {item.FATHER_NAME}
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                    <Text style={styles.textStyle2}>Dam: </Text>
+                                    <Text style={styles.textStyle2}>{t('Dam2')}</Text>
                                     <Text style={styles.textStyle}>
                                         {item.MOTHER_NAME}
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                    <Text style={styles.textStyle2}>BM Sire: </Text>
+                                    <Text style={styles.textStyle2}>{t('BMSire')}</Text>
                                     <Text style={styles.textStyle}>
                                         {item.BM_SIRE_NAME}
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
 
-                                    <Text style={[styles.textStyle2]}>Gender: </Text>
+                                    <Text style={[styles.textStyle2]}>{t('Gender')}</Text>
                                     <Text style={styles.textStyle}>
                                         {item.SEX_OBJECT.SEX_EN}
                                     </Text>
 
-                                    <Text style={[styles.textStyle2, { paddingLeft: 20 }]}>Class: </Text>
+                                    <Text style={[styles.textStyle2, { paddingLeft: 20 }]}>{t('Class')}</Text>
                                     <Text style={styles.textStyle}>
                                         {item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}
                                     </Text>
@@ -311,7 +314,7 @@ function HomeComponent({ props }) {
                     keyExtractor={item => item.HORSE_ID.toString()}
                 />
 
-                <Text style={styles.heightText}>Horses For Sale</Text>
+                <Text style={styles.heightText}>{t('HorsesForSale')}</Text>
                 <FlatList horizontal={true}
                     pagingEnabled
                     horizontal
@@ -393,6 +396,13 @@ const styles = StyleSheet.create({
     image: {
         width: 120,
         height: 100,
+        borderRadius: 4,
+        marginRight: 10,
+        alignItems: 'center'
+    },
+    image2: {
+        width: 120,
+        height: 120,
         borderRadius: 4,
         marginRight: 10,
     },

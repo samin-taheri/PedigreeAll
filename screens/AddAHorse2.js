@@ -19,8 +19,12 @@ import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
 import MyButtonWhite from '../component/MyButtonWhite';
 import Myloader from '../constants/Myloader';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 export function AddAHorse2({ navigation }) {
+
+  const [getImage, setImage] = React.useState("");
 
   const BottomSheetRef = useRef();
   const [isDetail, setIsDetail] = useState(false);
@@ -40,12 +44,12 @@ export function AddAHorse2({ navigation }) {
   const [ColorText, setColorText] = useState("Select a Color")
   const [searchValue, setSearchValue] = React.useState("")
   const [loader, setLoader] = React.useState(false)
-  const [loaderText, setLoaderText] = React.useState("Lütfen Bekleyin..")
+  const [loaderText, setLoaderText] = React.useState("")
   const [getOwnerBreederName, setOwnerBreederName] = React.useState("")
   const [getCoachBreederOwner, setCoachBreederOwner] = React.useState("");
-  const [getOwnerText, setOwnerText] = React.useState('Owner');
-  const [getBreederText, setBreederText] = React.useState('Breeder')
-  const [getCoachText, setCoachText] = React.useState('Coach')
+  const [getOwnerText, setOwnerText] = React.useState('');
+  const [getBreederText, setBreederText] = React.useState('')
+  const [getCoachText, setCoachText] = React.useState('')
   const [isLoading, SetisLoading] = React.useState(true);
 
   const [SireMareHorseData, setSireMareHorseData] = React.useState([]);
@@ -54,8 +58,8 @@ export function AddAHorse2({ navigation }) {
   const [getCheckHorseAvaibleData, setCheckHorseAvaibleData] = React.useState([]);
   const [SireData, setSireData] = React.useState([]);
   const [MareData, setMareData] = React.useState([]);
-  const [SireText, setSireText] = React.useState("Sire");
-  const [MareText, setMareText] = React.useState("Mare");
+  const [SireText, setSireText] = React.useState("");
+  const [MareText, setMareText] = React.useState("");
   const bottomSheet = useRef();
 
   const [DeadCheckBox, setDeadCheckBox] = React.useState(false)
@@ -235,8 +239,6 @@ export function AddAHorse2({ navigation }) {
         if (isActive) {
           setWinnerTypeList(list)
         }
-
-
       })
       .catch((error) => {
         console.error(error);
@@ -563,8 +565,8 @@ export function AddAHorse2({ navigation }) {
               setWinnerTypeID(1)
               setFamilyID(1)
               setColorID(1)
-              setSireText("Sire")
-              setMareText("Mare")
+              setSireText("")
+              setMareText("")
               setSexText("Select a Gender")
               setCounrtyText("Select a Country")
               setWinnerText("Select a Class")
@@ -573,9 +575,9 @@ export function AddAHorse2({ navigation }) {
               setAliveCheckBox(false)
               setEarningText("$")
               setPriceText("$")
-              setOwnerText("Owner")
-              setBreederText("Breeder")
-              setCoachText("Coach")
+              setOwnerText("")
+              setBreederText("")
+              setCoachText("")
               setImagelist([]);
             }
 
@@ -621,7 +623,6 @@ export function AddAHorse2({ navigation }) {
         })
           .then((response) => response.json())
           .then((json) => {
-            console.log(json)
             readAddAHorse(json)
           })
           .catch((error) => {
@@ -653,29 +654,13 @@ export function AddAHorse2({ navigation }) {
           })
           .then((response) => response.json())
           .then((json) => {
-            var dataDisplay = null;
-            var aa = [];
-            if (json && json.m_cData) {
-              dataDisplay = json.m_cData.map((i, index) => (
-                aa.push({
-                  HORSE_DATA: i,
-                  HORSE_ID: i.HORSE_ID,
-                  HORSE_NAME: i.HORSE_NAME,
-                  FATHER_NAME: i.FATHER_NAME,
-                  MOTHER_NAME: i.MOTHER_NAME,
-                  IMAGE: i.IMAGE,
-                })
-              ))
-            }
+            console.log(JSON.stringify(json))
+
             setCheckHorseAvaibleData(json)
-            if (json.m_cDetail.m_eProcessState < 1) {
+            if (json.m_cDetail.m_eProcessState < 0) {
+              readAddAHorse();
               saveImage();
             }
-            else {
-              Alert("Kayit Bulundu")
-            }
-
-
           })
           .catch((error) => {
             console.error(error);
@@ -687,7 +672,7 @@ export function AddAHorse2({ navigation }) {
     } catch (e) {
     }
   }
-
+  const { t, i18n } = useTranslation();
   React.useEffect(() => {
     const abortCtrl = new AbortController();
     setSexList([])
@@ -704,19 +689,18 @@ export function AddAHorse2({ navigation }) {
     readUser()
     readGetOwnerBreeder()
 
-    setOwnerText("Owner")
-    setBreederText("Breeder")
-    setCoach("Coach")
+    setOwnerText("")
+    setBreederText("")
+    setCoach("")
     return () => { abortCtrl.abort() };
 
   }, [])
-  const [getImage, setImage] = React.useState("");
 
   return (
 
     <View style={styles.Container}>
-      <Myloader Show={loader} Text={loaderText} />
-      <MyHeader Title="Add A Horse"
+      <Myloader Show={loader} Text={t('LoaderText')} />
+      <MyHeader Title={t('AddAHorse')}
         onPress={() => navigation.goBack()}
       >
         <RBSheet
@@ -811,7 +795,7 @@ export function AddAHorse2({ navigation }) {
                             }} >
                             <Flag code={item.ICON.toUpperCase()} size={24} />
                             <ListItem.Content>
-                                <ListItem.Title>{item.COUNTRY_EN}</ListItem.Title>
+                              <ListItem.Title>{item.COUNTRY_EN}</ListItem.Title>
                             </ListItem.Content>
                             <ListItem.Chevron />
                           </ListItem>
@@ -887,12 +871,15 @@ export function AddAHorse2({ navigation }) {
                               setSireData(item);
                               setFatherID(item.HORSE_ID)
                               setFatherName(item.HORSE_NAME)
+                              setFatherObject(item)
+
                             }
                             else if (SireMareHorseName === 'Mare') {
                               setMareText(item.HORSE_NAME);
                               setMareData(item);
                               setMotherID(item.HORSE_ID)
                               setMotherName(item.HORSE_NAME)
+                              setMotherObject(item)
                             }
                             setSireMareHorseData([])
                             BottomSheetRef.current.close();
@@ -904,21 +891,21 @@ export function AddAHorse2({ navigation }) {
                           />
                           <View style={{ flexDirection: 'column' }}>
                             <View style={{ flexDirection: 'row' }}>
-                              <Text style={[styles.textStyle2]}>Horse: </Text>
+                              <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                               <Text style={styles.textStyle}>
                                 {item.HORSE_NAME}
                               </Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
-                              <Text style={[styles.textStyle2]}>Sire: </Text>
+                              <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                               <Text style={styles.textStyle}>
                                 {item.FATHER_NAME}
                               </Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
-                              <Text style={[styles.textStyle2]}>Mare: </Text>
+                              <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                               <Text style={styles.textStyle}>
                                 {item.MOTHER_NAME}
                               </Text>
@@ -1115,11 +1102,11 @@ export function AddAHorse2({ navigation }) {
           <ScrollView style={{ padding: 10, top: 15 }}>
             <View style={{ marginTop: 20 }}>
 
-              <Text style={styles.text_footer}>Name</Text>
+              <Text style={styles.text_footer}>{t('NameText')}</Text>
               <View style={[styles.action]}>
                 <Ionicons name="person-outline" size={25} color="#2e3f6e" />
                 <TextInput
-                  placeholder="Name"
+                  placeholder={t('NameText')}
                   name={"username"}
                   value={getHorseName}
                   onChangeText={setHorseName}
@@ -1128,7 +1115,7 @@ export function AddAHorse2({ navigation }) {
                 />
 
               </View>
-              <Text style={styles.text_footer}>Sire</Text>
+              <Text style={styles.text_footer}>{t('SireText')}</Text>
               <View style={styles.action}>
                 <TouchableOpacity
                   onPress={() => {
@@ -1138,12 +1125,12 @@ export function AddAHorse2({ navigation }) {
                   }}
                   style={styles.TwoValueInLineButton}>
                   <Ionicons name="male-outline" size={22} color="#2e3f6e" />
-                  <Text style={styles.InformationText3}>{SireText}
+                  <Text style={styles.InformationText3}>{t('SireText2')}{SireText}
                   </Text>
                   <Feather name="plus" size={22} color="silver" />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.text_footer}>Mare</Text>
+              <Text style={styles.text_footer}>{t('MareText')}</Text>
               <View style={styles.action}>
                 <TouchableOpacity
                   onPress={() => {
@@ -1153,12 +1140,12 @@ export function AddAHorse2({ navigation }) {
                   }}
                   style={styles.TwoValueInLineButton}>
                   <Ionicons name="female-outline" size={22} color="#2e3f6e" />
-                  <Text style={styles.InformationText3}>{MareText}
+                  <Text style={styles.InformationText3}>{t('MareText2')}{MareText}
                   </Text>
                   <Feather name="plus" size={22} color="silver" />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.text_footer}>Birth Date</Text>
+              <Text style={styles.text_footer}>{t('BirthDateText')}</Text>
               <View style={styles.action}>
                 <TouchableOpacity onPress={() => {
 
@@ -1209,7 +1196,7 @@ export function AddAHorse2({ navigation }) {
                       }}
                     >
                       <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 10, bottom: 5 }}>
-                          <Text style={{ fontSize: 22 }}>Birth Date</Text>
+                        <Text style={{ fontSize: 22 }}>{t('BirthDateText')}</Text>
                       </View>
                       {show && (
                         <DateTimePicker style={{ width: Dimensions.get('window').width }}
@@ -1228,7 +1215,7 @@ export function AddAHorse2({ navigation }) {
 
               </View>
 
-              <Text style={styles.text_footer}>Sex</Text>
+              <Text style={styles.text_footer}>{t('SexText')}</Text>
               <View style={styles.action}>
                 <Ionicons name="transgender-outline" size={22} color="#2e3f6e" />
 
@@ -1252,7 +1239,7 @@ export function AddAHorse2({ navigation }) {
 
                 />
               </View>
-              <Text style={styles.text_footer}>Country</Text>
+              <Text style={styles.text_footer}>{t('CountryText')}</Text>
               <View style={styles.action}>
                 <Ionicons name="flag-outline" size={22} color="#2e3f6e" />
 
@@ -1273,7 +1260,7 @@ export function AddAHorse2({ navigation }) {
               </View>
 
 
-              <Text style={styles.text_footer}>Class</Text>
+              <Text style={styles.text_footer}>{t('ClassText')}</Text>
               <View style={styles.action}>
                 <Ionicons name="list-outline" size={22} color="#2e3f6e" />
 
@@ -1297,7 +1284,7 @@ export function AddAHorse2({ navigation }) {
 
                 />
               </View>
-              <Text style={styles.text_footer}>Color</Text>
+              <Text style={styles.text_footer}>{t('ColorText')}</Text>
               <View style={styles.action}>
                 <Ionicons name="color-filter-outline" size={22} color="#2e3f6e" />
 
@@ -1324,7 +1311,7 @@ export function AddAHorse2({ navigation }) {
               </View>
 
               <View style={styles.TextInputContainer}>
-                <Text style={[styles.text_footer, { top: 25 }]}>First Place</Text>
+                <Text style={[styles.text_footer, { top: 25 }]}>{t('FirstPlaceText')}</Text>
                 <View style={styles.action5}>
 
                   <InputSpinner
@@ -1345,7 +1332,7 @@ export function AddAHorse2({ navigation }) {
                     }}
                   />
                 </View>
-                <Text style={[styles.text_footer, { top: 25 }]}>Second Place</Text>
+                <Text style={[styles.text_footer, { top: 25 }]}>{t('SecondPlaceText')}</Text>
                 {/*<Feather name="award" size={22} color="#2e3f6e" />*/}
                 <View style={styles.action5}>
 
@@ -1366,7 +1353,7 @@ export function AddAHorse2({ navigation }) {
                     }}
                   />
                 </View>
-                <Text style={[styles.text_footer, { top: 25 }]}>Third Place</Text>
+                <Text style={[styles.text_footer, { top: 25 }]}>{t('ThirdPlaceText')}</Text>
                 <View style={styles.action5}>
                   <InputSpinner
                     step={1}
@@ -1385,7 +1372,7 @@ export function AddAHorse2({ navigation }) {
                     }}
                   />
                 </View>
-                <Text style={[styles.text_footer, { top: 25 }]}>Forth Place</Text>
+                <Text style={[styles.text_footer, { top: 25 }]}>{t('FourthPlaceText')}</Text>
                 <View style={styles.action5}>
                   <InputSpinner
                     step={1}
@@ -1404,7 +1391,7 @@ export function AddAHorse2({ navigation }) {
                     }}
                   />
                 </View>
-                <Text style={[styles.text_footer, { top: 25 }]}>Start</Text>
+                <Text style={[styles.text_footer, { top: 25 }]}>{t('StartText')}</Text>
                 <View style={styles.action5}>
                   <InputSpinner
                     step={1}
@@ -1424,7 +1411,7 @@ export function AddAHorse2({ navigation }) {
                 </View>
               </View>
               <View style={[styles.action, { bottom: 30, paddingTop: 15 }]}>
-                <Text style={styles.text_footer}>Dead: </Text>
+                <Text style={styles.text_footer}>{t('DeadText')}</Text>
                 <Switch
                   trackColor={{ false: "#D6D6D6", true: "#2e3f6e" }}
                   thumbColor={isEnabled ? "#fff" : "#fff"}
@@ -1437,13 +1424,13 @@ export function AddAHorse2({ navigation }) {
               </View>
 
               <View style={{}}>
-                <Text style={styles.text_footer}>Earning</Text>
+                <Text style={styles.text_footer}>{t('EarningText')}</Text>
                 <View style={styles.action4}>
                   <View style={{ left: 0, top: 10 }}>
                     <Ionicons name="cash-outline" size={22} color="#2e3f6e" /></View>
                   <TextInput
                     style={styles.EarningPriceInput}
-                    placeholder="Earning"
+                    placeholder={t('EarningText')}
                     keyboardType="numeric"
                     value={getEarn}
                     onChangeText={setEarn}
@@ -1472,13 +1459,13 @@ export function AddAHorse2({ navigation }) {
                   />
                 </View>
 
-                <Text style={styles.text_footer}>Price</Text>
+                <Text style={styles.text_footer}>{t('PriceText')}</Text>
                 <View style={styles.action4}>
                   <View style={{ left: 0, top: 10 }}>
                     <Ionicons name="wallet-outline" size={22} color="#2e3f6e" /></View>
                   <TextInput
                     style={styles.EarningPriceInput}
-                    placeholder="Price"
+                    placeholder={t('PriceText')}
                     keyboardType="numeric"
                     value={getPrice}
                     onChangeText={setPrice}
@@ -1510,7 +1497,7 @@ export function AddAHorse2({ navigation }) {
 
 
               <View style={styles.CoachOwnerContainer}>
-                <Text style={styles.text_footer}>Owner</Text>
+                <Text style={styles.text_footer}>{t('OwnerText')}</Text>
                 <TouchableOpacity
                   onPress={() => {
                     setBottomSheet("Owner")
@@ -1519,10 +1506,10 @@ export function AddAHorse2({ navigation }) {
                   }}
                   style={styles.action}>
                   <Ionicons name="person-outline" size={22} color="#2e3f6e" />
-                  <Text style={styles.InformationText4}>{getOwnerText}</Text>
+                  <Text style={styles.InformationText4}>{t('OwnerText2')}{getOwnerText}</Text>
                   <Ionicons name="add-outline" size={24} color="silver" />
                 </TouchableOpacity>
-                <Text style={styles.text_footer}>Coach</Text>
+                <Text style={styles.text_footer}>{t('CoachText')}</Text>
                 <TouchableOpacity
                   onPress={() => {
                     setBottomSheet("Owner")
@@ -1531,10 +1518,10 @@ export function AddAHorse2({ navigation }) {
                   }}
                   style={styles.action}>
                   <Ionicons name="person-outline" size={22} color="#2e3f6e" />
-                  <Text style={styles.InformationText4}>{getCoachText}</Text>
+                  <Text style={styles.InformationText4}>{t('CoachText2')}{getCoachText}</Text>
                   <Ionicons name="add-outline" size={24} color="silver" />
                 </TouchableOpacity>
-                <Text style={styles.text_footer}>Breeder</Text>
+                <Text style={styles.text_footer}>{t('BreederText')}</Text>
                 <TouchableOpacity
                   onPress={() => {
                     setBottomSheet("Owner")
@@ -1543,25 +1530,25 @@ export function AddAHorse2({ navigation }) {
                   }}
                   style={styles.action}>
                   <Ionicons name="person-outline" size={22} color="#2e3f6e" />
-                  <Text style={styles.InformationText4}>{getBreederText}</Text>
+                  <Text style={styles.InformationText4}>{t('BreederText2')}{getBreederText}</Text>
                   <Feather name="plus" size={22} color="silver" />
                 </TouchableOpacity>
               </View>
 
               <View style={{ marginVertical: 15 }}>
-                <Text style={styles.text_footer}>Header</Text>
+                <Text style={styles.text_footer}>{t('HeaderText')}</Text>
                 <TextInput
                   style={styles.action}
-                  placeholder="Header"
+                  placeholder={t('HeaderText')}
                   name={"Header"}
                   value={getHeader}
                   onChangeText={setHeader}
                   numberOfLines={1}
                 />
-                <Text style={styles.text_footer}>Paragraph</Text>
+                <Text style={styles.text_footer}>{t('ParagraphText')}</Text>
                 <TextInput
                   style={[styles.action4, { height: 100, textAlignVertical: 'top', }]}
-                  placeholder="Paragraph"
+                  placeholder={t('ParagraphText')}
                   name={"Paragraph"}
                   value={getInfo}
                   onChangeText={setInfo}
@@ -1611,14 +1598,14 @@ export function AddAHorse2({ navigation }) {
                 </View>
               </ScrollView>
               <MyButtonWhite
-                Title="Upload"
+                Title={t('UploadButton')}
                 Icon="cloud-upload-outline"
                 IconSize={24}
                 onPress={pickImage}>
               </MyButtonWhite>
               <View style={{ marginTop: '5%', marginBottom: 40, paddingBottom: 40 }}>
                 <MyButton
-                  Title="Add"
+                  Title={t('AddButton')}
                   Icon="add-circle-outline"
                   IconSize={24}
                   onPress={async (e) => {
@@ -1626,7 +1613,7 @@ export function AddAHorse2({ navigation }) {
                       readCheckHorseAvaible()
                     }
                     else {
-                      alert("Please fill the required fields.")
+                      alert(t('TabSearchAlert'))
                     }
                   }
                   }

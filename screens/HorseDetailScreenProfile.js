@@ -12,10 +12,12 @@ import {
 import { Global } from './Global'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Flag from "react-native-flags";
-import Progress from 'react-native-progress'
+import * as Progress from 'react-native-progress';
 import Image from 'react-native-image-progress'
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
-function HorseDetailScreenProfile({ navigation, route }) {
+function HorseDetailScreenProfile({ navigation, route, BackButton }) {
     const [images, setImageInfo] = React.useState([]);
     const [getHorseInfoByID, setHorseInfoByID] = React.useState();
     const [profileInfo, setProfileInfo] = React.useState();
@@ -23,6 +25,7 @@ function HorseDetailScreenProfile({ navigation, route }) {
     const [time, setTime] = React.useState(true);
     const [loading, setLoading] = React.useState(false);
     const { HORSE_ID } = route.params;
+    const { t, i18n } = useTranslation();
 
     const readHorseInfoByID = async () => {
         try {
@@ -166,6 +169,10 @@ function HorseDetailScreenProfile({ navigation, route }) {
                 paddingBottom: 23
 
             }}>
+            <>
+
+                
+            </>
             {time ?
                 <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
                 :
@@ -211,112 +218,112 @@ function HorseDetailScreenProfile({ navigation, route }) {
                                 </View>
 
                                 <View style={styles.ItemContainer}>
-                                    <Text style={styles.ItemTitleText}>Name:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('NameTextTab')}</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].ICON.toUpperCase()} size={16} />
+                                            <Flag style={{ top: '1%' }} code={getHorseInfoByID[0].ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].HORSE_NAME}</Text>
                                         </View>
                                     </View>
                                 </View>
                                 <View style={styles.ItemContainer}>
-                                    <Text style={styles.ItemTitleText}>Sire:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Sire2')}</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].FATHER_ICON.toUpperCase()} size={16} />
+                                            <Flag style={{ top: '1%' }} code={getHorseInfoByID[0].FATHER_ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].FATHER_NAME}</Text>
                                         </View>
                                     </View>
                                 </View>
                                 <View style={styles.ItemContainer}>
-                                    <Text style={styles.ItemTitleText}>Dam:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Dam2')}</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].MOTHER_ICON.toUpperCase()} size={16} />
+                                            <Flag style={{ top: '1%' }} code={getHorseInfoByID[0].MOTHER_ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].MOTHER_NAME}</Text>
                                         </View>
                                     </View>
                                 </View>
                                 <View style={styles.ItemContainer}>
-                                    <Text style={styles.ItemTitleText}>Broodmare Sire:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('BMSire')}</Text>
                                     <View style={styles.ItemFlexRowContainer}>
                                         <View style={styles.ItemFlagNameContainer}>
-                                            <Flag style={{top: '1%'}} code={getHorseInfoByID[0].BM_SIRE_ICON.toUpperCase()} size={16} />
+                                            <Flag style={{ top: '1%' }} code={getHorseInfoByID[0].BM_SIRE_ICON.toUpperCase()} size={16} />
                                             <Text style={styles.ItemNameText}>{getHorseInfoByID[0].BM_SIRE_NAME}</Text>
                                         </View>
                                     </View>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Class:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Class')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Sex:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Sex')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].SEX_OBJECT.SEX_EN}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Earning:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Earning')}</Text>
                                     <View style={styles.ItemFlagNameContainer}>
                                         <Text style={styles.ItemNameText}>{getHorseInfoByID[0].EARN} {getHorseInfoByID[0].EARN_ICON}</Text>
 
                                     </View>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Family:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Family2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].FAMILY_TEXT}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Color:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Color')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].COLOR_TEXT}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Birth Date:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('BirthDate')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].HORSE_BIRTH_DATE_TEXT}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Start:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Starts')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].START_COUNT}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>1st:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('1st2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].FIRST}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>1st %:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('1st%2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].FIRST_PERCENTAGE}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>2nd:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('2nd2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].SECOND}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>2nd %:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('2nd%2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].SECOND_PERCENTAGE}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>3rd:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('3rd2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].THIRD}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>3rd %:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('3rd%2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].THIRD_PERCENTAGE}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>4th:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('4th2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].FOURTH}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>4th %:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('4th%2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].FOURTH_PERCENTAGE}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Price:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Price2')}</Text>
                                     <View style={styles.ItemFlagNameContainer}>
                                         <Text style={styles.ItemNameText}>{getHorseInfoByID[0].PRICE} {getHorseInfoByID[0].EARN_ICON}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Dr. Roman Miller:</Text>
+                                    <Text style={styles.ItemTitleText}>Dr Roman Miller:</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].RM}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
@@ -328,32 +335,32 @@ function HorseDetailScreenProfile({ navigation, route }) {
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].PA}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Owner:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('OwnerText2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].OWNER}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Breeder:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('CoachText2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].BREEDER}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Coach:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('BreederText2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].COACH}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Dead:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('DeadText')}</Text>
                                     {getHorseInfoByID.IS_DEAD ?
-                                        <Text style={styles.ItemNameText}>Dead</Text>
+                                        <Text style={styles.ItemNameText}>{t('DEAD')}</Text>
                                         :
-                                        <Text style={styles.ItemNameText}>Alive</Text>
+                                        <Text style={styles.ItemNameText}>{t('ALIVE')}</Text>
                                     }
 
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Point:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('Point2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].POINT}</Text>
                                 </View>
                                 <View style={styles.ItemContainer2}>
-                                    <Text style={styles.ItemTitleText}>Update Date:</Text>
+                                    <Text style={styles.ItemTitleText}>{t('UpdateDate2')}</Text>
                                     <Text style={styles.ItemNameText}>{getHorseInfoByID[0].EDIT_DATE_TEXT}</Text>
                                 </View>
 
@@ -389,14 +396,14 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 1.27,
-        elevation: 4, 
-        backgroundColor: '#fff', 
-        width: 50, 
-        height: 50, 
-        paddingLeft: Platform.OS == 'ios' ? 3: 0,
-        borderRadius: 30, 
-        alignItems: 'center', 
-        justifyContent: 'center', 
+        elevation: 4,
+        backgroundColor: '#fff',
+        width: 50,
+        height: 50,
+        paddingLeft: Platform.OS == 'ios' ? 3 : 0,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
         alignSelf: 'center'
     },
     container: {
@@ -444,7 +451,6 @@ const styles = StyleSheet.create({
     bar: {
         backgroundColor: 'rgba(52, 77, 169, 0.6)',
         height: 2,
-        position: 'absolute',
         left: 0,
         top: 0,
     },

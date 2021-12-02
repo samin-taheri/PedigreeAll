@@ -4,6 +4,8 @@ import { Global } from './Global'
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Flag from "react-native-flags";
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function HorseDetailScreenFemaleFamily({ BackButton, navigation, route }) {
 
@@ -16,6 +18,7 @@ function HorseDetailScreenFemaleFamily({ BackButton, navigation, route }) {
     const { Horse_Second_ID_Female_Family } = route.params;
     const { Generation } = route.params;
     const { MinCross_Fename_Family } = route.params;
+    const { t, i18n } = useTranslation();
 
     const readFemaleFamilyReport = async () => {
         try {

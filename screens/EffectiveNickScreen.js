@@ -4,6 +4,8 @@ import * as Animatable from 'react-native-animatable';
 import { Ionicons } from '@expo/vector-icons';
 import WebView from 'react-native-webview';
 import { Global } from './Global';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 const windowWidth = Dimensions.get('window').width / 3;
 
@@ -15,6 +17,7 @@ const EffectiveNickScreen = ({ route, navigation }) => {
 
   const [getEffectiveNickReport, setEffectiveNickReport] = React.useState();
   const [time, setTime] = React.useState(true);
+  const { t, i18n } = useTranslation();
 
   const EffectiveNickReport = async () => {
     try {
@@ -71,15 +74,21 @@ const EffectiveNickScreen = ({ route, navigation }) => {
               size={30}
             />
           </TouchableOpacity>
+         
           <View style={{ marginBottom: 'auto', flexDirection: 'row', bottom: '3%', left: '25%' }}>
-          <Text style={styles.textStyles}>{StallionName}</Text>
+          <Animatable.Image
+            animation="fadeIn"
+            style={{ width: '100%', height: '100%', marginLeft: 'auto', right: '50%', bottom: '0%', position: 'absolute', zIndex: -1, resizeMode: 'center' }}
+            source={require('../assets/ver.png')}
+          />
+          <Animatable.Text style={styles.textStyles}>{StallionName}</Animatable.Text>
           </View>
         </View>
         <Animatable.View style={styles.headerContainer3}>
         {time ?
         <>
           <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
-          <Text style={{top: '42%', textAlign: 'center', color: 'rgba(52, 77, 169, 0.6)', fontSize: 16, margin: 20, fontWeight: '500'}}>Please wait, It may take some time..</Text>
+          <Text style={{top: '42%', textAlign: 'center', color: 'rgba(52, 77, 169, 0.6)', fontSize: 16, margin: 20, fontWeight: '500'}}>{t('Please wait, It may take some time..')}</Text>
           </>
           :
           <>
@@ -175,6 +184,7 @@ const { height } = Dimensions.get("screen");
     textStyles: {
       color: 'white',
       fontSize: 15,
+      left: '90%'
     },
     TabNavigationContainer: {
       padding: 5,

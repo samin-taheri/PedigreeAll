@@ -12,6 +12,8 @@ import {
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyHeader from '../component/MyHeader';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function Search({ navigation }) {
     const [getHorseGetFilter, setHorseGetFilter] = React.useState()
@@ -19,6 +21,7 @@ function Search({ navigation }) {
     const [getSortTypeIDGlobal, setSortTypeIDGlobal] = React.useState(1)
     const [getYearIDGlobal, setYearIDGlobal] = React.useState("7")
     const [getTime, setTime] = React.useState(true);
+    const { t, i18n } = useTranslation();
 
     const [getHorseID, setHorseID] = React.useState("");
     const [getHorseName, setHorseName] = React.useState("");
@@ -207,7 +210,7 @@ function Search({ navigation }) {
 
     return (
         <View style={styles.Container}>
-            <MyHeader Title="Search"
+            <MyHeader Title={t('Search')}
                 onPress={() => navigation.goBack()}
             >
                 {getTime ?
@@ -241,7 +244,7 @@ function Search({ navigation }) {
                                                 item.HORSE_NAME}
                                         </Text>
                                         <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                            <Text style={styles.textStyle2}>Place: </Text>
+                                            <Text style={styles.textStyle2}>{t('Place')}</Text>
                                             <Text style={styles.textStyle}>
                                                 {((item.PLACE).length > maxlimit) ?
                                                     (((item.PLACE).substring(0, maxlimit - 3)) + '...') :
@@ -249,20 +252,20 @@ function Search({ navigation }) {
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                            <Text style={styles.textStyle2}>Cell Phone: </Text>
+                                            <Text style={styles.textStyle2}>{t('CellPhone')}</Text>
                                             <Text style={styles.textStyle}>
                                                 {item.CELL_PHONE}
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                            <Text style={styles.textStyle2}>Name: </Text>
+                                            <Text style={styles.textStyle2}>{t('NameTextTab')}</Text>
                                             <Text style={styles.textStyle}>
                                                 {item.NAME}
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', marginTop: 5 }}>
 
-                                            <Text style={[styles.textStyle2]}>Breeding: </Text>
+                                            <Text style={[styles.textStyle2]}>{t('Breeding')}</Text>
                                             <Text style={styles.textStyle}>
                                                 {item.COUNT}
                                             </Text>

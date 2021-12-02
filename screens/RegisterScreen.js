@@ -10,7 +10,8 @@ import CheckBox1 from '../component/CheckBox1';
 import CheckBox2 from '../component/CheckBox2';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
-
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function showMessage(data, navigation) {
 
@@ -67,28 +68,13 @@ const RegisterScreen = ({ route, navigation }) => {
     const [error, setError] = React.useState("");
     const [checked_1, toggleChecked_1] = useState(true);
     const [checked_2, toggleChecked_2] = useState(false);
-    const [CounrtyList, setCountryList] = useState([])
-
-
-
-    const [getEmailPlaceholder, setEmailPlaceholder] = React.useState("")
-    const [getPasswordPlaceholder, setPasswordPlaceholder] = React.useState("")
-    const [getPasswordAgainPlaceholder, setPasswordAgainPlaceholder] = React.useState("")
-    const [getNamePlaceholder, setNamePlaceholder] = React.useState("")
-    const [getSurnamePlaceholder, setSurnamePlaceholder] = React.useState("")
-    const [getEmailText, setEmailText] = React.useState("")
-    const [getPasswordText, setPasswordText] = React.useState("")
-    const [getPasswordAgainText, setPasswordAgainText] = React.useState("")
-    const [getNameText, setNameText] = React.useState("")
-    const [getSurnameText, setSurnameText] = React.useState("")
-    const [getCountryText, setCountryText] = React.useState("")
-    const [getMemberTypeText, setMemberTypeText] = React.useState("")
-    const [getSelectACountryText, setSelectACountryText] = React.useState("")
-    const [getBireyselText, setBireyselText] = React.useState("")
-    const [getKurumsalText, setKurumsalText] = React.useState("")
-    const [getRegisterButtonText, setRegisterButtonText] = React.useState("")
+    const [CounrtyList, setCountryList] = useState([]);
+    const [checkedPersonal, setCkeckedPersonal] = useState(false);
+    const [checkedLegal, setCkeckedLegal] = useState(false);
+    const { t, i18n } = useTranslation();
 
     const readDataCountryList = async (data) => {
+       
         fetch('https://api.pedigreeall.com/Country/Get', {
             method: 'GET',
             headers: {
@@ -117,25 +103,7 @@ const RegisterScreen = ({ route, navigation }) => {
 
 
     React.useEffect(() => {
-        readDataCountryList();
-
-            setEmailPlaceholder("Enter Your Email")
-            setPasswordPlaceholder("Enter Your Password")
-            setPasswordAgainPlaceholder("Your Password Again")
-            setNamePlaceholder("Enter Your Name")
-            setSurnamePlaceholder("Enter Your Surname")
-            setSelectACountryText("Select Your Country")
-            setEmailText("Email")
-            setPasswordText("Password")
-            setPasswordAgainText("Confirm Password")
-            setNameText("Name")
-            setSurnameText("Surname")
-            setCountryText("Country")
-            setMemberTypeText("Member Type")
-            setBireyselText("Personal")
-            setKurumsalText("Legal Entity")
-            setRegisterButtonText("Register")
-        
+        readDataCountryList();        
     }, []);
 
 
@@ -175,7 +143,7 @@ const RegisterScreen = ({ route, navigation }) => {
             >
                 <View style={{ padding: 20 }}>
                     <ScrollView >
-                        <Text style={styles.text_footer}>{getEmailText}</Text>
+                        <Text style={styles.text_footer}>{t('EmailText')}</Text>
                         <View style={styles.action}>
                             <Feather
                                 name="mail"
@@ -183,7 +151,7 @@ const RegisterScreen = ({ route, navigation }) => {
                                 size={20}
                             />
                             <TextInput
-                                placeholder={getEmailPlaceholder}
+                                placeholder={t('EnterYourEmail')}
                                 name={"username"}
                                 value={email}
                                 keyboardType='email-address'
@@ -205,7 +173,7 @@ const RegisterScreen = ({ route, navigation }) => {
                         </View>
 
                         <View >
-                            <Text style={styles.text_footer}>{getPasswordText}</Text>
+                            <Text style={styles.text_footer}>{t('PasswordText')}</Text>
                             <View style={styles.action}>
                                 <Feather
                                     name="lock"
@@ -213,7 +181,7 @@ const RegisterScreen = ({ route, navigation }) => {
                                     size={20}
                                 />
                                 <TextInput
-                                    placeholder={getPasswordPlaceholder}
+                                    placeholder={t('EnterYourPassword')}
                                     secureTextEntry={data.secureTextEntry ? true : false}
                                     style={styles.textInput}
                                     autoCapitalize="none"
@@ -244,7 +212,7 @@ const RegisterScreen = ({ route, navigation }) => {
 
                         </View>
                         <View>
-                            <Text style={styles.text_footer}>{getPasswordAgainText}</Text>
+                            <Text style={styles.text_footer}>{t('Confirm Password')}</Text>
                             <View style={styles.action}>
                                 <Feather
                                     name="lock"
@@ -252,7 +220,7 @@ const RegisterScreen = ({ route, navigation }) => {
                                     size={20}
                                 />
                                 <TextInput
-                                    placeholder={getPasswordAgainPlaceholder}
+                                    placeholder={t('EnterYourPasswordAgain')}
                                     secureTextEntry={data.confirm_secureTextEntry ? true : false}
                                     style={styles.textInput}
                                     autoCapitalize="none"
@@ -280,7 +248,7 @@ const RegisterScreen = ({ route, navigation }) => {
                             </View>
                         </View>
                         <View >
-                            <Text style={styles.text_footer}>{getNameText}</Text>
+                            <Text style={styles.text_footer}>{t('NameText')}</Text>
                             <View style={styles.action}>
                                 <Feather
                                     name="user"
@@ -288,7 +256,7 @@ const RegisterScreen = ({ route, navigation }) => {
                                     size={20}
                                 />
                                 <TextInput
-                                    placeholder={getNamePlaceholder}
+                                    placeholder={t('EnterYourName')}
                                     style={styles.textInput}
                                     value={name}
                                     onChangeText={setname}
@@ -307,7 +275,7 @@ const RegisterScreen = ({ route, navigation }) => {
                             </View>
                         </View>
                         <View>
-                            <Text style={styles.text_footer}>{getSurnameText}</Text>
+                            <Text style={styles.text_footer}>{t('SurnameText')}</Text>
                             <View style={[styles.action, {}]}>
                                 <Feather
                                     name="user"
@@ -315,7 +283,7 @@ const RegisterScreen = ({ route, navigation }) => {
                                     size={20}
                                 />
                                 <TextInput
-                                    placeholder={getSurnamePlaceholder}
+                                    placeholder={t('EnterYourSurname')}
                                     style={styles.textInput}
                                     value={surname}
                                     onChangeText={setsurname}
@@ -336,7 +304,7 @@ const RegisterScreen = ({ route, navigation }) => {
                         </View>
 
                         <View>
-                            <Text style={styles.text_footer}>{getCountryText}</Text>
+                            <Text style={styles.text_footer}>{t('CountryText')}</Text>
                             <View style={styles.action}>
                                 <Feather
                                     name="globe"
@@ -372,17 +340,17 @@ const RegisterScreen = ({ route, navigation }) => {
 
                         <View>
 
-                            <Text style={styles.text_footer}>{getMemberTypeText}</Text>
+                            <Text style={styles.text_footer}>{t('Member Type')}</Text>
                             <View style={styles.CheckboxView}>
 
 
-                                <CheckBox1 label={getBireyselText} status={checked_1 ? 'checked' : 'unchecked'} onPress={() => {
+                                <CheckBox1 label={t('Personal')} checked ={setCkeckedPersonal} status={checked_1 ? 'checked' : 'unchecked'} onPress={() => {
                                     if (checked_2 === true) {
                                         toggleChecked_1(!checked_1);
                                         toggleChecked_2(!checked_2);
                                     }
                                 }} />
-                                <CheckBox2 label={getKurumsalText} status={checked_2 ? 'checked' : 'unchecked'} onPress={() => {
+                                <CheckBox2 label={t('Legal Entity')} checked ={setCkeckedPersonal} status={checked_2 ? 'checked' : 'unchecked'} onPress={() => {
                                     if (checked_1 === true) {
                                         toggleChecked_2(!checked_2);
                                         toggleChecked_1(!checked_1);
@@ -397,7 +365,7 @@ const RegisterScreen = ({ route, navigation }) => {
                         <View style={{ marginTop: 15, marginBottom: 50 }}>
 
                             <MyButton
-                                Title="Sign Up"
+                                Title={t('Sign Up')}
                                 Icon="log-in-outline"
                                 IconSize={24}
                                 onPress={async (e) => {

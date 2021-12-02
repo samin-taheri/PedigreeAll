@@ -15,8 +15,15 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
 import { SocialIcon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function CustomDrawerContent(props) {
+
+
+
+  
+  const { t, i18n } = useTranslation();
 
   const saveData = async (data) => {
     try {
@@ -145,9 +152,7 @@ function CustomDrawerContent(props) {
                   }}
                   resizeMode="contain"
                 />
-
-
-                <Text style={[styles.icon, styles.title]}>{parent.title}</Text>
+                <Text style={[styles.title]}>{parent.title}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -176,7 +181,7 @@ function CustomDrawerContent(props) {
               }}
               resizeMode="contain"
             />
-            <Text style={{ left: 50, marginTop: 3, fontSize: 16 }}>Back</Text>
+            <Text style={{ left: 50, marginTop: 3, fontSize: 16 }}>{t('Back')}</Text>
           </TouchableOpacity>
           {filteredItems.routes.map((route) => {
             return (
@@ -210,7 +215,7 @@ function CustomDrawerContent(props) {
         >
           <Image source={require('../assets/myAccount.png')} style={styles.ImageIconStyle} />
           <View style={styles.SeparatorLine} />
-          <Text style={styles.TextStyle}> My Account </Text>
+          <Text style={styles.TextStyle}>{t('MyAccount')}</Text>
         </TouchableOpacity>
 
         {AsyncStorage.getItem('TOKEN') ? <TouchableOpacity style={styles.LogOutButtonStyle} activeOpacity={0.5}
@@ -224,7 +229,7 @@ function CustomDrawerContent(props) {
         >
           <Image source={require('../assets/logOutt.png')} style={styles.ImageIconStyle} />
           <View style={styles.SeparatorLine} />
-          <Text style={[styles.TextStyle,{color:'#fff'}]}> Logout </Text>
+          <Text style={[styles.TextStyle,{color:'#fff'}]}>{t('Logout')}</Text>
         </TouchableOpacity> : null}
 
 

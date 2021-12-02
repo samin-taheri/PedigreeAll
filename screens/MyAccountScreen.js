@@ -1,152 +1,94 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Image, TextInput, ToastAndroid, StyleSheet, StatusBar, ScrollView, Platform, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react'
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+  Platform,
+  Dimensions
+} from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyButton from '../component/MyButton';
+import MyHeader from '../component/MyHeader';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import RNPickerSelect from 'react-native-picker-select';
-import Toast from 'react-native-toast-message';
-import * as Haptics from 'expo-haptics';
-import CheckBox1 from '../component/CheckBox1';
-import CheckBox2 from '../component/CheckBox2';
-import MyHeader from '../component/MyHeader';
-import MyButton from '../component/MyButton';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
-function showMessage(data, navigation) {
+function MyAccount({ navigation }) {
 
-  var durum = false;
-  if (data.m_eProcessState > 0) {
-    if (Platform.OS != "web")
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-    Toast.show({
-      type: 'success',
-      position: 'top',
-      text1: 'başarılı',
-      text2: data.m_lUserMessageList[0],
-      visibilityTime: 4000,
-      autoHide: true,
-      topOffset: StatusBar.currentHeight || 42,
-      bottomOffset: 40,
-      onShow: () => { navigation.navigate("Home") },
-      onHide: () => { },
-      onPress: () => { }
+  const { t, i18n } = useTranslation();
 
-    });
-  }
-  else {
-    durum = false;
-    if (Platform.OS != "web")
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
-    Toast.show({
-      type: 'error',
-      position: 'top',
-      text1: 'Hata',
-      text2: data.m_lUserMessageList[0],
-      visibilityTime: 4000,
-      autoHide: true,
-      topOffset: StatusBar.currentHeight || 42,
-      bottomOffset: 40,
-      onShow: () => { },
-      onHide: () => { },
-      onPress: () => { }
-    });
-  }
-}
-
-export function MyAccountScreen({ route, navigation }) {
-
-  const [countryID, setCountryID] = React.useState(0);
-  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [password_again, setPassword_again] = React.useState("");
-  const [name, setname] = React.useState("");
-  const [surname, setsurname] = React.useState("");
-  const [title, setTitle] = React.useState("");
-  const [passport, setPassport] = React.useState("");
-  const [taxOffice, setTaxOffice] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [checked_1, toggleChecked_1] = useState(true);
-  const [checked_2, toggleChecked_2] = useState(false);
+  const [getIsLoading, setIsLoading] = React.useState(false);
+  const [getSystemUserTypeData, setSystemUserTypeData] = React.useState();
+  const [getPersonTypeData, setPersonTypeData] = React.useState([]);
+  const [time, setTime] = React.useState(true);
 
+  const [getPersonTypeID, setPersonTypeID] = React.useState("")
+  const [getName, setName] = React.useState("")
+  const [getSurname, setSurname] = React.useState("")
+  const [getEmail, setEmail] = React.useState("")
+  const [getTitle, setTitle] = React.useState("")
+  const [getID, setID] = React.useState("")
+  const [getTaxOffice, setTaxOffice] = React.useState("")
+  const [getCountryID, setCountryID] = React.useState(0)
+  const [getAddress, setAddress] = React.useState("")
+  const [getCellPhone, setCellPhone] = React.useState("")
 
-
-  const [getEmailPlaceholder, setEmailPlaceholder] = React.useState("")
-  const [getPasswordPlaceholder, setPasswordPlaceholder] = React.useState("")
-  const [getPasswordAgainPlaceholder, setPasswordAgainPlaceholder] = React.useState("")
-  const [getNamePlaceholder, setNamePlaceholder] = React.useState("")
-  const [getSurnamePlaceholder, setSurnamePlaceholder] = React.useState("")
-  const [getTitlePlaceholder, setTitlePlaceholder] = React.useState("")
-  const [getPassportPlaceholder, setPassportPlaceholder] = React.useState("")
-  const [getTaxOfficePlaceholder, setTaxOfficePlaceholder] = React.useState("")
-  const [getAddressPlaceholder, setAddressPlaceholder] = React.useState("")
-  const [getPhonePlaceholder, setPhonePlaceholder] = React.useState("")
-  const [getEmailText, setEmailText] = React.useState("")
-  const [getPasswordText, setPasswordText] = React.useState("")
-  const [getPasswordAgainText, setPasswordAgainText] = React.useState("")
-  const [getNameText, setNameText] = React.useState("")
-  const [getSurnameText, setSurnameText] = React.useState("")
-  const [getTitleText, setTitleText] = React.useState("")
-  const [getPassportText, setPassportText] = React.useState("")
-  const [getTaxOfficeText, setTaxOfficeText] = React.useState("")
-  const [getAddressText, setAddressText] = React.useState("")
-  const [getPhoneText, setPhoneText] = React.useState("")
-  const [getCountryText, setCountryText] = React.useState("")
-  const [getMemberTypeText, setMemberTypeText] = React.useState("")
-  const [getSelectACountryText, setSelectACountryText] = React.useState("")
-  const [getBireyselText, setBireyselText] = React.useState("")
-  const [getKurumsalText, setKurumsalText] = React.useState("")
-  const [getSaveButtonText, setSaveButtonText] = React.useState("")
   const [CounrtyList, setCountryList] = useState([])
-  const [getProfileData, setProfileData] = useState([])
+  const [getShowFlag, setShowFlag] = useState(false)
+  const [getShowDetail, setShowDetail] = useState(false)
 
-  const readDataCountryList = async (data) => {
-    fetch('https://api.pedigreeall.com/Country/Get', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
 
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        var list = [];
-        json.m_cData.map(item => (
-          list.push({
-            label: item.COUNTRY_EN,
-            value: item.COUNTRY_ID,
-            key: item.COUNTRY_ID.toString()
-          })
-        ))
-
-        setCountryList(list)
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-  }
-
-  const readUser = async () => {
+  const UpdateProfile = async () => {
     try {
       const token = await AsyncStorage.getItem('TOKEN')
       if (token !== null) {
-        fetch('https://api.pedigreeall.com/SystemUser/GetByProfile', {
-          method: 'GET',
+        fetch('https://api.pedigreeall.com/SystemUser/UpdateMyProfile', {
+
+          method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             'Authorization': "Basic " + token,
           },
+          body: JSON.stringify({
+            ADDRESS: getAddress,
+            CELL_PHONE: getCellPhone,
+            COUNTRY_OBJECT: {
+              COUNTRY_ID: getCountryID
+            },
+            EMAIL: getEmail,
+            ID: getID,
+            NAME: getName,
+            PASSWORD: password,
+            PERSON_TYPE_OBJECT: {
+              PERSON_TYPE_ID: getPersonTypeID
+            },
+            SURNAME: getSurname,
+            TAX_OFFICE: getTaxOffice,
+            TITLE: getTitle,
+            IBAN: password,
+            SHOW_DETAIL: getShowDetail,
+            SHOW_FLAG: getShowFlag
+
+          })
         })
           .then((response) => response.json())
           .then((json) => {
-            setProfileData(json.m_cData)
+            navigation.navigate('Result', {
+              res: JSON.stringify(json)
+            })
           })
           .catch((error) => {
             console.error(error);
           })
-
       }
       else {
         console.log("Basarisiz")
@@ -156,39 +98,143 @@ export function MyAccountScreen({ route, navigation }) {
     }
   }
 
-  React.useEffect(() => {
-    readUser();
-    readDataCountryList();
-    setEmailPlaceholder("Enter Your Email")
-    setPasswordPlaceholder("Enter Your Password")
-    setPasswordAgainPlaceholder("Your Password Again")
-    setNamePlaceholder("Enter Your Name")
-    setSurnamePlaceholder("Enter Your Surname")
-    setTitlePlaceholder("Enter Your Title")
-    setPassportPlaceholder("Enter Your ID/Passport/Tax No")
-    setTaxOfficePlaceholder("Enter Your Tax Office")
-    setAddressPlaceholder("Enter Your Address")
-    setPhonePlaceholder("Enter Your Telephone")
-    setSelectACountryText("Select Your Country")
-    setEmailText("Email")
-    setPasswordText("Password")
-    setPasswordAgainText("Confirm Password")
-    setNameText("Name")
-    setSurnameText("Surname")
-    setTitleText("Title")
-    setPassportText("ID/Passport/Tax No")
-    setTaxOfficeText("Tax Office")
-    setAddressText("Address")
-    setPhoneText("Telephone")
-    setCountryText("Country")
-    setMemberTypeText("Member Type")
-    setBireyselText("Personal")
-    setKurumsalText("Legal Entity")
-    setSaveButtonText("Save")
+  const readPersonTypeList = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/PersonType/Get', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            var list = [];
+            json.m_cData.map(item => (
+              list.push({
+                label: item.PERSON_TYPE_EN,
+                value: item.PERSON_TYPE_ID,
+                key: item.PERSON_TYPE_ID.toString()
+              })
+            ))
+            setPersonTypeData(list)
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+      }
+      else {
+        console.log("Basarisiz")
+      }
+    } catch (e) {
+    }
+  }
 
-  }, []);
+  const readSystemUserTypeList = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/SystemUserType/Get', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            setSystemUserTypeData(json.m_cData)
+            setIsLoading(false)
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+      }
+      else {
+        console.log("Basarisiz")
+      }
+    } catch (e) {
+    }
+  }
 
+  const readMyProfile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/SystemUser/GetByProfile', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          }
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            
+            let user = json.m_cData[0];
+            setName(user.NAME)
+            setSurname(user.SURNAME)
+            setEmail(user.EMAIL)
+            setPassword(user.PASSWORD)
+            setTaxOffice(user.TAX_OFFICE)
+            setTitle(user.TITLE)
+            setID(user.ID)
+            setAddress(user.ADDRESS)
+            setCellPhone(user.CELL_PHONE)
+            setCountryID(user.COUNTRY_OBJECT.COUNTRY_ID)
+            setPersonTypeID(user.PERSON_TYPE_OBJECT.PERSON_TYPE_ID)
+            setTime(false)
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+      }
+      else {
+        console.log("Basarisiz")
+      }
+    } catch (e) {
+    }
+  }
 
+  const readCountryGet = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/Country/Get', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            var list = [];
+            json.m_cData.map(item => (
+              list.push({
+                label: item.COUNTRY_EN,
+                value: item.COUNTRY_ID,
+                key: item.COUNTRY_ID.toString()
+              })
+            ))
+            setCountryList(list)
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+      }
+      else {
+        console.log("Basarisiz")
+      }
+    } catch (e) {
+    }
+  }
 
   const [data, setData] = React.useState({
     email: '',
@@ -200,20 +246,6 @@ export function MyAccountScreen({ route, navigation }) {
     confirm_secureTextEntry: true,
   });
 
-
-  //const axios = require('axios').default;
-  /*
-  const loginUser = () => {
-      axios.post(global.ApiUrl + 'SystemUser/Login', {
-          EMAIL: email,
-          PASSWORD: password
-      })
-          .then(function (response) {
-              global.ShowMessage(response.data);
-          })
-
-  };
-  */
   const updateSecureTextEntry = () => {
     setData({
       ...data,
@@ -221,12 +253,12 @@ export function MyAccountScreen({ route, navigation }) {
     });
   }
 
-  const updateConfirmSecureTextEntry = () => {
-    setData({
-      ...data,
-      confirm_secureTextEntry: !data.confirm_secureTextEntry
-    });
-  }
+  React.useEffect(() => {
+    readPersonTypeList();
+    readSystemUserTypeList();
+    readCountryGet();
+    readMyProfile();
+  }, [])
 
 
   return (
@@ -234,431 +266,335 @@ export function MyAccountScreen({ route, navigation }) {
 
       <MyHeader
         onPress={() => navigation.goBack()}
-        Title="My Account"
+        Title={t('MyAccount')}
       >
         <View style={{ padding: 20 }}>
+          {time ?
+            <ActivityIndicator style={styles.Activity} color="rgba(52, 77, 169, 0.6)" size="large" />
+            :
+            <ScrollView>
+              <Text style={styles.text_footer}>{t('EmailText')}</Text>
+              <View style={styles.action}>
+                <Feather
+                  name="mail"
+                  color="#2e3f6e"
+                  size={20}
+                />
+                <TextInput
+                  style={styles.HalfInputStyle}
+                  keyboardType="email-address"
+                  value={getEmail}
 
-          <ScrollView >
-            <Text style={styles.text_footer}>{getEmailText}</Text>
-            <View style={styles.action}>
-              <Feather
-                name="mail"
-                color="#2e3f6e"
-                size={20}
-              />
-              <TextInput
-                placeholder={getEmailPlaceholder}
-                name={"username"}
-                value={email}
-                keyboardType='email-address'
-                onChangeText={setEmail}
-                style={styles.textInput}
-                autoCapitalize="none"
-              />
-              {data.check_textInputChange ?
-                <Animatable.View
-                  animation="bounceIn"
-                >
+                  onChangeText={setEmail}
+                />
+
+              </View>
+
+              <View >
+                <Text style={styles.text_footer}>{t('PasswordText')}</Text>
+                <View style={styles.action}>
                   <Feather
-                    name="check-circle"
-                    color="green"
+                    name="lock"
+                    color="#2e3f6e"
                     size={20}
                   />
-                </Animatable.View>
-                : null}
-            </View>
-
-            <View >
-              <Text style={styles.text_footer}>{getPasswordText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="lock"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getPasswordPlaceholder}
-                  secureTextEntry={data.secureTextEntry ? true : false}
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                  name={"password"}
-                  value={password}
-                  onChangeText={setPassword}
-                />
-                <TouchableOpacity
-                  onPress={updateSecureTextEntry}
-                >
-                  {data.secureTextEntry ?
-
-                    <Feather
-                      name="eye-off"
-                      color="grey"
-                      size={20}
-                    />
-                    :
-                    <Feather
-                      name="eye"
-                      color="grey"
-                      size={20}
-                    />
-                  }
-
-                </TouchableOpacity>
-              </View>
-
-            </View>
-            <View >
-              <Text style={styles.text_footer}>{getPasswordAgainText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="lock"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getPasswordAgainPlaceholder}
-                  secureTextEntry={data.confirm_secureTextEntry ? true : false}
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                  name={"password"}
-                  value={password_again}
-                  onChangeText={setPassword_again}
-                />
-                <TouchableOpacity
-                  onPress={updateConfirmSecureTextEntry}
-                >
-                  {data.confirm_secureTextEntry ?
-                    <Feather
-                      name="eye-off"
-                      color="grey"
-                      size={20}
-                    />
-                    :
-                    <Feather
-                      name="eye"
-                      color="grey"
-                      size={20}
-                    />
-                  }
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View>
-              <Text style={styles.text_footer}>{getNameText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="user"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getNamePlaceholder}
-                  style={styles.textInput}
-                  value={name}
-                  onChangeText={setname}
-                />
-                {data.check_textInputChange ?
-                  <Animatable.View
-                    animation="bounceIn"
+                  <TextInput
+                    style={styles.textInput2}
+                    autoCapitalize="none"
+                    name={"password"}
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                  <TouchableOpacity
+                    onPress={updateSecureTextEntry}
                   >
-                    <Feather
-                      name="check-circle"
-                      color="green"
-                      size={20}
-                    />
-                  </Animatable.View>
-                  : null}
+
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-            <View >
-              <Text style={styles.text_footer}>{getSurnameText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="user"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getSurnamePlaceholder}
-                  style={styles.textInput}
-                  value={surname}
-                  onChangeText={setsurname}
 
-                />
-                {data.check_textInputChange ?
-                  <Animatable.View
-                    animation="bounceIn"
-                  >
-                    <Feather
-                      name="check-circle"
-                      color="green"
-                      size={20}
-                    />
-                  </Animatable.View>
-                  : null}
+              <View>
+                <Text style={styles.text_footer}>{t('NameText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="user"
+                    color="#2e3f6e"
+                    size={20}
+                  />
+                  <TextInput
+                    style={styles.HalfInputStyle}
+                    value={getName}
+                    onChangeText={setName}
+                  />
+                  {data.check_textInputChange ?
+                    <Animatable.View
+                      animation="bounceIn"
+                    >
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                </View>
               </View>
-            </View>
-
-            <View >
-              <Text style={styles.text_footer}>{getTitleText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="user-check"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getTitlePlaceholder}
-                  style={styles.textInput}
-                  value={title}
-                  onChangeText={setTitle}
-
-                />
-                {data.check_textInputChange ?
-                  <Animatable.View
-                    animation="bounceIn"
-                  >
-                    <Feather
-                      name="check-circle"
-                      color="green"
-                      size={20}
-                    />
-                  </Animatable.View>
-                  : null}
+              <View >
+                <Text style={styles.text_footer}>{t('SurnameText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="user"
+                    color="#2e3f6e"
+                    size={20}
+                  />
+                  <TextInput
+                    style={styles.HalfInputStyle}
+                    value={getSurname}
+                    onChangeText={setSurname}
+                  />
+                  {data.check_textInputChange ?
+                    <Animatable.View
+                      animation="bounceIn"
+                    >
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                </View>
               </View>
-            </View>
 
-            <View>
-              <Text style={styles.text_footer}>{getPassportText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="grid"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getPassportPlaceholder}
-                  style={styles.textInput}
-                  value={passport}
-                  onChangeText={setPassport}
+              <View >
+                <Text style={styles.text_footer}>{t('TaxOfficeText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="user-check"
+                    color="#2e3f6e"
+                    size={20}
+                  />
 
-                />
-                {data.check_textInputChange ?
-                  <Animatable.View
-                    animation="bounceIn"
-                  >
-                    <Feather
-                      name="check-circle"
-                      color="green"
-                      size={20}
-                    />
-                  </Animatable.View>
-                  : null}
+                  <TextInput
+                    style={styles.HalfInputStyle}
+                    value={getTaxOffice}
+                    onChangeText={setTaxOffice}
+                  />
+                  {data.check_textInputChange ?
+                    <Animatable.View
+                      animation="bounceIn"
+                    >
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                </View>
               </View>
-            </View>
-            <View >
-              <Text style={styles.text_footer}>{getTaxOfficeText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="printer"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getTaxOfficePlaceholder}
-                  style={styles.textInput}
-                  value={taxOffice}
-                  onChangeText={setTaxOffice}
 
-                />
-                {data.check_textInputChange ?
-                  <Animatable.View
-                    animation="bounceIn"
-                  >
-                    <Feather
-                      name="check-circle"
-                      color="green"
-                      size={20}
-                    />
-                  </Animatable.View>
-                  : null}
+              <View >
+                <Text style={styles.text_footer}>{t('TitleText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="user-check"
+                    color="#2e3f6e"
+                    size={20}
+                  />
+                  <TextInput
+                    style={styles.HalfInputStyle}
+                    value={getTitle}
+                    onChangeText={setTitle}
+                  />
+                  {data.check_textInputChange ?
+                    <Animatable.View
+                      animation="bounceIn"
+                    >
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                </View>
               </View>
-            </View>
+
+              <View>
+                <Text style={styles.text_footer}>{t('PassportText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="grid"
+                    color="#2e3f6e"
+                    size={20}
+                  />
+                  <TextInput
+                    style={styles.HalfInputStyle}
+                    value={getID}
+                    onChangeText={setID}
+                  />
+                  {data.check_textInputChange ?
+                    <Animatable.View
+                      animation="bounceIn"
+                    >
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                </View>
+              </View>
+
+              <View >
+                <Text style={styles.text_footer}>{t('CountryText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="globe"
+                    color="#2e3f6e"
+                    size={20}
+                  />
+
+                  <RNPickerSelect
+                    placeholder={{}}
+
+                    style={
+                      pickerSelectStyles
+                    }
+                    Icon={() => {
+                      return <FontAwesome5
+                        name="angle-down"
+                        color="gray"
+                        size={20}
+                      />;
+
+                    }}
+
+                    useNativeAndroidPickerStyle={false}
+                    onValueChange={(value) => { setCountryID(value); }}
+                    items={CounrtyList}
+                    value={getCountryID}
+                    key={getCountryID.toString()}
+                  />
 
 
-            <View >
-              <Text style={styles.text_footer}>{getCountryText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="globe"
-                  color="#2e3f6e"
-                  size={20}
-                />
+                </View>
 
-                <RNPickerSelect
-                  placeholder={{ label: 'Select Your Country' }}
-                  value={countryID}
+              </View>
 
-                  style={
-                    pickerSelectStyles
-                  }
-                  Icon={() => {
-                    return <FontAwesome5
-                      name="angle-down"
-                      color="gray"
-                      size={20}
-                    />;
+              <View >
+                <Text style={styles.text_footer}>{t('AddressText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="map-pin"
+                    color="#2e3f6e"
+                    size={20}
+                  />
 
+                  <TextInput
+                    style={styles.HalfInputStyle}
+                    value={getAddress}
+                    onChangeText={setAddress}
+                  />
+                  {data.check_textInputChange ?
+                    <Animatable.View
+                      animation="bounceIn"
+                    >
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                </View>
+              </View>
+              <View>
+                <Text style={styles.text_footer}>{t('PhoneText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="phone"
+                    color="#2e3f6e"
+                    size={20}
+                  />
+                  <TextInput
+                    style={styles.HalfInputStyle}
+                    keyboardType="phone-pad"
+                    value={getCellPhone.toString()}
+                    onChangeText={setCellPhone}
+                  />
+                  {data.check_textInputChange ?
+                    <Animatable.View
+                      animation="bounceIn"
+                    >
+                      <Feather
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                      />
+                    </Animatable.View>
+                    : null}
+                </View>
+              </View>
+              <View >
+
+                <Text style={styles.text_footer}>{t('MemberTypeText')}</Text>
+                <View style={styles.action}>
+                  <Feather
+                    name="user-plus"
+                    color="#2e3f6e"
+                    size={20}
+                  />
+
+                  <RNPickerSelect
+                    placeholder={{}}
+
+                    style={
+                      pickerSelectStyles
+                    }
+                    Icon={() => {
+                      return <FontAwesome5
+                        name="angle-down"
+                        color="gray"
+                        size={20}
+                      />;
+
+                    }}
+
+                    useNativeAndroidPickerStyle={false}
+                    onValueChange={(value) => { setPersonTypeID(value); }}
+                    items={getPersonTypeData}
+                    value={getPersonTypeID}
+                    key={getPersonTypeID.toString()}
+                  />
+
+                </View>
+              </View>
+
+              <View style={{ marginTop: 15, marginBottom: 50 }}>
+
+                <MyButton
+                  Title={t('SubmitButtonText')}
+                  Icon="checkmark-circle-outline"
+                  IconSize={24}
+                  onPress={() => {
+                    UpdateProfile();
                   }}
-
-                  useNativeAndroidPickerStyle={false}
-                  onValueChange={(value) => { setCountryID(value); }}
-                  items={CounrtyList}
-                  value={countryID}
-                  key={countryID.toString()}
                 />
-
-
               </View>
 
-            </View>
-
-            <View >
-              <Text style={styles.text_footer}>{getAddressText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="map-pin"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getAddressPlaceholder}
-                  style={styles.textInput}
-                  value={address}
-                  onChangeText={setAddress}
-
-                />
-                {data.check_textInputChange ?
-                  <Animatable.View
-                    animation="bounceIn"
-                  >
-                    <Feather
-                      name="check-circle"
-                      color="green"
-                      size={20}
-                    />
-                  </Animatable.View>
-                  : null}
-              </View>
-            </View>
-            <View>
-              <Text style={styles.text_footer}>{getPhoneText}</Text>
-              <View style={styles.action}>
-                <Feather
-                  name="phone"
-                  color="#2e3f6e"
-                  size={20}
-                />
-                <TextInput
-                  placeholder={getPhonePlaceholder}
-                  style={styles.textInput}
-                  value={phone}
-                  onChangeText={setPhone}
-                  keyboardType='numeric'
-                />
-                {data.check_textInputChange ?
-                  <Animatable.View
-                    animation="bounceIn"
-                  >
-                    <Feather
-                      name="check-circle"
-                      color="green"
-                      size={20}
-                    />
-                  </Animatable.View>
-                  : null}
-              </View>
-            </View>
-            <View >
-
-              <Text style={styles.text_footer}>{getMemberTypeText}</Text>
-              <View style={styles.CheckboxView}>
-
-
-                <CheckBox1 label={getBireyselText} status={checked_1 ? 'checked' : 'unchecked'} onPress={() => {
-                  if (checked_2 === true) {
-                    toggleChecked_1(!checked_1);
-                    toggleChecked_2(!checked_2);
-                  }
-                }} />
-                <CheckBox2 label={getKurumsalText} status={checked_2 ? 'checked' : 'unchecked'} onPress={() => {
-                  if (checked_1 === true) {
-                    toggleChecked_2(!checked_2);
-                    toggleChecked_1(!checked_1);
-                  }
-                }} />
-
-              </View>
-            </View>
-
-
-
-            <View style={{ marginTop: 15, marginBottom: 50 }}>
-
-              <MyButton
-                Title="Save"
-                Icon="save-outline"
-                IconSize={18}
-                onPress={async (e) => {
-                  fetch('https://api.pedigreeall.com/systemuser/SignUp', {
-                    method: 'POST',
-                    headers: {
-                      Accept: 'application/json',
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      NAME: name,
-                      SURNAME: surname,
-                      EMAIL: email,
-                      PASSWORD: password,
-                      ADDRESS: password_again,
-                      COUNTRY_OBJECT: {
-                        COUNTRY_ID: countryID
-                      },
-                      PERSON_TYPE_OBJECT: {
-                        PERSON_TYPE_ID: (
-                          checked_1 ? 1 : 2
-                        )
-                      }
-                    })
-                  })
-                    .then((response) => response.json())
-                    .then((json) => {
-                      showMessage(json, navigation);
-                    })
-                    .catch((error) => {
-                      console.error(error);
-                    })
-                }}
-              >
-              </MyButton>
-            </View>
-
-          </ScrollView>
+            </ScrollView>
+          }
         </View>
       </MyHeader>
     </View >
-  );
-};
-
-const { height } = Dimensions.get("screen");
-const { width } = Dimensions.get("screen");
-const height_logo = height * 0.1;
-const width_logo = width * 0.90;
+  )
+}
 const windowWidth = Dimensions.get('window').width - 100;
 
-export default MyAccountScreen;
-
+export default MyAccount;
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -691,10 +627,11 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 4,
     justifyContent: 'center',
     paddingTop: 8,
-    left: 0,
+    left: 13,
   },
   placeholder: { color: '#9a9aa1', fontSize: 14 },
 });
+
 const styles = StyleSheet.create({
   footer: {
     flex: 3,
@@ -714,16 +651,6 @@ const styles = StyleSheet.create({
     fontSize: 14
   },
 
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5
-  }, logo: {
-    width: width_logo,
-    height: height_logo
-  },
   textInput: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 0 : -12,
@@ -784,11 +711,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingBottom: 10
-  },
-  logo: {
-    width: width_logo,
-    height: height_logo,
-    bottom: 25
   },
   HeaderText: {
     fontSize: 23,
@@ -1073,14 +995,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#FF0000',
     paddingBottom: 5
-  }, logo: {
-    width: width_logo,
-    height: height_logo
   },
   textInput: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 0 : -12,
     paddingLeft: 10,
+    paddingTop: 8,
+    color: '#05375a',
+    marginBottom: 10,
+    bottom: Platform.OS === 'ios' ? 5 : 0,
+  },
+  textInput2: {
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? 0 : -12,
+    paddingLeft: 20,
     paddingTop: 8,
     color: '#05375a',
     marginBottom: 10,
@@ -1097,6 +1025,131 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 50
   },
+  Container: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fff'
+  },
+  BottomSheetInputsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    borderColor: 'silver',
+    padding: 10,
+    marginVertical: 2
+  },
+  OneValueInLineButton: {
+    width: '90%',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  InformationText: {
+    fontSize: 16,
+    marginLeft: 5
+  },
+  SwipableCloseIcon: {
+    width: '100%',
+    flexDirection: 'row-reverse',
+    marginRight: -25
+  },
+  ButtonContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 20
+  },
+  FullInputStyle: {
+    marginVertical: 5,
+    width: '100%',
+    paddingLeft: 20,
+    borderRadius: 8,
+    fontSize: 18,
+    margin: 0,
+    padding: 10,
+    borderColor: 'silver',
+    borderWidth: 0.5,
+  },
+  TextInputContainer: {
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: 'silver',
+    borderRadius: 8,
+    flexDirection: 'row',
+    marginVertical: 5
+  },
+  TextInputHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    alignSelf: 'center'
+  },
+  HalfInputStyle: {
+    width: '90%',
+    paddingLeft: 20,
+    fontSize: 16,
+    margin: 0,
+  },
 
-
-});
+  ErrorMessageContainer: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  ErrorMessageTitle: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#222'
+  },
+  ErrorMessageText: {
+    fontSize: 16,
+    color: '#c7c1c1',
+    textAlign: 'center',
+    marginTop: 5
+  },
+  ErrorMessageButtonContainer: {
+    width: '80%',
+    marginTop: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  SortTypeContainer: {
+    width: '100%',
+    padding: 10,
+    paddingRight: 15,
+    alignItems: 'flex-end'
+  },
+  SortTypeButton: {
+    flexDirection: 'row',
+    backgroundColor: '#2169ab',
+    padding: 10,
+    borderRadius: 6,
+    elevation: 10,
+    width: '50%'
+  },
+  SortTypeButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center'
+  },
+  Activity: {
+    bottom: '30%', shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.27,
+    elevation: 4,
+    backgroundColor: '#fff',
+    width: 50,
+    height: 50,
+    paddingLeft: Platform.OS == 'ios' ? 3 : 0,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center'
+  },
+})

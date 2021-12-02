@@ -7,46 +7,48 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import HomeComponent from '../component/HomeComponent';
 import { Ionicons } from '@expo/vector-icons';
 import MyButton from '../component/MyButton';
-
-const GenerationData = [
-  {
-    id: "4",
-    title: "Generation 4",
-  },
-  {
-    id: "5",
-    title: "Generation 5",
-  },
-  {
-    id: "6",
-    title: "Generation 6",
-  },
-  {
-    id: "7",
-    title: "Generation 7",
-  },
-  {
-    id: "8",
-    title: "Generation 8",
-  },
-  {
-    id: "9",
-    title: "Generation 9",
-  },
-];
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 
 export function TabHypotheticalSearch({ navigation, route, props }) {
 
+  const { t, i18n } = useTranslation();
 
   const refRBSheetGeneration = useRef();
-  const [GenerationTitle, setGenerationTitle] = React.useState('Generation 5');
+  const [GenerationTitle, setGenerationTitle] = React.useState('Nesil 5');
   const [state, setState] = React.useState({ checked: [] });
   const [chekedItem, setChekedItem] = React.useState(5)
   const [getSireText, setSireText] = React.useState("")
   const [getMareText, setMareText] = React.useState("")
   const [getSireId, setSireId] = React.useState(-1)
   const [getMareId, setMareId] = React.useState(-1)
+  const GenerationData = [
+    {
+      id: "4",
+      title: t('Genration'),
+    },
+    {
+      id: "5",
+      title: t('Genration'),
+    },
+    {
+      id: "6",
+      title: t('Genration'),
+    },
+    {
+      id: "7",
+      title: t('Genration'),
+    },
+    {
+      id: "8",
+      title: t('Genration'),
+    },
+    {
+      id: "9",
+      title: t('Genration'),
+    },
+  ];
 
   useEffect(() => {
 
@@ -91,7 +93,7 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
               }}
               style={styles.TwoValueInLineButton}
             >
-              <Text style={{ alignSelf: 'center' }}>Sire Name: {getSireText}</Text>
+              <Text style={{ alignSelf: 'center' }}>{t('SireNameTextTab')} {getSireText}</Text>
             </TouchableOpacity>
           </View>
 
@@ -115,7 +117,7 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
                 }} style={styles.TwoValueInLineButton}
 
               >
-                <Text style={{ alignSelf: 'center' }}>Mare Name: {getMareText}</Text>
+                <Text style={{ alignSelf: 'center' }}>{t('MareNameTextTab')} {getMareText}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -158,8 +160,8 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
 
               <View>
                 <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                 
-                    <Text style={{ fontSize: 22, left: 5 }}>Standard:</Text>
+
+                  <Text style={{ fontSize: 22, left: 5 }}>{t('Generations')}</Text>
 
                 </View>
                 {GenerationData.length > 0 ?
@@ -175,15 +177,20 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
                         onPress={() => {
                           setState({ checked: [state, item.id] });
                           setChekedItem(item.id)
-                          setGenerationTitle("Generation " + item.id)
+                          setGenerationTitle(t('Generations') + item.id)
                           refRBSheetGeneration.current.close();
 
                         }}
                       >
                         <Ionicons name="arrow-forward-outline" size={16} color="black" />
+
                         <View style={{ flexDirection: 'row' }}>
+
                           <Text style={styles.textStyle}>
                             {item.title} {" "}
+                          </Text>
+                          <Text style={styles.textStyle}>
+                            {item.id}
                           </Text>
                         </View>
                       </TouchableOpacity>)}
@@ -197,7 +204,7 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
           </View>
 
           <MyButton
-            Title="Hypothetical Search"
+            Title={t('HypotheticalSearch')}
             Icon="search-outline"
             IconSize={18}
             onPress={() => {
@@ -212,7 +219,7 @@ export function TabHypotheticalSearch({ navigation, route, props }) {
                 )
               }
               else {
-                alert('Please search for a name first..')
+                alert(t('TabSearchAlert'))
               }
             }}
           >

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { View, platform, SafeAreaViewBase, Animated, StyleSheet, FlatList, Text, Dimensions, TouchableOpacity, Image, StatusBar, Alert, TextInput, Button, Keyboard, Platform } from 'react-native'
 import { SearchBar } from "react-native-elements";
@@ -9,6 +8,8 @@ import MyHeader from '../component/MyHeader';
 import RBSheet from "react-native-raw-bottom-sheet";
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 faker.seed(10);
 const SPACING = 18;
@@ -16,6 +17,7 @@ const AVATAR_SIZE = 55;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 function FoalsAsBroodMareSire({ route, navigation }) {
+    const { t, i18n } = useTranslation();
 
     const [searchText, setSearchText] = React.useState("");
     const [getHorseId, setHorseId] = React.useState(0);
@@ -132,11 +134,11 @@ function FoalsAsBroodMareSire({ route, navigation }) {
     const scrollY = React.useRef(new Animated.Value(0)).current;
     return (
         <View>
-            <Myloader Show={loader} Text={loaderText} />
+            <Myloader Show={loader} Text={t('LütfenBekleyin')} />
             <View style={styles.container}>
 
 
-                <MyHeader Title="Foals As Brood Mare Sire"
+                <MyHeader Title={t("Foals As Brood Mare Sire")}
                     onPress={() => navigation.goBack()}
                 >
 
@@ -155,7 +157,7 @@ function FoalsAsBroodMareSire({ route, navigation }) {
                     ></RBSheet>
 
                     <SearchBar
-                        placeholder={getSearchPlaceholder}
+                        placeholder={t('SearchPlaceholder')}
                         lightTheme
                         platform="ios"
                         cancelButtonTitle=""
@@ -185,7 +187,7 @@ function FoalsAsBroodMareSire({ route, navigation }) {
 
 
                     <MyButtonEditDelete
-                        Title="Search"
+                        Title={t('Search')}
                         Icon="search-outline"
                         IconSize={18}
                         onPress={() => {
@@ -206,7 +208,7 @@ function FoalsAsBroodMareSire({ route, navigation }) {
 
                             <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseData.length}) records</Text>
+                                    <Text style={{ fontSize: 12 }}>{t('SearchResultsFound')} ({getHorseData.length}) {t('records')}</Text>
                                     <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
                                 </View>
                                 <Animated.FlatList
@@ -242,10 +244,12 @@ function FoalsAsBroodMareSire({ route, navigation }) {
                                         })
                                         return <TouchableOpacity style={[styles.latestItem, {opacity, transform:[{scale}]}]}
                                         onPress={() => {
-                                            navigation.navigate('HorseDetailScreenFoalsAsBroodMareSire', {
+                                            navigation.navigate('BreedersFoalsAsBroodMareSire', {
                                                 HORSE_ID: item.HORSE_ID,
                                                 Generation: 5,
                                                 SECOND_ID: -1,
+                                                HORSE_NAME: item.HORSE_NAME,
+
                                                 })
                                         }}
                                         >
@@ -255,21 +259,21 @@ function FoalsAsBroodMareSire({ route, navigation }) {
                                             />
                                             <View style={{ flexDirection: 'column' }}>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Horse: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.HORSE_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Sire: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.FATHER_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                                                     <Text style={styles.textStyle}>
                                                         {item.MOTHER_NAME}
                                                     </Text>

@@ -8,7 +8,7 @@ const { height } = Dimensions.get("screen");
 const MyButton = (props) => {
     return (
         <>
-            <View style={{ bottom: '1%' }}>
+            <View style={{ }}>
                 <TouchableOpacity
                     style={styles.PrimaryIconButton }
 

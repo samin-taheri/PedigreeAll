@@ -13,6 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyHeader from '../component/MyHeader';
 import { Ionicons } from '@expo/vector-icons';
 import faker from 'faker'
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 faker.seed(10);
 const SPACING = 18;
@@ -22,6 +24,7 @@ const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 function RegisteredStallion({ navigation }) {
     const [getTime, setTime] = React.useState(true);
     const [Data, SetData] = useState([]);
+    const { t, i18n } = useTranslation();
 
     let maxlimit = 27;
     let addresslimit = 27;
@@ -62,7 +65,7 @@ function RegisteredStallion({ navigation }) {
 
     return (
         <View style={styles.Container}>
-            <MyHeader Title="Registered Stallions"
+            <MyHeader Title={t('RegisteredStallions')}
                 onPress={() => navigation.goBack()}
             >
                 {getTime ?

@@ -4,11 +4,14 @@ import { Global } from './Global'
 import { DataTable } from 'react-native-paper';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Flag from "react-native-flags";
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function HorseDetailScreenSiblingBroodmareSire({ navigation, route }) {
     const [time, setTime] = React.useState(true);
     const [getSiblingBroodmareSire, setSiblingBroodmareSire] = React.useState([]);
     const { HORSE_ID } = route.params;
+    const { t, i18n } = useTranslation();
 
     const readSiblingBroodmareSire = async () => {
         try {
@@ -74,135 +77,135 @@ function HorseDetailScreenSiblingBroodmareSire({ navigation, route }) {
 
                 <>
                     <ScrollView vertical={true}>
-                    {getSiblingBroodmareSire !== undefined &&
+                        {getSiblingBroodmareSire !== undefined &&
 
-                        <ScrollView horizontal={true}>
-
-
-                            <DataTable>
-
-                                <DataTable.Header removeClippedSubviews={true}>
-                                    <DataTable.Title style={{ width: 350 }}>Name</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.4%'}]}>Class</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.3%'}]}>Point</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.3%'}]}>Earning</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.2%'}]}>Fam</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.1%'}]}>Color</DataTable.Title>
-                                    <DataTable.Title style={{ width: 400, left: '0.1%' }}>Sire</DataTable.Title>
-                                    <DataTable.Title style={{ width: 400, left: '0.5%' }}>Dam</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.9%'}]}>Birth D.</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.7%'}]}>Start</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.7%'}]}>1st</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.7%'}]}>1st %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.6%'}]}>2nd</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.6%'}]}>2nd %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.6%'}]}>3rd</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.5%'}]}>3rd %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.5%'}]}>4th</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.5%'}]}>4th %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.4%'}]}>Price</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.4%'}]}>Dr. RM</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.4%'}]}>ANZ</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.3%'}]}>PedigreeAll</DataTable.Title>
-                                    <DataTable.Title style={{ width: 150, left: '0.2%' }}>Owner</DataTable.Title>
-                                    <DataTable.Title style={{ width: 150, left: '0.2%' }}>Breeder</DataTable.Title>
-                                    <DataTable.Title style={{ width: 150, left: '0.2%' }}>Coach</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.1%'}]}>Dead</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableText, {left: '0.1%'}]}>Update D.</DataTable.Title>
-                                </DataTable.Header>
-
-                                {getSiblingBroodmareSire.map((item, index) => (
-
-                                    <DataTable.Row centered={true} key={index}>
-                                        <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%': '0%' , bottom: Platform.OS == 'ios' ? '0%': '4%'}}>
-                                            <Flag code={item.ICON.toUpperCase()} size={16} />
-                                        </DataTable.Cell>
-                                        <DataTable.Cell
-                                            onPress={() => { alertDialog("Name", item.HORSE_NAME) }}
-                                            style={{ width: 350 , left: '0.4%'}}>
-                                            {item.HORSE_NAME}
-                                        </DataTable.Cell>
-
-                                        <DataTable.Cell style={styles.DataTableText}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                            <ScrollView horizontal={true}>
 
 
-                                        <DataTable.Cell style={styles.DataTableText} >{item.POINT}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText} >{item.EARN} {item.EARN_ICON}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.FAMILY_TEXT}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.COLOR_TEXT}</DataTable.Cell>
-                                        <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%': '0%' , bottom: Platform.OS == 'ios' ? '0%': '4%'}}>
-                                            <Flag code={item.FATHER_ICON.toUpperCase()} size={16} />
-                                        </DataTable.Cell>
-                                        <DataTable.Cell
-                                            onPress={() => { alertDialog("Sire", item.FATHER_NAME) }}
-                                            style={{ width: 400, left: '0.4%' }}>
-                                            {item.FATHER_NAME}
-                                        </DataTable.Cell>
-                                        <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%': '0%' , bottom: Platform.OS == 'ios' ? '0%': '4%'}}>
-                                            <Flag code={item.MOTHER_ICON.toUpperCase()} size={16} />
-                                        </DataTable.Cell>
-                                        <DataTable.Cell
-                                            onPress={() => { alertDialog("Dam", item.MOTHER_NAME) }}
-                                            style={{ width: 400, left: '0.4%' }}>
-                                            {item.MOTHER_NAME}
-                                        </DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.HORSE_BIRTH_DATE_TEXT}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText} >{item.START_COUNT}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText} >{item.FIRST}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText} >{item.FIRST_PERCENTAGE} %</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.SECOND}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.SECOND_PERCENTAGE} %</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText} >{item.THIRD}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText} >{item.THIRD_PERCENTAGE} %</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.FOURTH}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.FOURTH_PERCENTAGE} %</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.PRICE} {item.PRICE_ICON}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.RM}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.ANZ}</DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.PA}</DataTable.Cell>
-                                        <DataTable.Cell
-                                            onPress={() => { alertDialog("Owner", item.OWNER) }}
-                                            style={{ width: 150 }}>
-                                            {item.OWNER}
-                                        </DataTable.Cell>
-                                        <DataTable.Cell
-                                            onPress={() => { alertDialog("Breeder", item.BREEDER) }}
-                                            style={{ width: 150 }}>
-                                            {item.BREEDER}
-                                        </DataTable.Cell>
-                                        <DataTable.Cell
-                                            onPress={() => { alertDialog("Coach", item.COACH) }}
-                                            style={{ width: 150 }}>
-                                            {item.COACH}
-                                        </DataTable.Cell>
-                                        {item.IS_DEAD ?
-                                            <>
+                                <DataTable>
 
-                                                <DataTable.Cell style={styles.DataTableText}>DEAD</DataTable.Cell>
+                                    <DataTable.Header removeClippedSubviews={true}>
+                                        <DataTable.Title style={{ width: 365 }}>{t('Name')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('Class2')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('Point')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('EarningText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('Fam')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('ColorText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 400,  }}>{t('Sire')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 400, }}>{t('Dam')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('BirthD.')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('StartText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('1st')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('1st%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('2nd')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('2nd%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('3rd')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('3rd%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('4th')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('4th%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('PriceText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('DR.RM')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('ANZ')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('PedigreeAll')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150,}}>{t('OwnerText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150, }}>{t('BreederText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150,}}>{t('CoachText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('Dead')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableText]}>{t('UpdateD.')}</DataTable.Title>
+                                    </DataTable.Header>
 
-                                            </>
+                                    {getSiblingBroodmareSire.map((item, index) => (
 
-                                            :
-                                            <>
+                                        <DataTable.Row centered={true} key={index}>
+                                            <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
+                                                <Flag code={item.ICON.toUpperCase()} size={16} />
+                                            </DataTable.Cell>
+                                            <DataTable.Cell
+                                                onPress={() => { alertDialog(t('Name'), item.HORSE_NAME) }}
+                                                style={{ width: 350, left: '0.4%' }}>
+                                                {item.HORSE_NAME}
+                                            </DataTable.Cell>
 
-                                                <DataTable.Cell style={styles.DataTableText}>ALIVE</DataTable.Cell>
-
-                                            </>
-                                        }
-                                        <DataTable.Cell style={styles.DataTableText}>{item.EDIT_DATE_TEXT}</DataTable.Cell>
-                                    </DataTable.Row>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
 
 
+                                            <DataTable.Cell style={styles.DataTableText} >{item.POINT}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText} >{item.EARN} {item.EARN_ICON}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.FAMILY_TEXT}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.COLOR_TEXT}</DataTable.Cell>
+                                            <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
+                                                <Flag code={item.FATHER_ICON.toUpperCase()} size={16} />
+                                            </DataTable.Cell>
+                                            <DataTable.Cell
+                                                onPress={() => { alertDialog(t('Sire'), item.FATHER_NAME) }}
+                                                style={{ width: 400, left: '0.4%' }}>
+                                                {item.FATHER_NAME}
+                                            </DataTable.Cell>
+                                            <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
+                                                <Flag code={item.MOTHER_ICON.toUpperCase()} size={16} />
+                                            </DataTable.Cell>
+                                            <DataTable.Cell
+                                                onPress={() => { alertDialog(t('Dam'), item.MOTHER_NAME) }}
+                                                style={{ width: 400, left: '0.4%' }}>
+                                                {item.MOTHER_NAME}
+                                            </DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.HORSE_BIRTH_DATE_TEXT}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText} >{item.START_COUNT}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText} >{item.FIRST}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText} >{item.FIRST_PERCENTAGE} %</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.SECOND}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.SECOND_PERCENTAGE} %</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText} >{item.THIRD}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText} >{item.THIRD_PERCENTAGE} %</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.FOURTH}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.FOURTH_PERCENTAGE} %</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.PRICE} {item.PRICE_ICON}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.RM}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.ANZ}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{item.PA}</DataTable.Cell>
+                                            <DataTable.Cell
+                                                onPress={() => { alertDialog(t('OwnerText'), item.OWNER) }}
+                                                style={{ width: 150 }}>
+                                                {item.OWNER}
+                                            </DataTable.Cell>
+                                            <DataTable.Cell
+                                                onPress={() => { alertDialog(t('BreederText'), item.BREEDER) }}
+                                                style={{ width: 150 }}>
+                                                {item.BREEDER}
+                                            </DataTable.Cell>
+                                            <DataTable.Cell
+                                                onPress={() => { alertDialog(t('CoachText'), item.COACH) }}
+                                                style={{ width: 150 }}>
+                                                {item.COACH}
+                                            </DataTable.Cell>
+                                            {item.IS_DEAD ?
+                                                <>
 
-                                ))}
+                                                    <DataTable.Cell style={styles.DataTableText}>{t('DEAD')}</DataTable.Cell>
 
-                            </DataTable>
+                                                </>
+
+                                                :
+                                                <>
+
+                                                    <DataTable.Cell style={styles.DataTableText}>{t('ALIVE')}</DataTable.Cell>
+
+                                                </>
+                                            }
+                                            <DataTable.Cell style={styles.DataTableText}>{item.EDIT_DATE_TEXT}</DataTable.Cell>
+                                        </DataTable.Row>
 
 
-                        </ScrollView>
+
+                                    ))}
+
+                                </DataTable>
 
 
-                    }
+                            </ScrollView>
+
+
+                        }
                     </ScrollView>
                 </>
 
@@ -230,8 +233,8 @@ const styles = StyleSheet.create({
         shadowRadius: 1.27,
         elevation: 4,
         backgroundColor: '#fff',
-        width: 50, 
-        height: 50, 
+        width: 50,
+        height: 50,
         paddingLeft: Platform.OS == 'ios' ? 3 : 0,
         borderRadius: 30,
         alignItems: 'center',

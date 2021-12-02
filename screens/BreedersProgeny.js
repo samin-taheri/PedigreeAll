@@ -1,27 +1,25 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, Platform } from 'react-native'
+import { View, ActivityIndicator, StyleSheet, Text, Platform, Alert } from 'react-native'
 import { Global } from './Global'
 import { DataTable } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
-import Icon from "react-native-vector-icons/FontAwesome5";
 import Flag from "react-native-flags";
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import MyHeader from '../component/MyHeader';
 
-const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-}
-
-function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
-    const [time, setTime] = React.useState(true);
-    const [getSiblingMare, setSiblingMare] = React.useState();
-    const { HORSE_ID } = route.params;
+function BreedersProgency({ navigation, route }) {
     const { t, i18n } = useTranslation();
 
-    const readSiblingMare = async () => {
+    const [time, setTime] = React.useState(true);
+    const [getProgency, setProgency] = React.useState();
+    const { HORSE_ID } = route.params;
+    const { HORSE_NAME } = route.params;
+
+    const readProgency = async () => {
         try {
             if (Global.Token !== null) {
-                fetch('https://api.pedigreeall.com/Sibling/GetSiblingFromMother?p_iHorseId=' + HORSE_ID, {
+                fetch('https://api.pedigreeall.com/Progeny/GetProgeny?p_iHorseId=' + HORSE_ID, {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
@@ -30,10 +28,12 @@ function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
                     },
                 }).then((response) => response.json())
                     .then((json) => {
+                        //setHorsePedigree(json)
                         if (json !== null) {
-                            setSiblingMare(json.m_cData);
+                            setProgency(json.m_cData);
                             setTime(false);
                         }
+
                     })
                     .catch((error) => {
                         console.error(error);
@@ -44,35 +44,28 @@ function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
             }
         }
         catch (e) {
-            console.log("GetSiblingMare Error")
+            console.log("GetProgency Error")
         }
+
     };
 
-    const [refreshing, setRefreshing] = React.useState(false);
-
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
-    }, []);
-
-
-    React.useEffect(() => {
-
-        const unsubscribe = navigation.addListener('focus', () => {
-
-            readSiblingMare();
-
+    function resolveAfter2Seconds() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve("Progency Page Duration");
+            }, 2000);
         });
+    }
 
-        return () => {
-            unsubscribe;
-        };
-    }, [navigation]);
-
+    async function asyncCall() {
+        const result = await resolveAfter2Seconds();
+        setTime(false);
+        // expected output: "resolved"
+    }
     React.useEffect(() => {
-
-        readSiblingMare();
+        readProgency();
     }, [])
+
 
     const alertDialog = (messageTitle, message) =>
         Alert.alert(
@@ -88,55 +81,55 @@ function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
             { cancelable: false }
         );
 
-    return (
-        <View
-            style={styles.Container}
-            showsVerticalScrollIndicator={true}>
 
-            {time ?
-            <>
+    return (
+        <View style={{ width: '100%', height: '100%', backgroundColor: '#fff' }} showsVerticalScrollIndicator={true}>
+            <MyHeader Title={HORSE_NAME}
+                onPress={() => navigation.navigate('Progeny')}
+            >               
+             {time ?
                 <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
-                <Text style={{top: '42%', textAlign: 'center', color: 'rgba(52, 77, 169, 0.6)', fontSize: 16, margin: 20, fontWeight: '500'}}>{t('Please wait, It may take some time..')}</Text>
-                </>
                 :
                 <>
                     <ScrollView vertical={true}>
-                        {getSiblingMare !== undefined &&
+                        {getProgency !== undefined &&
 
                             <ScrollView horizontal={true}>
 
 
                                 <DataTable>
+
                                     <DataTable.Header removeClippedSubviews={true}>
-                                        <DataTable.Title style={{ width: 365 }}>{t('Name')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('Class2')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('Point')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('EarningText')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('Fam')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('ColorText')}</DataTable.Title>
-                                        <DataTable.Title style={{ width: 420 }}>{t('Dam')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('BirthD.')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('StartText')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('1st')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('1st%')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('2nd')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('2nd%')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('3rd')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('3rd%')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('4th')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('4th%')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('PriceText')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('DR.RM')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('ANZ')}</DataTable.Title>
-                                        <DataTable.Title style={styles.DataTableTitle}>{t('PedigreeAll')}</DataTable.Title>
-                                        <DataTable.Title style={{ width: 150 }}>{t('OwnerText')}</DataTable.Title>
-                                        <DataTable.Title style={{ width: 150 }}>{t('BreederText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 350 }}>{t('Name')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('Class2')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('Point')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('EarningText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('Fam')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('ColorText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 320, left: '0.4%' }}>{t('Dam')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 465, left: '1.7%' }}>{t('BroodmareSire')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('BirthD.')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('StartText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('1st')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('1st%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('2nd')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('2nd%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('3rd')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('3rd%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('4th')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('4th%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('PriceText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('DR.RM')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('ANZ')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.4%' }]}>{t('PedigreeAll')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150, left: '0.5%' }}>{t('OwnerText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 170, left: '0.5%' }}>{t('BreederText')}</DataTable.Title>
                                         <DataTable.Title style={{ width: 150 }}>{t('CoachText')}</DataTable.Title>
-                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('Dead')}</DataTable.Title>
-                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('UpdateD.')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.1%' }]}>{t('Dead')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, { left: '0.1%' }]}>{t('UpdateD.')}</DataTable.Title>
                                     </DataTable.Header>
 
-                                    {getSiblingMare.HORSE_INFO_LIST.map((item, index) => (
+                                    {getProgency.HORSE_INFO_LIST.map((item, index) => (
 
                                         <DataTable.Row centered={true} key={index}>
                                             <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
@@ -144,9 +137,7 @@ function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 onPress={() => { alertDialog(t('Name'), item.HORSE_NAME) }}
-                                                style={{
-                                                    width: 350, left: '0.4%'
-                                                }}>
+                                                style={{ width: 350, left: '0.3%' }}>
                                                 {item.HORSE_NAME}
                                             </DataTable.Cell>
 
@@ -157,14 +148,20 @@ function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
                                             <DataTable.Cell style={styles.DataTableCell} >{item.FAMILY_TEXT}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.COLOR_TEXT}</DataTable.Cell>
                                             <DataTable.Cell style={{ top: Platform.OS == 'ios' ? '8%' : '0%', bottom: Platform.OS == 'ios' ? '0%' : '4%' }}>
-                                                <Flag code={item.FATHER_ICON.toUpperCase()} size={16} />
+                                                <Flag code={item.MOTHER_ICON.toUpperCase()} size={16} />
                                             </DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog(t('Sire'), item.FATHER_NAME) }}
-                                                style={{
-                                                    width: 400, left: '0.4%'
-                                                }}>
-                                                {item.FATHER_NAME}
+                                                onPress={() => { alertDialog(t('Dam'), item.MOTHER_NAME) }}
+                                                style={{ width: 350, left: '0.3%' }}>
+                                                {item.MOTHER_NAME}
+                                            </DataTable.Cell>
+                                            <DataTable.Cell style={{ bottom: '2.5%' }}>
+                                                <Flag code={item.BM_SIRE_ICON.toUpperCase()} size={16} />
+                                            </DataTable.Cell>
+                                            <DataTable.Cell
+                                                onPress={() => { alertDialog(t('BroodmareSire'), item.BM_SIRE_NAME) }}
+                                                style={{ width: 400, left: '0.3%' }}>
+                                                {item.BM_SIRE_NAME}
                                             </DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.HORSE_BIRTH_DATE_TEXT}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell} >{item.START_COUNT}</DataTable.Cell>
@@ -182,29 +179,24 @@ function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
                                             <DataTable.Cell style={styles.DataTableCell}>{item.PA}</DataTable.Cell>
                                             <DataTable.Cell
                                                 onPress={() => { alertDialog(t('OwnerText'), item.OWNER) }}
-                                                style={{
-                                                    width: 150,
-                                                }}>
+                                                style={{ width: 150 }}>
                                                 {item.OWNER}
                                             </DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog(('BreederText'), item.BREEDER) }}
-                                                style={{
-                                                    width: 150,
-                                                }}>
+                                                onPress={() => { alertDialog(t('BreederText'), item.BREEDER) }}
+                                                style={{ width: 150 }}>
                                                 {item.BREEDER}
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 onPress={() => { alertDialog(t('CoachText'), item.COACH) }}
-                                                style={{
-                                                    width: 150,
-                                                }}>
+                                                style={{ width: 150 }}>
                                                 {item.COACH}
                                             </DataTable.Cell>
                                             {item.IS_DEAD ?
                                                 <>
-                                                    <DataTable.Cell style={styles.DataTableCell}>{t('DEAD')}</DataTable.Cell>
+                                                    <DataTable.Cell style={styles.DataTableCell} >{t('DEAD')}</DataTable.Cell>
                                                 </>
+
                                                 :
                                                 <>
                                                     <DataTable.Cell style={styles.DataTableCell}>{t('ALIVE')}</DataTable.Cell>
@@ -212,41 +204,20 @@ function HorseDetailScreenSiblingMare({ BackButton, navigation, route }) {
                                             }
                                             <DataTable.Cell style={styles.DataTableCell}>{item.EDIT_DATE_TEXT}</DataTable.Cell>
                                         </DataTable.Row>
-
-
-
                                     ))}
-
                                 </DataTable>
                             </ScrollView>
                         }
                     </ScrollView>
                 </>
-            }
-
+                }
+            </MyHeader>
         </View>
     )
 }
-export default HorseDetailScreenSiblingMare;
+export default BreedersProgency;
 
 const styles = StyleSheet.create({
-    Container: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#fff'
-    },
-    BackButton: {
-        flexDirection: 'row',
-        alignSelf: 'baseline',
-        padding: 10,
-        width: '100%',
-        borderBottomWidth: 0.5,
-        borderColor: 'silver',
-        marginBottom: 10
-    },
-    DataTableTitle: {
-        width: 100
-    },
     Activity: {
         top: '40%', shadowColor: "#000",
         shadowOffset: {
@@ -265,7 +236,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center'
     },
-    DataTableCell: {
+    DataTableTitle: {
         width: 100,
-    }
+    },
+    DataTableCell: {
+        width: 100
+    },
 })

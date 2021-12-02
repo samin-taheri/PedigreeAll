@@ -7,32 +7,9 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import HomeComponent from '../component/HomeComponent';
 import { Ionicons } from '@expo/vector-icons';
 import MyButton from '../component/MyButton';
-const GenerationData = [
-  {
-    id: "4",
-    title: "Generation",
-  },
-  {
-    id: "5",
-    title: "Generation",
-  },
-  {
-    id: "6",
-    title: "Generation",
-  },
-  {
-    id: "7",
-    title: "Generation",
-  },
-  {
-    id: "8",
-    title: "Generation",
-  },
-  {
-    id: "9",
-    title: "Generation",
-  },
-];
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
+
 
 const TabSearch = ({ route, navigation }) => {
 
@@ -45,15 +22,44 @@ const TabSearch = ({ route, navigation }) => {
     return () => ac.abort(); 
 
   });
-
+  const { t, i18n } = useTranslation();
   const refRBSheetGeneration = useRef();
-  const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
+  const [GenerationTitle, setGenerationTitle] = React.useState('Nesil 5');
   const [state, setState] = React.useState({ checked: [] });
   const [chekedItem, setChekedItem] = React.useState(5)
   const [getHorseText, setHorseText] = React.useState('')
   const [getHorseId, setHorseId] = React.useState(-1)
   const [getMareId, setMareId] = React.useState(-1)
-  
+  const GenerationData = [
+    {
+      id: "4",
+      title: t('Genration'),
+    },
+    {
+      id: "5",
+      title: t('Genration'),
+    },
+    {
+      id: "6",
+      title: t('Genration'),
+    },
+    {
+      id: "7",
+      title: t('Genration'),
+    },
+    {
+      id: "8",
+      title: t('Genration'),
+    },
+    {
+      id: "9",
+      title: t('Genration'),
+    },
+  ];
+  React.useEffect(() => {
+
+  }, [])
+
   return (
     <>
       <ScrollView>
@@ -81,7 +87,7 @@ const TabSearch = ({ route, navigation }) => {
                   })
                 }}
                 style={styles.TwoValueInLineButton}>
-                <Text style={{ alignSelf: 'center' }}>Name: {getHorseText}</Text>
+                <Text style={{ alignSelf: 'center' }}>{t('NameTextTab')} {getHorseText}</Text>
               </TouchableOpacity>
             </View>
 
@@ -122,7 +128,7 @@ const TabSearch = ({ route, navigation }) => {
               >
                 <View>
                   <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                      <Text style={{ fontSize: 22, left: 5 }}>Generations:</Text>
+                      <Text style={{ fontSize: 22, left: 5 }}>{t('Generations')}</Text>
                     
                   </View>
                   <>
@@ -140,7 +146,7 @@ const TabSearch = ({ route, navigation }) => {
                             onPress={() => {
                               setState({ checked: [state, item.id] });
                               setChekedItem(item.id)
-                              setGenerationTitle("Generation " + item.id)
+                              setGenerationTitle(t('Generations') +  item.id)
                               refRBSheetGeneration.current.close();
 
                             }}
@@ -169,7 +175,7 @@ const TabSearch = ({ route, navigation }) => {
             </View>
 
             <MyButton
-              Title="Search"
+              Title={t('Search')}
               Icon="search-outline"
               IconSize={18}
               onPress={() => 
@@ -183,7 +189,7 @@ const TabSearch = ({ route, navigation }) => {
                 })
             }
             else{
-              alert('Please search for a name first..')
+              alert(t('TabSearchAlert'))
             }
             }}
             >

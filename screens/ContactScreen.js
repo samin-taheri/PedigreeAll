@@ -8,10 +8,15 @@ import Toast from 'react-native-toast-message';
 import * as Haptics from 'expo-haptics';
 import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 const STORAGE_KEY = "USER"
 
 export function ContactScreen({ navigation }) {
+
+  const { t, i18n } = useTranslation();
+
   const refRBSheet = useRef();
   const [getName, setName] = React.useState("");
   const [getEmail, setEmail] = React.useState("");
@@ -122,12 +127,12 @@ export function ContactScreen({ navigation }) {
     <View style={styles.container}>
       <MyHeader
         onPress={() => navigation.goBack()}
-        Title="Contact Us"
+        Title={t('ContactUs')}
       >
         <View style={{ padding: 20 }}>
           <ScrollView >
 
-            <Text style={styles.text_footer}>Name</Text>
+            <Text style={styles.text_footer}>{t('NameText')}</Text>
             <View style={styles.action}>
               <Feather
                 name="user"
@@ -135,7 +140,7 @@ export function ContactScreen({ navigation }) {
                 size={20}
               />
               <TextInput
-                placeholder="Your Name"
+                placeholder={t('YourName')}
                 name={"username"}
                 value={getName}
                 onChangeText={setName}
@@ -145,7 +150,7 @@ export function ContactScreen({ navigation }) {
             </View>
 
             <View >
-              <Text style={styles.text_footer}>Email & Phone</Text>
+              <Text style={styles.text_footer}>{t('Email&Phone')}</Text>
               <View style={styles.action}>
                 <Feather
                   name="mail"
@@ -153,7 +158,7 @@ export function ContactScreen({ navigation }) {
                   size={20}
                 />
                 <TextInput
-                  placeholder="Your Email & Phone"
+                  placeholder={t('YourEmail&Phone')}
                   keyboardType={"email-address"}
                   name={"mail"}
                   value={getEmail}
@@ -165,7 +170,7 @@ export function ContactScreen({ navigation }) {
             </View>
 
             <View >
-              <Text style={styles.text_footer}>Message</Text>
+              <Text style={styles.text_footer}>{t('Message')}</Text>
               <View style={[styles.action, { height: 70 }]}>
                 <Feather
                   name="message-square"
@@ -175,7 +180,7 @@ export function ContactScreen({ navigation }) {
                 />
                 <TextInput
                   style={[styles.textInput, { marginBottom: 'auto' }]}
-                  placeholder="Type a Message"
+                  placeholder={t('TypeAMessage')}
                   name={"message"}
                   value={getMessage}
                   onChangeText={setMessage}
@@ -189,7 +194,7 @@ export function ContactScreen({ navigation }) {
             <View style={{ marginTop: 10 }}>
 
               <MyButton
-                Title="Submit"
+                Title={t('Submit')}
                 Icon="checkmark-circle-outline"
                 IconSize={24}
                 onPress={async (e) => {
@@ -236,7 +241,7 @@ export function ContactScreen({ navigation }) {
               </MyButton>
             </View>
             <View style={{ alignItems: 'center', top: 20, color: '#2e3f6e', fontSize: 15 }}>
-              <Text>Thank You For Contacting Us!</Text>
+              <Text>{t('ThankYouForContactingUs')}</Text>
             </View>
             <View style={styles.Socialcontainer}>
               <View

@@ -4,11 +4,14 @@ import { Global } from './Global'
 import { DataTable } from 'react-native-paper';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Flag from "react-native-flags";
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
     const [time, setTime] = React.useState(true);
     const [getSiblingSire, setSiblingSire] = React.useState();
     const { HORSE_ID } = route.params;
+    const { t, i18n } = useTranslation();
 
     const readSiblingSire = async () => {
         try {
@@ -51,7 +54,7 @@ function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
             message,
             [
                 {
-                    text: "OK",
+                    text: t('OK'),
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
@@ -63,7 +66,10 @@ function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
         <View style={styles.Container} showsVerticalScrollIndicator={true}>
             
             {time ?
+            <>
                 <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
+                <Text style={{top: '42%', textAlign: 'center', color: 'rgba(52, 77, 169, 0.6)', fontSize: 16, margin: 20, fontWeight: '500'}}>{t('Please wait, It may take some time..')}</Text>
+                </>
                 :
                 <>
                     <ScrollView vertical={true}>
@@ -75,33 +81,33 @@ function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
                                 <DataTable>
 
                                     <DataTable.Header removeClippedSubviews={true}>
-                                    <DataTable.Title style={{ width: 350 }}>Name</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.3%' }]}>Class</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.3%' }]}>Point</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.3%' }]}>Earning</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.3%' }]}>Fam</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.3%' }]}>Color</DataTable.Title>
-                                    <DataTable.Title style={{ width: 340, left: '0.2%' }}>Dam</DataTable.Title>
-                                    <DataTable.Title style={{ width: 450, left: '2.2%' }}>Broodmare Sire</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1.3%' }]}>Birth D.</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1.2%' } ]}>Start</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1.2%' } ]}>1st</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1.2%' } ]}>1st %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1.1%' } ]}>2nd</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1.1%' } ]}>2nd %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1%' } ]}>3rd</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1%' } ]}>3rd %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1%' } ]}>4th</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '1%' } ]}>4th %</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.9%' } ]}>Price</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.8%' } ]}>Dr. RM</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.8%' } ]}>ANZ</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.7%' } ]}>PedigreeAll</DataTable.Title>
-                                    <DataTable.Title style={{ width: 150, left: '0.7%' }}>Owner</DataTable.Title>
-                                    <DataTable.Title style={{ width: 170, left: '0.7%' }}>Breeder</DataTable.Title>
-                                    <DataTable.Title style={{ width: 150 , left: '0.1%'}}>Coach</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.1%' }]}>Dead</DataTable.Title>
-                                    <DataTable.Title style={[styles.DataTableTitle, { left: '0.1%' }]}>Update D.</DataTable.Title>
+                                    <DataTable.Title style={{ width: 340 }}>{t('Name')}</DataTable.Title>
+                                        <DataTable.Title  style={[styles.DataTableTitle]}>{t('Class2')}</DataTable.Title>
+                                        <DataTable.Title  style={[styles.DataTableTitle]}>{t('Point')}</DataTable.Title>
+                                        <DataTable.Title  style={[styles.DataTableTitle, {left: '0.4%'}]}>{t('EarningText')}</DataTable.Title>
+                                        <DataTable.Title  style={[styles.DataTableTitle, {left: '0.4%'}]}>{t('Fam')}</DataTable.Title>
+                                        <DataTable.Title  style={[styles.DataTableTitle, {left: '0.4%'}]}>{t('ColorText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 400, left: '0.4%'}}>{t('Sire')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 410, left: '0.8%' }}>{t('BroodmareSire')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, {left: '0.9%'}]}>{t('BirthD.')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('StartText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('1st')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('1st%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('2nd')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('2nd%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('3rd')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('3rd%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('4th')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle]}>{t('4th%')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, {left: '0.2%'}]}>{t('PriceText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, {left: '0.3%'}]}>{t('DR.RM')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, {left: '0.3%'}]}>{t('ANZ')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, {left: '0.3%'}]}>{t('PedigreeAll')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150, left: '0.4%' }}>{t('OwnerText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150, left: '0.4%'  }}>{t('BreederText')}</DataTable.Title>
+                                        <DataTable.Title style={{ width: 150, left: '0.4%' }}>{t('CoachText')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, {right: '0.8%'}]}>{t('Dead')}</DataTable.Title>
+                                        <DataTable.Title style={[styles.DataTableTitle, {right: '0.8%'}]}>{t('UpdateD.')}</DataTable.Title>
                                 </DataTable.Header>
 
 
@@ -112,7 +118,7 @@ function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
                                             <Flag code={item.ICON.toUpperCase()} size={16} />
                                         </DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog("Name", item.HORSE_NAME) }}
+                                                onPress={() => { alertDialog(t('Name'), item.HORSE_NAME) }}
                                                 style={{ width: 350, left: '0.4%' }}>
                                                 {item.HORSE_NAME}
                                             </DataTable.Cell>
@@ -127,7 +133,7 @@ function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
                                             <Flag code={item.MOTHER_ICON.toUpperCase()} size={16} />
                                         </DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog("Dam", item.MOTHER_NAME) }}
+                                                onPress={() => { alertDialog(t('Dam'), item.MOTHER_NAME) }}
                                                 style={{ width: 400, left: '0.4%'  }}>
                                                 {item.MOTHER_NAME}
                                             </DataTable.Cell>
@@ -135,7 +141,7 @@ function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
                                             <Flag code={item.BM_SIRE_ICON.toUpperCase()} size={16} />
                                         </DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog("Broodmare Sire", item.BM_SIRE_NAME) }}
+                                                onPress={() => { alertDialog(t('BroodmareSire'), item.BM_SIRE_NAME) }}
                                                 style={{ width: 400, left: '0.4%'  }}>
                                                 {item.BM_SIRE_NAME}
                                             </DataTable.Cell>
@@ -154,28 +160,28 @@ function HorseDetailScreenSiblingSire({ BackButton, navigation, route }) {
                                             <DataTable.Cell style={styles.DataTableCell}>{item.ANZ}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.PA}</DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog("Owner", item.OWNER) }}
+                                                onPress={() => { alertDialog(t('OwnerText'), item.OWNER) }}
                                                 style={{ width: 150 }}>
                                                 {item.OWNER}
                                             </DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog("Breeder", item.BREEDER) }}
+                                                onPress={() => { alertDialog(t('BreederText'), item.BREEDER) }}
                                                 style={{ width: 150 }}>
                                                 {item.BREEDER}
                                             </DataTable.Cell>
                                             <DataTable.Cell
-                                                onPress={() => { alertDialog("Coach", item.COACH) }}
+                                                onPress={() => { alertDialog(t('CoachText'), item.COACH) }}
                                                 style={{ width: 150 }}>
                                                 {item.COACH}
                                             </DataTable.Cell>
                                             {item.IS_DEAD ?
                                                 <>
 
-                                                    <DataTable.Cell style={styles.DataTableCell}>DEAD</DataTable.Cell>
+                                                    <DataTable.Cell style={styles.DataTableCell}>{t('DEAD')}</DataTable.Cell>
                                                 </>
                                                 :
                                                 <>
-                                                    <DataTable.Cell style={styles.DataTableCell}>ALIVE</DataTable.Cell>
+                                                    <DataTable.Cell style={styles.DataTableCell}>{t('ALIVE')}</DataTable.Cell>
                                                 </>
                                             }
                                             <DataTable.Cell style={styles.DataTableCell}>{item.EDIT_DATE_TEXT}</DataTable.Cell>

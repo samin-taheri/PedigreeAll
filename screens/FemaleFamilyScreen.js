@@ -10,33 +10,9 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
 import Feather from 'react-native-vector-icons/Feather';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
-const GenerationData = [
-    {
-        id: "4",
-        title: "Generation",
-    },
-    {
-        id: "5",
-        title: "Generation",
-    },
-    {
-        id: "6",
-        title: "Generation",
-    },
-    {
-        id: "7",
-        title: "Generation",
-    },
-    {
-        id: "8",
-        title: "Generation",
-    },
-    {
-        id: "9",
-        title: "Generation",
-    },
-];
 faker.seed(10);
 const SPACING = 18;
 const AVATAR_SIZE = 55;
@@ -53,10 +29,36 @@ function FemaleFamily({ route, navigation }) {
     const BottomSheetLong = useRef();
     const [Data, SetData] = useState([]);
     const refRBSheetGeneration = useRef();
-    const [GenerationTitle, setGenerationTitle] = React.useState("Generation 5");
+    const [GenerationTitle, setGenerationTitle] = React.useState("Nesil 5");
     const [state, setState] = React.useState({ checked: [] });
     const [chekedItem, setChekedItem] = React.useState(5)
-
+    const { t, i18n } = useTranslation();
+    const GenerationData = [
+        {
+          id: "4",
+          title: t('Genration'),
+        },
+        {
+          id: "5",
+          title: t('Genration'),
+        },
+        {
+          id: "6",
+          title: t('Genration'),
+        },
+        {
+          id: "7",
+          title: t('Genration'),
+        },
+        {
+          id: "8",
+          title: t('Genration'),
+        },
+        {
+          id: "9",
+          title: t('Genration'),
+        },
+      ];
     const readHorseGetByName = async () => {
 
         let isSubscribed = true;
@@ -163,11 +165,11 @@ function FemaleFamily({ route, navigation }) {
     const scrollY = React.useRef(new Animated.Value(0)).current;
     return (
         <View>
-            <Myloader Show={loader} Text={loaderText} />
+            <Myloader Show={loader} Text={t('LütfenBekleyin')}/>
             <View style={styles.container}>
 
 
-                <MyHeader Title="Female Family"
+                <MyHeader Title={t("Female Family")}
                     onPress={() => navigation.goBack()}
                 >
 
@@ -186,7 +188,7 @@ function FemaleFamily({ route, navigation }) {
                     ></RBSheet>
 
                     <SearchBar
-                        placeholder={getSearchPlaceholder}
+                        placeholder={t('SearchPlaceholder')}
                         lightTheme
                         platform="ios"
                         cancelButtonTitle=""
@@ -250,7 +252,7 @@ function FemaleFamily({ route, navigation }) {
                         >
                             <View>
                                 <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 20, flexDirection: 'row', paddingTop: 0 }}>
-                                        <Text style={{ fontSize: 22, left: 5 }}>Generations:</Text>
+                                        <Text style={{ fontSize: 22, left: 5 }}>{t('Generations')}</Text>
                                     
                                 </View>
                                 <>
@@ -268,7 +270,7 @@ function FemaleFamily({ route, navigation }) {
                                                     onPress={() => {
                                                         setState({ checked: [state, item.id] });
                                                         setChekedItem(item.id)
-                                                        setGenerationTitle("Generation " + item.id)
+                                                        setGenerationTitle(t('Generations') + item.id)
                                                         refRBSheetGeneration.current.close();
 
                                                     }}
@@ -296,7 +298,7 @@ function FemaleFamily({ route, navigation }) {
 
                     </View>
                     <MyButtonEditDelete
-                        Title="Search"
+                        Title={t('Search')}
                         Icon="search-outline"
                         IconSize={18}
                         onPress={() => {
@@ -305,7 +307,7 @@ function FemaleFamily({ route, navigation }) {
                                 Keyboard.dismiss()
                                 readHorseGetByName();
                             } else {
-                                alert("Please search the name first");
+                                alert(t('TabSearchAlert'))
                             }
                         }}
                     >
@@ -317,7 +319,7 @@ function FemaleFamily({ route, navigation }) {
 
                             <View style={{ paddingLeft: 20, padding: 10, paddingBottom: '2%' }}>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 12 }}>Search results found ({getHorseData.length}) records</Text>
+                                    <Text style={{ fontSize: 12 }}>{t('SearchResultsFound')} ({getHorseData.length}) {t('records')}</Text>
                                     <Ionicons style={{ marginLeft: 'auto', right: 10 }} name="chevron-down-outline" size={20} color="grey" />
                                 </View>
                                 <Animated.FlatList
@@ -353,10 +355,12 @@ function FemaleFamily({ route, navigation }) {
                                         })
                                         return <TouchableOpacity style={[styles.latestItem, { opacity, transform: [{ scale }] }]}
                                             onPress={() => {
-                                                navigation.navigate('HorseDetailScreenFemaleFamily', {
+                                                navigation.navigate('BreedersFemaleFamily', {
                                                     HORSE_ID: item.HORSE_ID,
                                                     Generation: chekedItem,
                                                     SECOND_ID: -1,
+                                                    HORSE_NAME: item.HORSE_NAME,
+
                                                 })
                                             }}
                                         >
@@ -366,21 +370,21 @@ function FemaleFamily({ route, navigation }) {
                                             />
                                             <View style={{ flexDirection: 'column' }}>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Horse: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.HORSE_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Sire: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.FATHER_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                                                     <Text style={styles.textStyle}>
                                                         {item.MOTHER_NAME}
                                                     </Text>

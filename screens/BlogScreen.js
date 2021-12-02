@@ -18,8 +18,12 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import MyHeader from '../component/MyHeader';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 export function BlogScreen({ navigation }) {
+  const { t, i18n } = useTranslation();
+
   const BottomSheetCategory = useRef();
   const [textShown, setTextShown] = useState(false);
   const [lengthMore, setLengthMore] = useState(false); 
@@ -112,7 +116,7 @@ export function BlogScreen({ navigation }) {
             {CategoryList.length > 0 ?
               <View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 20, paddingLeft: 20, paddingRight: 20 }}>Filter</Text>
+                  <Text style={{ fontSize: 20, paddingLeft: 20, paddingRight: 20 }}>{t('Filter')}</Text>
                 </View>
                 <FlatList
                   scrollEnabled={true}
@@ -164,7 +168,7 @@ export function BlogScreen({ navigation }) {
             <Icon style={{ marginBottom: 40 }} name="exclamation-circle" size={150} color="#e54f4f" />
            
               <>
-                <Text style={styles.ErrorMessageTitle}>No data found!</Text>
+                <Text style={styles.ErrorMessageTitle}>{t('Nodatafound')}</Text>
               </>
             
             <View style={styles.ErrorMessageButtonContainer}>
@@ -172,7 +176,7 @@ export function BlogScreen({ navigation }) {
                 style={[styles.ErrorMessageButton, { right: 20 }]}
                 onPress={() => { BottomSheetCategory.current.open(); }}
               >
-                  <Text style={styles.ErrorMessageButtonText}>Go to Categories</Text>
+                  <Text style={styles.ErrorMessageButtonText}>{t('GotoCategories')}</Text>
 
               </TouchableOpacity>
               <TouchableOpacity
@@ -182,7 +186,7 @@ export function BlogScreen({ navigation }) {
                   setBlogIsAvaible(true)
                 }}
               >
-                  <Text style={[styles.ErrorMessageButtonText, { color: 'rgb(232, 237, 241)' }]}>Go to Blog</Text>
+                  <Text style={[styles.ErrorMessageButtonText, { color: 'rgb(232, 237, 241)' }]}>{t('GotoBlog')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -205,8 +209,12 @@ export function BlogScreen({ navigation }) {
                                   selectedBlog: i
                                 })
                                 setSelectedBlog(i)
+                                i18n.use('tr')?
                                 setBlogHeader(i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_TR)
-                              }}>
+                              :
+                              setBlogHeader(i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_EN)
+                            }
+                              }>
                                 <Card
                                   containerStyle={{ elevation: 0, borderWidth: 0.5, borderRadius: 10, padding: 10, borderColor: 'silver', marginBottom: 20 }}
                                 >

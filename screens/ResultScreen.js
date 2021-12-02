@@ -2,10 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 const ResultScreen = ({ route, navigation }) => {
     const { res } = route.params;
+    const { t, i18n } = useTranslation();
     var object = JSON.parse(res);
 console.log(object)
 
@@ -58,7 +60,7 @@ console.log(object)
                     bottom: '10%',
 
                 }}>
-                <Text style={[styles.TextStyle, { color: '#fff' }]}>OK</Text>
+                <Text style={[styles.TextStyle, { color: '#fff' }]}>{t('OK')}</Text>
 
             </TouchableOpacity>
 

@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Platform, Animated, ActivityIndicator, ScrollVi
 import { Global } from './Global'
 import { Dimensions } from 'react-native';
 import WebView from 'react-native-webview';
-
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 let data;
 const PedigreeHTML =
   "<style>.pedigree-table { font-size: 13px; line-height: normal; font-weight: bold; border-collapse: collapse; border-spacing: 1px; width: 100%; border: 1px solid #737373; table-layout: fixed; }.pedigree-table td.pedigree-cell { border: 1px solid #737373; padding: 2px; text-align: center; vertical-align: middle; } .background-M, .background-M A { color: #9c4d4d; } .background-M { border-radius: 1px; background-image: linear-gradient(to bottom,#dbe8f3 0,#c7e5ff 100%) } .HorseName { font-family: 'Verdana'; font-size: 7pt; font-weight: 600; color: #000 !important; } td p { font-size: 8pt; } .HorseName:hover { text-decoration: underline; } .background-F { border-radius: 1px; border-color: #ce8080; background-color: #fedcdc; background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgeG1sbnM9Imh0d…0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2xlc3NoYXQtZ2VuZXJhdGVkKSIgLz48L3N2Zz4=); background-image: -webkit-linear-gradient(top,#fff0f0 0,#ffe9e9 100%); background-image: -moz-linear-gradient(top,#fff0f0 0,#ffe9e9 100%); background-image: -o-linear-gradient(top,#fff0f0 0,#ffe9e9 100%); background-image: linear-gradient(to bottom,#fff0f0 0,#ffe9e9 100%); }</style>"
@@ -17,6 +18,7 @@ function HorseDetailScreenPedigree({ navigation, route }) {
   const { HORSE_ID } = route.params;
   const { SECOND_ID } = route.params;
   const { Generation } = route.params;
+  const { t, i18n } = useTranslation();
 
   const readPedigreeReport = async () => {
     console.log(Generation)
@@ -105,7 +107,7 @@ function HorseDetailScreenPedigree({ navigation, route }) {
                 injectedJavaScript={webViewScript}
 
               />
-              <Text style={styles.FamilyText}>Family Summary: {getPedigreeReport[3]}</Text>
+              <Text style={styles.FamilyText}>{t('FamilySummary')}{getPedigreeReport[3]}</Text>
             </>
           }
         </>}

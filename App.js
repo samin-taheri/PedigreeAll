@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, createContext } from 'react';
 import { Platform, NativeModules, Modal, TouchableOpacity, StyleSheet, ScrollView, View, Text, Switch, Button, StatusBar, Dimensions, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -23,7 +23,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { MyAddingRequestScreen } from './screens/MyAddingRequestScreen';
 import { RequestsEditAHorse } from './screens/RequestsEditAHorse';
 import { MyEditRequestsScreen } from './screens/MyEditRequestsScreen';
-import { MyAccountScreen } from './screens/MyAccountScreen'
+import MyAccount from './screens/MyAccountScreen'
 import { DeleteAHorseScreen } from './screens/DeleteAHorseScreen';
 import { MyDeleteRequestsScreen } from './screens/MyDeleteRequestsScreen';
 import { AddAHorse2 } from './screens/AddAHorse2';
@@ -53,14 +53,26 @@ import Profile from './screens/ProfileScreen';
 import Linebreeding from './screens/LinebreedingScreen';
 import FemaleFamily from './screens/FemaleFamilyScreen';
 import BroodmareSireSiblings from './screens/BroodmareSireSiblingsScreen';
-import HorseDetailScreenFoalsAsBroodMareSire from './screens/HorseDetailScreenFoalsAsBroodMareSire';
+import HorseDetailScreenFoalsAsBroodMareSire from './screens/BreedersFoalsAsBroodMareSire';
 import FoalsAsBroodMareSire from './screens/FoalsAsBroodMareSireScreen';
 import Search from './screens/SearchScreen';
 import EffectiveNickScreen from './screens/EffectiveNickScreen';
 import CompareHorses from './screens/CompareHorsesScreen';
 import HorsesForSale from './screens/HorsesForSaleScreen';
 import RegisteredStallions from './screens/RegisteredStallionScreen';
-import ImportantRaces from './screens/ImportantRacesScreen';
+import { useTranslation } from "react-i18next";
+import i18n from "./component/i18n";
+import { Dil } from './component/Helper';
+import BreedersBroodmareSireSibling from './screens/BreedersBroodmareSireSibling';
+import BreedersFemaleFamily from './screens/BreedersFemaleFamily';
+import BreedersFoalsAsBroodMareSire from './screens/BreedersFoalsAsBroodMareSire';
+import BreedersLinebreeding from './screens/BreedersLinebreeding';
+import BreedersProfile from './screens/BreedersProfile';
+import BreedersProgency from './screens/BreedersProgeny';
+import BreedersSiblingMare from './screens/BreedersSiblingMare';
+import BreedersSiblingSire from './screens/BreedersSiblingStallion';
+import BreedersTailFemale from './screens/BreedersTailFemale';
+
 export const BASE_URL = 'http://api.pedigreeall.com/';
 
 const Drawer = createDrawerNavigator();
@@ -72,24 +84,14 @@ const navOptionHandler = () => ({
 })
 
 function MainDrawerNavigation() {
+  
+  const { t, i18n } = useTranslation();
 
-  const toggleDrawer = () =>
-    props.navigation.dispatch(DrawerActions.toggleDrawer());
-
-  const [getLanguageClicking, setLanguageClicking] = React.useState(false)
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [getBottomNavigationMainName, setBottomNavigationMainName] = React.useState();
-  const [getBottomNavigationProfileName, setBottomNavigationProfileName] = React.useState()
-  const [getBottomNavigationBasketName, setBottomNavigationBasketName] = React.useState()
-  const [getBottomNavigationSearchName, setBottomNavigationSearchName] = React.useState()
-  const [showEdition, setShowEdition] = React.useState(false)
   const bottomSheet = useRef();
 
-
   const drawerOptionHandler = ({ navigation }) => ({
-
     headerShown: true,
     headerRight: () => (
       <View style={{ right: 25, padding: 10, flexDirection: 'row' }}>
@@ -124,6 +126,8 @@ function MainDrawerNavigation() {
     ),
 
   })
+
+
   return (
     <>
       <StatusBar hidden={true} />
@@ -145,22 +149,16 @@ function MainDrawerNavigation() {
 
         <View style={{ borderBottomWidth: 0.7, borderBottomColor: '#CFCFD5', paddingLeft: 20, padding: 10, flexDirection: 'row' }}>
 
-          {Global.Language === 1 ?
-            <Text style={{ fontSize: 22, left: 5 }}>Ayarlar:</Text>
-            :
-            <Text style={{ fontSize: 22, left: 5 }}>Settings:</Text>
-          }
+
+          <Text style={{ fontSize: 22, left: 5 }}>{t('Settings')}</Text>
+
 
         </View>
         <View style={{ flexDirection: 'row' }}>
 
           <Ionicons style={{ left: 20, top: 30 }} name="notifications-outline" size={24} color="black" />
 
-          {Global.Language === 1 ?
-            <Text style={styles.SwipeablePanelText}>Bildirimler:</Text>
-            :
-            <Text style={styles.SwipeablePanelText}>Notifications:</Text>
-          }
+          <Text style={styles.SwipeablePanelText}>{t('Notifications')}:</Text>
         </View>
 
         <View style={{ right: 30, flexDirection: 'row', top: 5 }}>
@@ -173,51 +171,43 @@ function MainDrawerNavigation() {
             style={{ marginLeft: 'auto', }}
           />
         </View>
+
         <View style={{ flexDirection: 'row' }}>
 
           <Ionicons style={{ left: 20, top: 30 }} name="language-outline" size={24} color="black" />
-          {Global.Language === 1 ?
-            <Text style={styles.SwipeablePanelText}>Diller:</Text>
-            :
-            <Text style={styles.SwipeablePanelText}>Languages:</Text>
-          }
-        </View>
-        <View style={styles.FlagContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              setLanguageClicking(true)
-              Global.Language = 2;
 
-              setBottomNavigationMainName("Main")
-              setBottomNavigationProfileName("Profile")
-              setBottomNavigationBasketName("Basket")
-              setBottomNavigationSearchName("Search")
+          <Text style={styles.SwipeablePanelText}>{t('Languages')}</Text>
 
-            }}
-            style={{ marginRight: 5 }}>
-            <Image
-              style={{ height: 40, width: 40, top: -5 }}
-              source={require('./assets/usa.png')} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setLanguageClicking(true)
-              Global.Language = 1;
 
-              setBottomNavigationMainName("Anasayfa")
-              setBottomNavigationProfileName("Profil")
-              setBottomNavigationBasketName("Sepet")
-              setBottomNavigationSearchName("Arama")
+          <View style={styles.FlagContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                
+                i18n.changeLanguage('tr');
+                AsyncStorage.setItem('Dil', 0)
+              }}>
+              <Image
+                style={{ height: 40, width: 40, bottom: -17 }}
+                source={require('./assets/turkey.png')} />
+            </TouchableOpacity>
 
-            }}
-            style={{ marginRight: 5 }} >
-            <Image
-              style={{ height: 40, width: 40, top: -5 }}
-              source={require('./assets/turkey.png')} />
-          </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                i18n.changeLanguage('en')
+                AsyncStorage.setItem('Dil', 1)
+              alert(Dil())
+              }}>
+              <Image
+                style={{ height: 40, width: 40, bottom: -17 }}
+                source={require('./assets/usa.png')} />
+            </TouchableOpacity>
+          </View>
+
         </View>
 
       </RBSheet>
+
       <Drawer.Navigator
         screenOptions={{
           presentation: 'modal'
@@ -258,7 +248,15 @@ function MainDrawerNavigation() {
         <Drawer.Screen name="CompareHorses" component={CompareHorses} options={navOptionHandler} />
         <Drawer.Screen name="HorsesForSale" component={HorsesForSale} options={navOptionHandler} />
         <Drawer.Screen name="RegisteredStallions" component={RegisteredStallions} options={navOptionHandler} />
-        <Drawer.Screen name="ImportantRaces" component={ImportantRaces} options={navOptionHandler} />
+        <Drawer.Screen name="BreedersBroodmareSireSibling" component={BreedersBroodmareSireSibling} options={navOptionHandler} />
+        <Drawer.Screen name="BreedersFemaleFamily" component={BreedersFemaleFamily} options={navOptionHandler} />
+        <Stack.Screen name="BreedersFoalsAsBroodMareSire" component={BreedersFoalsAsBroodMareSire} options={navOptionHandler} />
+        <Stack.Screen name="BreedersLinebreeding" component={BreedersLinebreeding} options={navOptionHandler} />
+        <Stack.Screen name="BreedersProfile" component={BreedersProfile} options={navOptionHandler} />
+        <Stack.Screen name="BreedersProgency" component={BreedersProgency} options={navOptionHandler} />
+        <Stack.Screen name="BreedersSiblingMare" component={BreedersSiblingMare} options={navOptionHandler} />
+        <Stack.Screen name="BreedersSiblingSire" component={BreedersSiblingSire} options={navOptionHandler} />
+        <Stack.Screen name="BreedersTailFemale" component={BreedersTailFemale} options={navOptionHandler} />
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
 
         </Stack.Group>
@@ -269,6 +267,7 @@ function MainDrawerNavigation() {
 }
 
 export default function App({ navigation }) {
+
   const [isLoading, setIsLoading] = React.useState(true);
   const [getLanguageClicking, setLanguageClicking] = React.useState(false)
   const [getUser, setUser] = React.useState(null)
@@ -379,6 +378,7 @@ export default function App({ navigation }) {
     return <SplashScreen />;
   }
 
+
   return (
     <>
       <StatusBar hidden={true} />
@@ -408,22 +408,6 @@ export default function App({ navigation }) {
             <Text style={{ fontSize: 22 }}>Settings:</Text>
           }
 
-        </View>
-        {Global.Language === 1 ?
-          <Text style={styles.SwipeablePanelText}>Bildirimler:</Text>
-          :
-          <Text style={styles.SwipeablePanelText}>Notifications:</Text>
-        }
-
-        <View style={{ right: 30, flexDirection: 'row', top: 5 }}>
-          <Switch
-            trackColor={{ false: "#D6D6D6", true: "#77b5fe" }}
-            thumbColor={isEnabled ? "#fff" : "#fff"}
-            ios_backgroundColor="#D6D6D6"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-            style={{ marginLeft: 'auto', }}
-          />
         </View>
 
         {Global.Language === 1 ?
@@ -466,7 +450,26 @@ export default function App({ navigation }) {
           </TouchableOpacity>
         </View>
 
+        {Global.Language === 1 ?
+          <Text style={styles.SwipeablePanelText}>Bildirimler:</Text>
+          :
+          <Text style={styles.SwipeablePanelText}>Notifications:</Text>
+        }
+
+        <View style={{ right: 30, flexDirection: 'row', top: 5 }}>
+          <Switch
+            trackColor={{ false: "#D6D6D6", true: "#77b5fe" }}
+            thumbColor={isEnabled ? "#fff" : "#fff"}
+            ios_backgroundColor="#D6D6D6"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+            style={{ marginLeft: 'auto', }}
+          />
+        </View>
+
+
       </RBSheet>
+
       <NavigationContainer>
         {getUser == null ? (
           <Stack.Navigator >
@@ -482,7 +485,7 @@ export default function App({ navigation }) {
             <Stack.Screen name="MainDrawer" component={MainDrawerNavigation} options={navOptionHandler} />
             <Stack.Screen name="Register" component={RegisterScreen} options={navOptionHandler} />
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={navOptionHandler} />
-            <Stack.Screen name="MyAccount" component={MyAccountScreen} options={navOptionHandler} />
+            <Stack.Screen name="MyAccount" component={MyAccount} options={navOptionHandler} />
             <Stack.Screen name="Login" component={LoginScreen} options={navOptionHandler} />
             <Stack.Screen name="Result" component={ResultScreen} options={navOptionHandler} />
 
@@ -504,7 +507,6 @@ export default function App({ navigation }) {
               <Stack.Screen name="HorseDetailScreenTailFemale" component={HorseDetailScreenTailFemale} options={navOptionHandler} />
               <Stack.Screen name="HorseDetailScreenLinebreeding" component={HorseDetailScreenLinebreeding} options={navOptionHandler} />
               <Stack.Screen name="HorseDetailScreenFemaleFamily" component={HorseDetailScreenFemaleFamily} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenFoalsAsBroodMareSire" component={HorseDetailScreenFoalsAsBroodMareSire} options={navOptionHandler} />
               <Stack.Screen name="EffectiveNickScreen" component={EffectiveNickScreen} options={navOptionHandler} />
             </Stack.Group>
           </Stack.Navigator>
@@ -514,6 +516,9 @@ export default function App({ navigation }) {
     </>
   );
 }
+const windowWidth = Dimensions.get('window').width - 10;
+const windowWidth2 = Dimensions.get('window').width - 10;
+
 const styles = StyleSheet.create({
   container: {
     width: "100%",
@@ -552,7 +557,12 @@ const styles = StyleSheet.create({
   },
   FlagContainer: {
     flexDirection: 'row-reverse',
-    right: 20,
+    left: 220,
+    top: 10
+  },
+  FlagContainer2: {
+    flexDirection: 'row-reverse',
+    right: 50,
     top: 10
   },
   SwipableCloseIcon: {

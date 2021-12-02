@@ -1,6 +1,6 @@
 
 export const drawerItemsMain = [
-
+  
     {
       key: 'Home',
       title: 'Home',
@@ -162,25 +162,7 @@ export const drawerItemsMain = [
         },
       ],
     },
-    {
-      key: 'Races',
-      title: 'Races',
-      forward:'https://img.icons8.com/material-rounded/96/000000/forward.png',
-      Image: 'https://img.icons8.com/windows/90/000000/finish-flag.png',
-  
-      routes: [
-        {
-          nav: 'MainDrawer',
-          routeName: 'ImportantRaces',
-          title: 'Important Races'
-        },
-        {
-          nav: 'MainDrawer',
-          routeName: 'TJKRaceProgram',
-          title: 'TJK Race Program'
-        },
-      ],
-    },
+
     {
       key: 'Blog',
       title: 'Blog',

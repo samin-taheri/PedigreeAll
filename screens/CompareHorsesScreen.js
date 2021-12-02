@@ -9,6 +9,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import faker from 'faker'
 import MyHeader from '../component/MyHeader';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from "react-i18next";
+import i18n from "../component/i18n";
 
 faker.seed(10);
 const SPACING = 18;
@@ -18,7 +20,7 @@ const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 function CompareHorses({navigation}) {
 
     const BottomSheetLong = React.useRef();
-
+    const { t, i18n } = useTranslation();
     const [getHorseData, setHorseData] = useState([])
     const [getHorseCompareListData, setHorseCompareListData] = useState([])
     const [searchValue, setSearchValue] = useState();
@@ -113,7 +115,7 @@ function CompareHorses({navigation}) {
 
     return (
         <View style={styles.Container}>
-            <MyHeader Title="Compare Horses"
+            <MyHeader Title={t('CompareHorses')}
                 onPress={() => navigation.goBack()}
             >
                 <RBSheet
@@ -146,12 +148,12 @@ function CompareHorses({navigation}) {
                         style={styles.SwipableCloseIcon}>
 
                         <Icon style={{ bottom: '4%', left: '10%' }} name="compress-alt" size={17} color="green" />
-                        <Text style={{ color: 'green', bottom: '4%', left: '35%', fontWeight: '700', fontSize: 14 }}>Compare</Text>
+                        <Text style={{ color: 'green', bottom: '4%', left: '35%', fontWeight: '700', fontSize: 14 }}>{t('Compare')}</Text>
                     </TouchableOpacity>
                     <View>
 
                         <SearchBar
-                            placeholder="Search"
+                            placeholder={t('Search')}
                             lightTheme
                             platform="ios"
                             cancelButtonTitle=""
@@ -225,21 +227,21 @@ function CompareHorses({navigation}) {
                                             />
                                             <View style={{ flexDirection: 'column' }}>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Horse: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('HorseText')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.HORSE_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Sire: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('SireText2')}</Text>
 
                                                     <Text style={styles.textStyle}>
                                                         {item.FATHER_NAME}
                                                     </Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.textStyle2]}>Mare: </Text>
+                                                    <Text style={[styles.textStyle2]}>{t('MareText2')}</Text>
                                                     <Text style={styles.textStyle}>
                                                         {item.MOTHER_NAME}
                                                     </Text>
@@ -275,7 +277,7 @@ function CompareHorses({navigation}) {
                                         onPress={() => setFullScreenVisible(false)}
                                     >
                                         <Ionicons name="close-outline" size={35} color="black" />
-                                        <Text style={{ padding: Platform.OS == 'ios' ? 15 : 8, left: 10, fontSize: 15, fontWeight: 'bold' }}>Image</Text>
+                                        <Text style={{ padding: Platform.OS == 'ios' ? 15 : 8, left: 10, fontSize: 15, fontWeight: 'bold' }}>{t('Image')}</Text>
                                     </Pressable>
                                 </View>
                             </View>
@@ -303,7 +305,7 @@ function CompareHorses({navigation}) {
                         }}
                         style={styles.AddingHorseButton}>
                         <Feather name="plus" size={20} color="#fff" style={{ alignSelf: 'center', marginRight: 10 }} />
-                        <Text style={styles.AddingHorseButtonText}>Add Horse</Text>
+                        <Text style={styles.AddingHorseButtonText}>{t('AddHorse')}</Text>
 
                     </TouchableOpacity>
                 </View>
@@ -314,34 +316,34 @@ function CompareHorses({navigation}) {
                         <DataTable>
 
                             <DataTable.Header removeClippedSubviews={true}>
-                                <DataTable.Title >Image</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 90, left: '0.1%' }}>Name</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 90 }}>Class</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30 }}>Point</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, right: '0.4%' }}>Earning</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, right: '0.2%' }}>Fam</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, right: '0.3%' }}>Color</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, right: '0.5%' }}>Sire</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 70, right: '0.1%' }}>Dam</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, left: '1.8%' }}>Birth D.</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, left: '2.2%'  }}>Start</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 40, left: '2.2%'  }}>1st</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 40, left: '1.8%'  }}>1st %</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 40, left: '2%'  }}>2nd</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 40, left: '1.7%'  }}>2nd %</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 40, left: '1.6%'  }}>3rd</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 60, left: '0.5%'  }}>3rd %</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, left: '0.9%'  }}>4th</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 50, left: '0.3%'  }}>4th %</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, left: '0.5%'  }}>Price</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, left: '0.8%'  }}>Dr. RM</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, left: '0.7%' }}>ANZ</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, left: '0.7%' }}>PedigreeAll</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 30, right: '0.8%' }}>Owner</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 50, right: '0.2%' }}>Breeder</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 80, right: '1.1%' }}>Coach</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 50, right: '0.3%' }}>Dead</DataTable.Title>
-                                <DataTable.Title style={{ marginLeft: 10 , right: '0.1%'}}>Update D.</DataTable.Title>
+                                <DataTable.Title >{t('Image')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 90, left: '0.1%' }}>{t('Name')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 90 }}>{t('Class2')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30 }}>{t('Point')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, right: '0.4%' }}>{t('EarningText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, right: '0.2%' }}>{t('Fam')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, right: '0.3%' }}>{t('ColorText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, right: '0.5%' }}>{t('SireText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 70, right: '0.1%' }}>{t('Dam')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, left: '1.8%' }}>{t('BirthD.')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, left: '2.2%'  }}>{t('StartText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 40, left: '2.2%'  }}>{t('1st')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 40, left: '1.8%'  }}>{t('1st%')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 40, left: '2%'  }}>{t('2nd')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 40, left: '1.7%'  }}>{t('2nd%')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 40, left: '1.6%'  }}>{t('3rd')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 60, left: '0.5%'  }}>{t('3rd%')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, left: '0.9%'  }}>{t('4th')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 50, left: '0.3%'  }}>{t('4th%')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, left: '0.5%'  }}>{t('PriceText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, left: '0.8%'  }}>{t('DR.RM')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, left: '0.7%' }}>{t('ANZ')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, left: '0.7%' }}>{t('PedigreeAll')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 30, right: '0.8%' }}>{t('OwnerText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 50, right: '0.2%' }}>{t('BreederText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 80, right: '1.1%' }}>{t('CoachText')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 50, right: '0.3%' }}>{t('Dead')}</DataTable.Title>
+                                <DataTable.Title style={{ marginLeft: 10 , right: '0.1%'}}>{t('UpdateD.')}</DataTable.Title>
                             </DataTable.Header>
                             <>
                                 {LoadingForCompareHorses ?
