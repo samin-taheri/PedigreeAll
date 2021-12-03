@@ -18,12 +18,198 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
 
+
+
 function CustomDrawerContent(props) {
 
-
-
-  
   const { t, i18n } = useTranslation();
+  const drawerItems = [
+    {
+      key: 'Home',
+      title: t('Home'),
+      Image: 'https://img.icons8.com/material-outlined/96/000000/home--v2.png',
+      routes: [
+        {
+          nav: 'MainDrawer',
+          routeName: 'Home',
+          title: t('Home'),
+        }
+      ],
+    },
+    {
+      key: 'EffectiveNick',
+      title: 'EffectiveNick',
+      forward:'https://img.icons8.com/material-rounded/96/000000/forward.png',
+      Image: 'https://img.icons8.com/fluency-systems-regular/96/000000/graph-report.png',
+      routes: [
+        {
+          nav: 'MainDrawer',
+          routeName: 'CreateMatchReport',
+          title: t('CreateMatchReport')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'RegisteredStallions',
+          title: t('RegisteredStallions')
+        },
+      ],
+    },
+    {
+      key: 'Breeders',
+      title: t('Breeders'),
+      forward:'https://img.icons8.com/material-rounded/96/000000/forward.png',
+      Image: 'https://img.icons8.com/windows/96/000000/cowboy-hat.png',
+  
+      routes: [
+        {
+          nav: 'MainDrawer',
+          routeName: 'PedigreeQuery',
+          title: t('PedigreeQuery')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'HypoMating',
+          title: t('HypoMating')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'MareMotherSiblingsScreen',
+          title: t('Mare(Mother)Siblings')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'StallionFatherSiblings',
+          title: t('Stallion(Father)Siblings')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'TailFemale',
+          title: t('TailFemale')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'Progeny',
+          title: t('Progeny')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'Profile',
+          title: t('Profile')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'Linebreeding',
+          title: 'Linebreeding'
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'FemaleFamily',
+          title: t('FemaleFamily')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'FoalsAsBroodMareSire',
+          title: t('FoalsAsBroodMareSire')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'CompareHorses',
+          title: t('CompareHorses')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'BroodmareSireSiblings',
+          title: t('BroodmareSireSiblings')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'Search',
+          title: t('Search')
+        },
+      ],
+    },
+    {
+      key: 'Ads',
+      title: t('Ads'),
+      forward:'https://img.icons8.com/material-rounded/96/000000/forward.png',
+      Image: 'https://img.icons8.com/fluency-systems-regular/96/000000/ad-banner.png',
+  
+      routes: [
+               {
+          nav: 'MainDrawer',
+          routeName: 'HorsesForSale',
+          title: t('HorsesForSale')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'RegisteredStallions',
+          title: t('RegisteredStallions')
+        }
+      ],
+    },
+    {
+      key: 'Requests',
+      title: t('Requests'),
+      forward:'https://img.icons8.com/material-rounded/96/000000/forward.png',
+      Image: 'https://img.icons8.com/windows/96/000000/ask-question.png',
+      routes: [
+        {
+          nav: 'MainDrawer',
+          routeName: 'AddAHorse2',
+          title: t('AddAHorse')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'MyAddingRequest',
+          title: t('MyAddingRequests')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'EditAHorse',
+          title: t('EditAHorse')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'MyEditRequests',
+          title: t('MyEditRequest')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'DeleteAHorse',
+          title: t('DeleteAHorse')
+        },
+        {
+          nav: 'MainDrawer',
+          routeName: 'MyDeleteRequests',
+          title: t('MyDeleteRequest')
+        },
+      ],
+    },
+  
+    {
+      key: 'Blog',
+      title: 'Blog',
+      Image: 'https://img.icons8.com/windows/96/000000/google-blog-search.png',
+      routes: [
+        {
+          nav: 'MainDrawer',
+          routeName: 'Blog',
+          title: 'Blog'
+        }],
+    },
+    {
+      key: 'Contact',
+      title: t('Contact'),
+      Image: 'https://img.icons8.com/fluency-systems-regular/96/000000/contact-card.png',
+      routes: [
+        {
+          nav: 'MainDrawer',
+          routeName: 'Contact',
+          title: t('Contact')
+        }],
+    },
+  ];
+
 
   const saveData = async (data) => {
     try {
@@ -109,7 +295,7 @@ function CustomDrawerContent(props) {
     setFilteredItems([]);
   };
   const onItemParentPress = (key) => {
-    const filteredMainDrawerRoutes = props.drawerItems.find((e) => {
+    const filteredMainDrawerRoutes = drawerItems.find((e) => {
       return e.key === key;
     });
     if (filteredMainDrawerRoutes.routes.length === 1) {
@@ -124,13 +310,10 @@ function CustomDrawerContent(props) {
     }
   };
 
-
-
   function renderMainDrawer() {
-
     return (
       <Animated.View style={{ flex: 1 }}>
-        {props.drawerItems.map((parent) => (
+        {drawerItems.map((parent) => (
           <View key={parent.key}>
             <TouchableOpacity
               key={parent.key}
@@ -145,7 +328,6 @@ function CustomDrawerContent(props) {
                   }}
                   resizeMode="contain"
                 />
-
                 <Image style={{ width: 22, height: 22, position: 'absolute', right: 15 }}
                   source={{
                     uri: parent.forward
@@ -172,7 +354,6 @@ function CustomDrawerContent(props) {
             style={{
               borderBottomWidth: 0.8, flexDirection: 'row',
               borderBottomColor: '#eaeaea',
-
               paddingBottom: 10,
             }}>
             <Image style={{ width: 25, height: 25, position: 'absolute', left: 15 }}
@@ -206,10 +387,6 @@ function CustomDrawerContent(props) {
   const renderLogoutBtn = () => {
     return (
       <View style={styles.LoginContainer}>
-
-
-
-
         <TouchableOpacity style={styles.PrimaryIconButton} activeOpacity={0.5}
           onPress={() => props.navigation.navigate('MyAccount')}
         >

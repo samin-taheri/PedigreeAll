@@ -8,22 +8,7 @@ import i18n from "../component/i18n";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [checked, toggleChecked] = React.useState(false);
-  const [focus_email, focus_email_toggle] = React.useState(true);
-
-  const [getEmailPlaceholder, setEmailPlaceholder] = React.useState("")
-  const [getSendPasswordButtonText, setSendPasswordButtonText] = React.useState("")
-  const [getEmailText, setEmailText] = React.useState("")
   const { t, i18n } = useTranslation();
-
-
-  React.useEffect(() => {
-    setEmailPlaceholder("Enter your email address")
-    setSendPasswordButtonText("Send Password")
-    setEmailText("Email")
-
-  }, []);
 
   return (
     <View style={styles.container}>

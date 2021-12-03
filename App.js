@@ -184,7 +184,6 @@ function MainDrawerNavigation() {
               onPress={() => {
                 
                 i18n.changeLanguage('tr');
-                AsyncStorage.setItem('Dil', 0)
               }}>
               <Image
                 style={{ height: 40, width: 40, bottom: -17 }}
@@ -195,8 +194,7 @@ function MainDrawerNavigation() {
             <TouchableOpacity
               onPress={() => {
                 i18n.changeLanguage('en')
-                AsyncStorage.setItem('Dil', 1)
-              alert(Dil())
+               
               }}>
               <Image
                 style={{ height: 40, width: 40, bottom: -17 }}
