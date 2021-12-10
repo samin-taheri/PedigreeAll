@@ -4,6 +4,7 @@ import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 const ResultScreen = ({ route, navigation }) => {
     const { res } = route.params;
@@ -34,8 +35,8 @@ console.log(object)
 
             <Image style={{bottom: '10%'}} source={(object.m_eProcessState > 0 ? require('../assets/IconSuccess.png') : require('../assets/IconError.png'))} resizeMode='center' />
 
-            <Text style={{ fontSize: 50, fontWeight: 'bold', color: (object.m_eProcessState > 0 ? 'green' : 'red'), bottom: '30%', }}>{(object.m_eProcessState > 0 ? 'Başarılı' : 'Hata')}</Text>
-            <Text style={{ fontSize: 22, padding: 20, color: '#383838', bottom: '25%',  textAlign: 'center', justifyContent: 'center', alignSelf: 'center', }}>{object.m_lUserMessageList[0]}</Text>
+            <Text style={{ fontSize: 50, fontWeight: 'bold', color: (object.m_eProcessState > 0 ? 'green' : 'red'), bottom: '30%', }}>{(object.m_eProcessState > 0 ? Translate('Başarılı', 'Successful') : Translate('Hata', 'Error'))}</Text>
+            <Text style={{ fontSize: 22, padding: 20, color: '#383838', bottom: '25%',  textAlign: 'center', justifyContent: 'center', alignSelf: 'center', }}>{Translate(object.m_lUserMessageList[0], object.m_lUserMessageList[1])}</Text>
             <TouchableOpacity
                 onPress={() => {
                     Haptics.selectionAsync()

@@ -12,6 +12,7 @@ import MyHeader from '../component/MyHeader';
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 function ImportantRaces({ navigation }) {
 
@@ -530,9 +531,9 @@ function ImportantRaces({ navigation }) {
                                             />
                                             <View>
                                                 <Text numberOfLines={1} style={styles.HorseName}>
-                                                    {((item.RACE_TITLE_EN).length > maxlimit) ?
-                                                        (((item.RACE_TITLE_EN).substring(0, maxlimit - 3)) + '...') :
-                                                        item.RACE_TITLE_EN}
+                                                    {((Translate(item.RACE_TITLE_TR, item.RACE_TITLE_EN)).length > maxlimit) ?
+                                                        (((Translate(item.RACE_TITLE_TR, item.RACE_TITLE_EN)).substring(0, maxlimit - 3)) + '...') :
+                                                        Translate(item.RACE_TITLE_TR, item.RACE_TITLE_EN)}
                                                 </Text>
                                             </View>
 

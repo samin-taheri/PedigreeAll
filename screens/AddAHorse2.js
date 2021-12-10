@@ -21,6 +21,7 @@ import MyButtonWhite from '../component/MyButtonWhite';
 import Myloader from '../constants/Myloader';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 export function AddAHorse2({ navigation }) {
 
@@ -193,7 +194,7 @@ export function AddAHorse2({ navigation }) {
         var list = [];
         json.m_cData.map(item => (
           list.push({
-            label: item.SEX_EN,
+            label: Translate(item.SEX_TR, item.SEX_EN),
             value: item.SEX_ID,
             key: item.SEX_ID.toString()
 
@@ -230,7 +231,7 @@ export function AddAHorse2({ navigation }) {
         var list = [];
         json.m_cData.map(item => (
           list.push({
-            label: item.WINNER_TYPE_EN,
+            label: Translate(item.WINNER_TYPE_TR, item.WINNER_TYPE_EN),
             value: item.WINNER_TYPE_ID,
             key: item.WINNER_TYPE_ID.toString()
 
@@ -304,7 +305,7 @@ export function AddAHorse2({ navigation }) {
         var list = [];
         json.m_cData.map(item => (
           list.push({
-            label: item.COUNTRY_EN,
+            label: Translate(item.COUNTRY_TR, item.COUNTRY_EN),
             value: item.COUNTRY_ID,
             key: item.COUNTRY_ID.toString()
 

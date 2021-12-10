@@ -7,11 +7,13 @@ import {
     Text,
     StatusBar,
     Image,
-    Animated
+    Animated,
+    Platform
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyHeader from '../component/MyHeader';
 import { Ionicons } from '@expo/vector-icons';
+import { Translate } from '../component/Helper';
 
 function HorsesForSale({ navigation }) {
     const [getHorseGetFilter, setHorseGetFilter] = React.useState();
@@ -112,7 +114,7 @@ function HorsesForSale({ navigation }) {
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                     <Ionicons name='copy-outline' size={12} />
                                     <Text style={styles.textStyle}>
-                                        {item.ADS_CATEGORY.ADS_CATEGORY_EN} /{item.RACE.RACE_EN}
+                                        {Translate(item.ADS_CATEGORY.ADS_CATEGORY_TR, item.ADS_CATEGORY.ADS_CATEGORY_EN)} /{Translate(item.RACE.RACE_TR, item.RACE.RACE_EN)}
 
                                     </Text>
                                 </View>

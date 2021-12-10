@@ -272,7 +272,7 @@ function MyAccount({ navigation }) {
           {time ?
             <ActivityIndicator style={styles.Activity} color="rgba(52, 77, 169, 0.6)" size="large" />
             :
-            <ScrollView>
+            <ScrollView style={{padding: '2%'}}>
               <Text style={styles.text_footer}>{t('EmailText')}</Text>
               <View style={styles.action}>
                 <Feather

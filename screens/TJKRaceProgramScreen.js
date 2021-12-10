@@ -14,6 +14,7 @@ import MyHeader from '../component/MyHeader';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { Translate } from '../component/Helper';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -190,7 +191,7 @@ function TJKRaceProgram({ navigation, route }) {
                                             <DataTable.Cell style={styles.DataTableCell}>{item.KGS}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.GNY}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.AGF}</DataTable.Cell>
-                                            <DataTable.Cell style={styles.DataTableCell}>{item.HORSE_INFO.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableCell}>{Translate(item.HORSE_INFO.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.HORSE_INFO.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.HORSE_INFO.POINT}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.HORSE_INFO.EARN}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell}>{item.HORSE_INFO.FAMILY_TEXT}</DataTable.Cell>

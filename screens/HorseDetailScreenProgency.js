@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Flag from "react-native-flags";
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 function HorseDetailScreenProgency({ navigation, route }) {
     const { t, i18n } = useTranslation();
@@ -136,7 +137,7 @@ function HorseDetailScreenProgency({ navigation, route }) {
                                                 {item.HORSE_NAME}
                                             </DataTable.Cell>
 
-                                            <DataTable.Cell style={styles.DataTableCell}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableCell}>{Translate(item.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
 
                                             <DataTable.Cell style={styles.DataTableCell} >{item.POINT}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableCell} >{item.EARN} {item.EARN_ICON}</DataTable.Cell>

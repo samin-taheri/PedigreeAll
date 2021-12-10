@@ -94,7 +94,7 @@ i18n.use(initReactI18next).init({
                 "DeleteText": "Delete",
                 "İşleniyor": " Processing",
                 "LütfenBekleyin": "Please Wait !",
-                "MyAddingRequest": "My Adding Request",
+                "MyAddingRequest": "My Adding Requests",
                 "Nodatafound": "No data found !",
                 "ID":"ID",
                 "Name": "Name",
@@ -108,8 +108,8 @@ i18n.use(initReactI18next).init({
                 "LastActionDateStart": "Last Action Date (Start)",
                 "RequestDateEnd": "Request Date (End)",
                 "RequestDateStart": "Request Date (Start)",
-                "MyDeleteRequest": "My Delete Request",
-                "MyEditRequest": "My Edit Request",
+                "MyDeleteRequest": "My Delete Requests",
+                "MyEditRequest": "My Edit Requests",
                 "ContactUs": "Contact Us",
                 "YourName": "Your Name",
                 "Email&Phone": "Email & Phone",
@@ -236,7 +236,8 @@ i18n.use(initReactI18next).init({
                 "BroodmareSireSiblings": "Broodmare Sire Siblings",
                 "Ads": "Ads",
                 "Requests": "Requests",
-                "Contact": "Contact"
+                "Contact": "Contact",
+                "LoaderText2": "The language is being changed, Please wait!"
             }
         },
         tr: {
@@ -459,18 +460,19 @@ i18n.use(initReactI18next).init({
                 "RegisteredStallions": "Aygır kayıtları",
                 "Breeders": "Yetiştiriciler",
                 "PedigreeQuery": "Soyağacı | Pedigree Sorgulama",
-                "HypoMating": "Hypo Mating | Eşleştirme",
+                "HypoMating": "Eşleştirme",
                 "Mare(Mother)Siblings": "Kırsak (Anne) Kardeşleri",
                 "Stallion(Father)Siblings": "Aygır (Baba) Kardeşleri",
-                "TailFemale": "Tail Female | Dişi Soy",
-                "Progeny": "Progeny | Taylar",
-                "FemaleFamily": "Female Family | Kapsamlı Dişi Soy",
+                "TailFemale": "Dişi Soy",
+                "Progeny": "Taylar",
+                "FemaleFamily": "Kapsamlı Dişi Soy",
                 "FoalsAsBroodMareSire": "Kırsak Babası Olarak Taylar",
                 "CompareHorses": "At Karşılaştır",
                 "BroodmareSireSiblings": "Kırsak Babası Kardeşleri",
                 "Ads": "İlanlar",
                 "Requests": "Bana Özel",
-                "Contact": "İletişim"
+                "Contact": "İletişim",
+                "LoaderText2": "Dil değiştiriliyor, lütfen bekleyin!"
              }
         }
     },

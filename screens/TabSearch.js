@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import MyButton from '../component/MyButton';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 
 const TabSearch = ({ route, navigation }) => {
@@ -24,7 +25,7 @@ const TabSearch = ({ route, navigation }) => {
   });
   const { t, i18n } = useTranslation();
   const refRBSheetGeneration = useRef();
-  const [GenerationTitle, setGenerationTitle] = React.useState('Nesil 5');
+  const [GenerationTitle, setGenerationTitle] = React.useState(Translate('Nesil 5', 'Generation 5'));
   const [state, setState] = React.useState({ checked: [] });
   const [chekedItem, setChekedItem] = React.useState(5)
   const [getHorseText, setHorseText] = React.useState('')
@@ -106,7 +107,7 @@ const TabSearch = ({ route, navigation }) => {
                   size={22}
                 />
                 <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{GenerationTitle}</Text>
-                <Feather style={{ paddingLeft: '60%', top: '1%' }} name="chevron-down" color="grey" size={20} />
+                <Feather style={{  position: 'absolute', right: '7%', bottom: '40%' }} name="chevron-down" color="grey" size={20} />
 
               </TouchableOpacity>
 

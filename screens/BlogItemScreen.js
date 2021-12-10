@@ -12,6 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import MyHeader from '../component/MyHeader';
+import { Translate } from '../component/Helper';
 
 export function BlogItemScreen({ route, navigation }) {
   const { selectedBlog } = route.params;
@@ -40,14 +41,14 @@ export function BlogItemScreen({ route, navigation }) {
             </View>
             <View style={[styles.IconsContainer, { marginTop: 10 }]}>
               <Icon name="tags" size={15} color="#000" />
-              <Text style={styles.IconText}>{selectedBlog.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_EN}</Text>
+              <Text style={styles.IconText}>{Translate(selectedBlog.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_TR ,selectedBlog.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_EN)}</Text>
             </View>
             <ScrollView>
               <Card.Image
                 style={{ borderRadius: 3, resizeMode: 'contain', height: 200, marginTop: 10 }}
                 source={{ uri: selectedBlog.IMAGE }} />
               <WebView
-                source={{ baseUrl: '', html: selectedBlog.BLOG_EN + '<meta name="viewport" content="width=device-width, initial-scale=1">' }}
+                source={{ baseUrl: '', html: Translate(selectedBlog.BLOG_TR ,selectedBlog.BLOG_EN) + '<meta name="viewport" content="width=device-width, initial-scale=1">' }}
                 originWhitelist={['*']}
                 automaticallyAdjustContentInsets={true}
                 javaScriptEnabledAndroid={true}

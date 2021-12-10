@@ -6,6 +6,7 @@ import Flag from "react-native-flags";
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 function HorseDetailScreenNick({ navigation, route }) {
 
@@ -137,7 +138,7 @@ function HorseDetailScreenNick({ navigation, route }) {
                                                 style={{ width: 300 }}>{item.HORSE_NAME} {item.ICON.toUpperCase()}
                                             </DataTable.Cell>
 
-                                            <DataTable.Cell style={styles.DataTableText}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                                            <DataTable.Cell style={styles.DataTableText}>{Translate(item.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
 
                                             <DataTable.Cell style={styles.DataTableText}>{item.POINT}</DataTable.Cell>
                                             <DataTable.Cell style={styles.DataTableText}>{item.EARN} {item.EARN_ICON}</DataTable.Cell>

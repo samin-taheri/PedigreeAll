@@ -14,9 +14,10 @@ import { Global } from './Global'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Flag from "react-native-flags";
 import * as Progress from 'react-native-progress';
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
 import MyHeader from '../component/MyHeader';
+import { Translate } from '../component/Helper';
 
 function BreedersProfile({ navigation, route, BackButton }) {
     const [images, setImageInfo] = React.useState([]);
@@ -253,11 +254,11 @@ function BreedersProfile({ navigation, route, BackButton }) {
                                     </View>
                                     <View style={styles.ItemContainer2}>
                                         <Text style={styles.ItemTitleText}>{t('Class')}</Text>
-                                        <Text style={styles.ItemNameText}>{getHorseInfoByID[0].WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</Text>
+                                        <Text style={styles.ItemNameText}>{Translate(getHorseInfoByID[0].WINNER_TYPE_OBJECT.WINNER_TYPE_TR, getHorseInfoByID[0].WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</Text>
                                     </View>
                                     <View style={styles.ItemContainer2}>
                                         <Text style={styles.ItemTitleText}>{t('Sex')}</Text>
-                                        <Text style={styles.ItemNameText}>{getHorseInfoByID[0].SEX_OBJECT.SEX_EN}</Text>
+                                        <Text style={styles.ItemNameText}>{Translate(getHorseInfoByID[0].SEX_OBJECT.SEX_TR, getHorseInfoByID[0].SEX_OBJECT.SEX_EN)}</Text>
                                     </View>
                                     <View style={styles.ItemContainer2}>
                                         <Text style={styles.ItemTitleText}>{t('Earning')}</Text>

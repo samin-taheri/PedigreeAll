@@ -8,6 +8,7 @@ import {
   FlatList,
   useWindowDimensions,
   ActivityIndicator,
+  Platform
 } from 'react-native'
 import { WebView } from 'react-native-webview';
 import { Card, Button } from 'react-native-elements';
@@ -20,13 +21,14 @@ import MyHeader from '../component/MyHeader';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 export function BlogScreen({ navigation }) {
   const { t, i18n } = useTranslation();
 
   const BottomSheetCategory = useRef();
   const [textShown, setTextShown] = useState(false);
-  const [lengthMore, setLengthMore] = useState(false); 
+  const [lengthMore, setLengthMore] = useState(false);
   const [BlogList, setBlogList] = useState([])
   const [CategoryList, setCategoryList] = useState([])
   const { width: windowWidth } = useWindowDimensions();
@@ -73,6 +75,7 @@ export function BlogScreen({ navigation }) {
   }
 
   React.useEffect(() => {
+
     readDataBlogList();
     readDataCategoryList();
 
@@ -94,68 +97,68 @@ export function BlogScreen({ navigation }) {
         onPress={() => navigation.goBack()}
       >
         {time ?
-        <>
-          <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
+          <>
+            <ActivityIndicator style={styles.Activity} size="large" color="rgba(52, 77, 169, 0.6)" />
           </>
           :
           <>
-        <RBSheet
-          ref={BottomSheetCategory}
-          closeOnDragDown={true}
-          closeOnPressMask={true}
-          height={Dimensions.get('window').height - 50}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10
-            },
+            <RBSheet
+              ref={BottomSheetCategory}
+              closeOnDragDown={true}
+              closeOnPressMask={true}
+              height={Dimensions.get('window').height - 50}
+              customStyles={{
+                container: {
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10
+                },
 
-          }}
-        >
-          <>
-            {CategoryList.length > 0 ?
-              <View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 20, paddingLeft: 20, paddingRight: 20 }}>{t('Filter')}</Text>
-                </View>
-                <FlatList
-                  scrollEnabled={true}
-                  bounces={false}
-                  style={styles.flatList}
-                  data={CategoryList}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.latestItem}
-                      onPress={() => {
-                        setBlogIsAvaible(false)
-                        setSelectedCategory(true);
-                        setSelectedCategoryID(item.BLOG_CATEGORY_ID);
-                        BottomSheetCategory.current.close();
-                        BlogList.map((i) => {
-                          if (i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_ID === item.BLOG_CATEGORY_ID) {
-                            setBlogIsAvaible(true)
-                          }
-                        })
-                      }}
-                    >
-                      <View style={{ flexDirection: 'row' }}>
-                        <Ionicons name="chevron-forward-outline" size={16} color="black" />
+              }}
+            >
+              <>
+                {CategoryList.length > 0 ?
+                  <View>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{ fontSize: 20, paddingLeft: 20, paddingRight: 20 }}>{t('Filter')}</Text>
+                    </View>
+                    <FlatList
+                      scrollEnabled={true}
+                      bounces={false}
+                      style={styles.flatList}
+                      data={CategoryList}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity style={styles.latestItem}
+                          onPress={() => {
+                            setBlogIsAvaible(false)
+                            setSelectedCategory(true);
+                            setSelectedCategoryID(item.BLOG_CATEGORY_ID);
+                            BottomSheetCategory.current.close();
+                            BlogList.map((i) => {
+                              if (i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_ID === item.BLOG_CATEGORY_ID) {
+                                setBlogIsAvaible(true)
+                              }
+                            })
+                          }}
+                        >
+                          <View style={{ flexDirection: 'row' }}>
+                            <Ionicons name="chevron-forward-outline" size={16} color="black" />
 
-                        <Text style={styles.textStyle}>
-                          {item.BLOG_CATEGORY_EN}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>)}
-                  keyExtractor={item => item.BLOG_CATEGORY_ID.toString()}
-                />
-              </View>
-              :
-              null
-            }
+                            <Text style={styles.textStyle}>
+                              {Translate(item.BLOG_CATEGORY_TR ,item.BLOG_CATEGORY_EN)}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>)}
+                      keyExtractor={item => item.BLOG_CATEGORY_ID.toString()}
+                    />
+                  </View>
+                  :
+                  null
+                }
+              </>
+            </RBSheet>
           </>
-        </RBSheet>
-        </>
-            }
-          
+        }
+
         <TouchableOpacity
           style={styles.CategoriesContainer}
           onPress={() => { BottomSheetCategory.current.open(); }}>
@@ -166,17 +169,17 @@ export function BlogScreen({ navigation }) {
 
           <View style={styles.ErrorMessageContainer}>
             <Icon style={{ marginBottom: 40 }} name="exclamation-circle" size={150} color="#e54f4f" />
-           
-              <>
-                <Text style={styles.ErrorMessageTitle}>{t('Nodatafound')}</Text>
-              </>
-            
+
+            <>
+              <Text style={styles.ErrorMessageTitle}>{t('Nodatafound')}</Text>
+            </>
+
             <View style={styles.ErrorMessageButtonContainer}>
               <TouchableOpacity
                 style={[styles.ErrorMessageButton, { right: 20 }]}
                 onPress={() => { BottomSheetCategory.current.open(); }}
               >
-                  <Text style={styles.ErrorMessageButtonText}>{t('GotoCategories')}</Text>
+                <Text style={styles.ErrorMessageButtonText}>{t('GotoCategories')}</Text>
 
               </TouchableOpacity>
               <TouchableOpacity
@@ -186,7 +189,7 @@ export function BlogScreen({ navigation }) {
                   setBlogIsAvaible(true)
                 }}
               >
-                  <Text style={[styles.ErrorMessageButtonText, { color: 'rgb(232, 237, 241)' }]}>{t('GotoBlog')}</Text>
+                <Text style={[styles.ErrorMessageButtonText, { color: 'rgb(232, 237, 241)' }]}>{t('GotoBlog')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -209,25 +212,22 @@ export function BlogScreen({ navigation }) {
                                   selectedBlog: i
                                 })
                                 setSelectedBlog(i)
-                                i18n.use('tr')?
                                 setBlogHeader(i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_TR)
-                              :
-                              setBlogHeader(i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_EN)
-                            }
+                              }
                               }>
                                 <Card
                                   containerStyle={{ elevation: 0, borderWidth: 0.5, borderRadius: 10, padding: 10, borderColor: 'silver', marginBottom: 20 }}
                                 >
-                                    <Card.Title> {i.HEADER_EN}</Card.Title>
+                                  <Card.Title>{Translate(i.HEADER_TR, i.HEADER_EN)}</Card.Title>
                                   <Card.Image
                                     style={{ borderRadius: 3, }}
                                     source={{ uri: i.IMAGE }} />
-                                    <Text
-                                      style={{ marginBottom: 10, marginTop: 10 }}
-                                      onTextLayout={onTextLayout}
-                                      numberOfLines={textShown ? undefined : 3}>
-                                      {i.SUMMARY_EN}
-                                    </Text>
+                                  <Text
+                                    style={{ marginBottom: 10, marginTop: 10 }}
+                                    onTextLayout={onTextLayout}
+                                    numberOfLines={textShown ? undefined : 3}>
+                                    {Translate(i.SUMMARY_TR ,i.SUMMARY_EN)}
+                                  </Text>
 
                                   <Card.Divider />
                                   <View style={styles.ButtonContainer}>
@@ -261,21 +261,21 @@ export function BlogScreen({ navigation }) {
                             <Card
                               containerStyle={{ width: '85%', elevation: 0, borderWidth: 0.5, borderRadius: 10, padding: 10, borderColor: 'silver', marginBottom: 20 }}
                             >
-                                <Card.Title> {i.HEADER_EN}</Card.Title>
+                              <Card.Title> {Translate(i.HEADER_TR, i.HEADER_EN)}</Card.Title>
                               <Card.Image
                                 style={{ borderRadius: 3, resizeMode: "contain" }}
                                 source={{ uri: i.IMAGE }} />
                               <View style={[styles.IconsContainer, { marginTop: 10 }]}>
                                 <Icon name="tags" size={15} color="#000" />
-                                  <Text style={styles.IconText}>{i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_EN}</Text>
-                                
+                                <Text style={styles.IconText}>{Translate(i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_TR, i.BLOG_CATEGORY_OBJECT.BLOG_CATEGORY_EN)}</Text>
+
                               </View>
-                                <Text
-                                  style={{ marginBottom: 10, marginTop: 10 }}
-                                  onTextLayout={onTextLayout}
-                                  numberOfLines={textShown ? undefined : 3}>
-                                  {i.SUMMARY_EN}
-                                </Text>
+                              <Text
+                                style={{ marginBottom: 10, marginTop: 10 }}
+                                onTextLayout={onTextLayout}
+                                numberOfLines={textShown ? undefined : 3}>
+                                {Translate(i.SUMMARY_TR, i.SUMMARY_EN)}
+                              </Text>
 
                               <Card.Divider />
 
@@ -315,7 +315,7 @@ export function BlogScreen({ navigation }) {
             }
           </>
         }
-        
+
       </MyHeader>
     </View >
   );

@@ -15,6 +15,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import MyButton from '../component/MyButton';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 export function MyEditRequestsScreen({ navigation }) {
   const { t, i18n } = useTranslation();
@@ -149,7 +150,7 @@ export function MyEditRequestsScreen({ navigation }) {
         var list = [];
         json.m_cData.map(item => (
           list.push({
-            label: item.REQUEST_STATUS_EN,
+            label: Translate(item.REQUEST_STATUS_TR,item.REQUEST_STATUS_EN),
             value: item.REQUEST_STATUS_ID,
             key: item.REQUEST_STATUS_ID.toString()
 
@@ -290,8 +291,8 @@ export function MyEditRequestsScreen({ navigation }) {
                           <DataTable.Cell style={{ width: 120 }}>{item.HORSE_NAME}</DataTable.Cell>
                           <DataTable.Cell style={{ width: 120 }}>{item.FATHER_NAME}</DataTable.Cell>
                           <DataTable.Cell style={{ width: 120 }}>{item.MOTHER_NAME}</DataTable.Cell>
-                          <DataTable.Cell style={{ width: 120 }}>{item.REQUEST_STATUS_OBJECT.REQUEST_STATUS_EN}</DataTable.Cell>
-                          <DataTable.Cell style={{ width: 120 }}>{item.COLUMNS_EN}</DataTable.Cell>
+                          <DataTable.Cell style={{ width: 120 }}>{Translate(item.REQUEST_STATUS_OBJECT.REQUEST_STATUS_TR, item.REQUEST_STATUS_OBJECT.REQUEST_STATUS_EN)}</DataTable.Cell>
+                          <DataTable.Cell style={{ width: 120 }}>{Translate(item.COLUMNS_TR, item.COLUMNS_EN)}</DataTable.Cell>
                           <DataTable.Cell style={{ width: 120 }}>{item.DATE.substring(0, 10)}</DataTable.Cell>
                           <DataTable.Cell style={{ width: 120 }}>{item.EDIT_DATE.substring(0, 10)}</DataTable.Cell>
                           <DataTable.Cell style={{ width: 120 }}>-</DataTable.Cell>

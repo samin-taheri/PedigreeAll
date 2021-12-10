@@ -8,6 +8,7 @@ import Flag from "react-native-flags";
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
 import MyHeader from '../component/MyHeader';
+import { Translate } from '../component/Helper';
 
 function BreedersLinebreeding({ BackButton, navigation, route }) {
 
@@ -142,11 +143,11 @@ function BreedersLinebreeding({ BackButton, navigation, route }) {
                                                         <DataTable.Cell style={styles.DataTableText}>{item.INFLUENCE} %</DataTable.Cell>
                                                         <DataTable.Cell style={styles.DataTableText}>{item.AGR} %</DataTable.Cell>
 
-                                                        <DataTable.Cell style={styles.DataTableText}>{item.HORSE_INFO_OBJECT.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                                                        <DataTable.Cell style={styles.DataTableText}>{Translate(item.HORSE_INFO_OBJECT.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.HORSE_INFO_OBJECT.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
 
 
 
-                                                        <DataTable.Cell style={styles.DataTableText}>{item.HORSE_INFO_OBJECT.SEX_OBJECT.SEX_EN}</DataTable.Cell>
+                                                        <DataTable.Cell style={styles.DataTableText}>{Translate(item.HORSE_INFO_OBJECT.SEX_OBJECT.SEX_TR, item.HORSE_INFO_OBJECT.SEX_OBJECT.SEX_EN)}</DataTable.Cell>
 
 
 

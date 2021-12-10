@@ -18,8 +18,9 @@ import MyButtonWhite from '../component/MyButtonWhite';
 import MyButton from '../component/MyButton';
 import MyButtonEditDelete from '../component/MyButtonEditDelete';
 import faker from 'faker'
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 faker.seed(10);
 const SPACING = 18;
@@ -550,7 +551,7 @@ export function RequestsEditAHorse({ navigation }) {
                         var list = [];
                         json.m_cData.map(item => (
                             list.push({
-                                label: item.SEX_EN,
+                                label: Translate(item.SEX_TR, item.SEX_EN),
                                 value: item.SEX_ID,
                                 key: item.SEX_ID.toString()
 
@@ -600,7 +601,7 @@ export function RequestsEditAHorse({ navigation }) {
                         var list = [];
                         json.m_cData.map(item => (
                             list.push({
-                                label: item.COUNTRY_EN,
+                                label: Translate(item.COUNTRY_TR, item.COUNTRY_EN),
                                 value: item.COUNTRY_ID,
                                 key: item.COUNTRY_ID.toString()
 
@@ -650,7 +651,7 @@ export function RequestsEditAHorse({ navigation }) {
                         var list = [];
                         json.m_cData.map(item => (
                             list.push({
-                                label: item.WINNER_TYPE_EN,
+                                label: Translate(item.WINNER_TYPE_TR, item.WINNER_TYPE_EN),
                                 value: item.WINNER_TYPE_ID,
                                 key: item.WINNER_TYPE_ID.toString()
 
@@ -1114,7 +1115,7 @@ export function RequestsEditAHorse({ navigation }) {
                                             showsVerticalScrollIndicator={true}
                                         >
 
-                                            {sexList.filter((x) => x.SEX_EN).map(
+                                            {sexList.filter((x) => Translate(x.SEX_TR, x.SEX_EN)).map(
                                                 (item, i) => (
                                                     <ListItem
                                                         key={i}
@@ -1127,7 +1128,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                             BottomSheetRef.current.close();
                                                         }} >
                                                         <ListItem.Content>
-                                                            <ListItem.Title>{item.SEX_EN}</ListItem.Title>
+                                                            <ListItem.Title>{Translate(item.SEX_TR, item.SEX_EN)}</ListItem.Title>
                                                         </ListItem.Content>
                                                         <ListItem.Chevron />
                                                     </ListItem>
@@ -1140,7 +1141,7 @@ export function RequestsEditAHorse({ navigation }) {
                                     <View>
                                         {WinnerTypeList !== undefined &&
                                             <ScrollView>
-                                                {WinnerTypeList.filter((x) => x.WINNER_TYPE_EN).map(
+                                                {WinnerTypeList.filter((x) => Translate(x.WINNER_TYPE_TR, x.WINNER_TYPE_EN)).map(
                                                     (item, i) => (
                                                         <ListItem
                                                             key={i}
@@ -1151,7 +1152,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                                 BottomSheetRef.current.close()
                                                             }} >
                                                             <ListItem.Content>
-                                                                <ListItem.Title>{item.WINNER_TYPE_EN}</ListItem.Title>
+                                                                <ListItem.Title>{Translate(item.WINNER_TYPE_TR, item.WINNER_TYPE_EN)}</ListItem.Title>
                                                             </ListItem.Content>
                                                             <ListItem.Chevron />
                                                         </ListItem>
@@ -1194,7 +1195,7 @@ export function RequestsEditAHorse({ navigation }) {
                                     <View>
                                         {CounrtyList !== undefined &&
                                             <ScrollView>
-                                                {CounrtyList.filter((x) => x.COUNTRY_EN).map(
+                                                {CounrtyList.filter((x) => Translate(x.COUNTRY_TR, x.COUNTRY_EN)).map(
                                                     (item, i) => (
                                                         <ListItem
                                                             key={i}
@@ -1206,7 +1207,7 @@ export function RequestsEditAHorse({ navigation }) {
                                                             }} >
                                                             <Flag code={item.ICON.toUpperCase()} size={24} />
                                                             <ListItem.Content>
-                                                                <ListItem.Title>{item.COUNTRY_EN}</ListItem.Title>
+                                                                <ListItem.Title>{Translate(item.COUNTRY_TR, item.COUNTRY_EN)}</ListItem.Title>
                                                             </ListItem.Content>
                                                             <ListItem.Chevron />
                                                         </ListItem>

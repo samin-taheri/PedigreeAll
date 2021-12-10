@@ -4,8 +4,9 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import Myloader from '../constants/Myloader';
 import { useNavigation } from '@react-navigation/native';
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from './Helper';
 
 function HomeComponent({ props }) {
 
@@ -294,19 +295,21 @@ function HomeComponent({ props }) {
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                     <Text style={styles.textStyle2}>{t('BMSire')}</Text>
                                     <Text style={styles.textStyle}>
-                                        {item.BM_SIRE_NAME}
+                                    {((item.BM_SIRE_NAME).length > maxlimit) ?
+                                        (((item.BM_SIRE_NAME).substring(0, maxlimit - 3)) + '...') :
+                                        item.BM_SIRE_NAME}
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
 
                                     <Text style={[styles.textStyle2]}>{t('Gender')}</Text>
                                     <Text style={styles.textStyle}>
-                                        {item.SEX_OBJECT.SEX_EN}
+                                        {Translate(item.SEX_OBJECT.SEX_TR, item.SEX_OBJECT.SEX_EN)}
                                     </Text>
 
                                     <Text style={[styles.textStyle2, { paddingLeft: 20 }]}>{t('Class')}</Text>
                                     <Text style={styles.textStyle}>
-                                        {item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}
+                                        {Translate(item.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}
                                     </Text>
                                 </View>
                             </View>
@@ -348,13 +351,15 @@ function HomeComponent({ props }) {
                                     <Ionicons name='female-outline' size={12} />
 
                                     <Text style={styles.textStyle}>
-                                        {item.HORSE_MOTHER_NAME}
+                                    {((item.HORSE_MOTHER_NAME).length > maxlimit) ?
+                                        (((item.HORSE_MOTHER_NAME).substring(0, maxlimit - 3)) + '...') :
+                                        item.HORSE_MOTHER_NAME}
                                     </Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                     <Ionicons name='copy-outline' size={12} />
                                     <Text style={styles.textStyle}>
-                                        {item.ADS_CATEGORY.ADS_CATEGORY_EN} /{item.RACE.RACE_EN}
+                                        {Translate(item.ADS_CATEGORY.ADS_CATEGORY_TR, item.ADS_CATEGORY.ADS_CATEGORY_EN)} /{Translate(item.RACE.RACE_TR, item.RACE.RACE_EN)}
 
                                     </Text>
                                 </View>
@@ -402,7 +407,7 @@ const styles = StyleSheet.create({
     },
     image2: {
         width: 120,
-        height: 120,
+        height: 100,
         borderRadius: 4,
         marginRight: 10,
     },

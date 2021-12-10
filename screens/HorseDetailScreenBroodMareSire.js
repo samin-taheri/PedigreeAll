@@ -4,6 +4,7 @@ import { Global } from './Global'
 import { DataTable } from 'react-native-paper';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 function HorseDetailScreenBroodMareSire({ navigation, route }) {
     const [getBroodMareSire, setBroodMareSire] = React.useState();
@@ -117,7 +118,7 @@ function HorseDetailScreenBroodMareSire({ navigation, route }) {
                                             style={{ width: 350 }}>
                                             {item.HORSE_NAME}
                                         </DataTable.Cell>
-                                        <DataTable.Cell style={styles.DataTableText}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                                        <DataTable.Cell style={styles.DataTableText}>{Translate(item.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
 
 
                                         <DataTable.Cell style={styles.DataTableText} >{item.POINT}</DataTable.Cell>

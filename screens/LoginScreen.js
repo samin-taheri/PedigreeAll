@@ -43,7 +43,9 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem(STORAGE_KEY, data)
         await AsyncStorage.setItem('TOKEN', btoa(email + ":" + password))
         Global.Token = btoa(email + ":" + password);
-        console.log('Data successfully saved')
+        const mobile_token = await AsyncStorage.getItem('mobile_token')
+        if (mobile_token)
+          setToken(mobile_token)
       }
       else {
         await AsyncStorage.setItem(STORAGE_KEY, data)
@@ -56,6 +58,26 @@ const LoginScreen = ({ navigation }) => {
 
     } catch (e) {
       console.log('Failed to save the data to the storage')
+    }
+  }
+  const setToken = async (mobile_token) => {
+    console.log(mobile_token)
+    try {
+      const token = await AsyncStorage.getItem('TOKEN')
+      if (token !== null) {
+        fetch('https://api.pedigreeall.com/SystemUser/SetMobilToken?p_sToken=' + mobile_token, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Basic " + token,
+          },
+        })
+      }
+      else {
+        console.log("Basarisiz")
+      }
+    } catch (e) {
     }
   }
 

@@ -22,7 +22,7 @@ import faker from 'faker'
 import RNPickerSelect from 'react-native-picker-select';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
-import { Helper } from "../component/Helper";
+import { Helper, Translate } from "../component/Helper";
 
 faker.seed(10);
 const SPACING = 18;
@@ -72,7 +72,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
 
     const [getFirstHorseID, setFirstHorseID] = React.useState();
     const refRBSheetGeneration = useRef();
-    const [GenerationTitle, setGenerationTitle] = React.useState("Standart");
+    const [GenerationTitle, setGenerationTitle] = React.useState(Translate("Standart", "Standard"));
     const readDataCountryList = async () => {
         let isMounted = true;
         let isActive = true;
@@ -91,7 +91,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                 var list = [];
                 json.m_cData.map(item => (
                     list.push({
-                        label: item.COUNTRY_EN,
+                        label: Translate(item.COUNTRY_TR, item.COUNTRY_EN),
                         value: item.COUNTRY_ID,
                         key: item.COUNTRY_ID.toString()
 
@@ -414,7 +414,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                 pickerSelectStyles
                             }
                             Icon={() => {
-                                return <Feather style={{ paddingRight: Platform.OS == 'ios' ? '12%' : '15%', top: '1%' }} name="chevron-down" color="grey" size={20} />
+                                return <Feather style={{ paddingRight: Platform.OS == 'ios' ? '12%' : '15%', top: '1%', }} name="chevron-down" color="grey" size={20} />
                             }}
                             useNativeAndroidPickerStyle={false}
                             onValueChange={(value) => {
@@ -441,7 +441,7 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                 size={22}
                             />
                             <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{getRegisteredStallionsName}</Text>
-                            <Feather style={{ paddingLeft: '68%', top: '1%' }} name="chevron-down" color="grey" size={20} />
+                            <Feather style={{ position: 'absolute', right: '7%', bottom: '40%' }} name="chevron-down" color="grey" size={20} />
 
                         </TouchableOpacity>
 
@@ -481,13 +481,13 @@ export function TabEffectiveNickSearch({ navigation, route }) {
                                 size={22}
                             />
                             <Text style={{ paddingRight: 'auto', top: 4.5, left: 5 }}>{GenerationTitle}</Text>
-                            <Feather style={{ paddingLeft: '65%', top: '1%' }} name="chevron-down" color="grey" size={20} />
+                            <Feather style={{ position: 'absolute', right: '7%', bottom: '40%' }} name="chevron-down" color="grey" size={20} />
 
                         </TouchableOpacity>
                     </View>
                     <MyButton
                         Title={t('Report')}
-                        Icon="search-outline"
+                        Icon="document-outline"
                         IconSize={18}
                         onPress={() => {
                             if (getRegisteredStallionsId !== undefined) {

@@ -1,9 +1,12 @@
 
 import React, { useState, useEffect, useRef, createContext } from 'react';
 import { Platform, NativeModules, Modal, TouchableOpacity, StyleSheet, ScrollView, View, Text, Switch, Button, StatusBar, Dimensions, Image } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
 import { drawerItemsMain } from './screens/drawerItemsMain';
 import CustomDrawerContent from './screens/CustomDrawerContent.js';
 import LoginScreen from './screens/LoginScreen';
@@ -62,7 +65,7 @@ import HorsesForSale from './screens/HorsesForSaleScreen';
 import RegisteredStallions from './screens/RegisteredStallionScreen';
 import { useTranslation } from "react-i18next";
 import i18n from "./component/i18n";
-import { Dil } from './component/Helper';
+import { Translate, lang } from './component/Helper';
 import BreedersBroodmareSireSibling from './screens/BreedersBroodmareSireSibling';
 import BreedersFemaleFamily from './screens/BreedersFemaleFamily';
 import BreedersFoalsAsBroodMareSire from './screens/BreedersFoalsAsBroodMareSire';
@@ -72,6 +75,23 @@ import BreedersProgency from './screens/BreedersProgeny';
 import BreedersSiblingMare from './screens/BreedersSiblingMare';
 import BreedersSiblingSire from './screens/BreedersSiblingStallion';
 import BreedersTailFemale from './screens/BreedersTailFemale';
+import Myloader from './constants/Myloader';
+import * as Location from 'expo-location';
+import { CreateMatchReport } from './screens/CreateMatchReport';
+import { EffectiveNickSearchModal2 } from './screens/EffectiveNickSearchModal2';
+import { HypoMating } from './screens/HypoMating';
+import HypotheticalSearchModalSire2 from './screens/HypotheticalSearchModalSire2';
+import HypotheticalSearchModalMare2 from './screens/HypotheticalSearchModalMare2';
+import { SearchModal2 } from './screens/SearchModal2';
+import PedigreeQuery from './screens/PedigreeQuery';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export const BASE_URL = 'http://api.pedigreeall.com/';
 
@@ -84,12 +104,13 @@ const navOptionHandler = () => ({
 })
 
 function MainDrawerNavigation() {
-  
+
   const { t, i18n } = useTranslation();
 
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [isEnabled, setIsEnabled] = useState(false);
   const bottomSheet = useRef();
+  const [loader, setLoader] = React.useState(false)
 
   const drawerOptionHandler = ({ navigation }) => ({
     headerShown: true,
@@ -127,10 +148,18 @@ function MainDrawerNavigation() {
 
   })
 
+  const setLang = async (lang) => {
+    await AsyncStorage.setItem(
+      'language',
+      lang
+    );
+  };
+
 
   return (
     <>
       <StatusBar hidden={true} />
+      <Myloader Show={loader} Text={t('LoaderText2')} />
       <RBSheet style={{ backgroundColor: '#00000000' }}
 
         hasDraggableIcon ref={bottomSheet}
@@ -162,6 +191,7 @@ function MainDrawerNavigation() {
         </View>
 
         <View style={{ right: 30, flexDirection: 'row', top: 5 }}>
+
           <Switch
             trackColor={{ false: "#D6D6D6", true: "#2e3f6e" }}
             thumbColor={isEnabled ? "#fff" : "#fff"}
@@ -170,6 +200,7 @@ function MainDrawerNavigation() {
             value={isEnabled}
             style={{ marginLeft: 'auto', }}
           />
+
         </View>
 
         <View style={{ flexDirection: 'row' }}>
@@ -178,32 +209,30 @@ function MainDrawerNavigation() {
 
           <Text style={styles.SwipeablePanelText}>{t('Languages')}</Text>
 
-
-          <View style={styles.FlagContainer}>
+          <View style={{ right: 30, flexDirection: 'row', top: (Platform.OS == "android" ? 25 : 35), position: 'absolute' }}>
             <TouchableOpacity
               onPress={() => {
-                
-                i18n.changeLanguage('tr');
+                setLang('tr')
+                NativeModules.DevSettings.reload();
+
               }}>
               <Image
-                style={{ height: 40, width: 40, bottom: -17 }}
+                style={{ height: 40, width: 40, marginLeft: 'auto' }}
                 source={require('./assets/turkey.png')} />
             </TouchableOpacity>
 
-
             <TouchableOpacity
               onPress={() => {
-                i18n.changeLanguage('en')
-               
+                setLang('en');
+                NativeModules.DevSettings.reload();
+
               }}>
               <Image
-                style={{ height: 40, width: 40, bottom: -17 }}
+                style={{ height: 40, width: 40, marginLeft: 'auto' }}
                 source={require('./assets/usa.png')} />
             </TouchableOpacity>
           </View>
-
         </View>
-
       </RBSheet>
 
       <Drawer.Navigator
@@ -230,8 +259,8 @@ function MainDrawerNavigation() {
         <Stack.Screen name="DeleteAHorse" component={DeleteAHorseScreen} options={navOptionHandler} />
         <Stack.Screen name="MyDeleteRequests" component={MyDeleteRequestsScreen} options={navOptionHandler} />
         <Stack.Screen name="HorseDetail" component={HorseDetailScreen} options={navOptionHandler} />
-        <Drawer.Screen name="PedigreeQuery" component={HomeScreen} options={drawerOptionHandler} />
-        <Drawer.Screen name="HypoMating" component={HomeScreen} options={drawerOptionHandler} />
+        <Drawer.Screen name="PedigreeQuery" component={PedigreeQuery} options={navOptionHandler} />
+        <Drawer.Screen name="HypoMating" component={HypoMating} options={navOptionHandler} />
         <Drawer.Screen name="MareMotherSiblingsScreen" component={MareMotherSiblingsScreen} options={navOptionHandler} />
         <Drawer.Screen name="StallionFatherSiblings" component={StallionFatherSiblings} options={navOptionHandler} />
         <Drawer.Screen name="TailFemale" component={TailFemale} options={navOptionHandler} />
@@ -242,7 +271,7 @@ function MainDrawerNavigation() {
         <Drawer.Screen name="BroodmareSireSiblings" component={BroodmareSireSiblings} options={navOptionHandler} />
         <Drawer.Screen name="FoalsAsBroodMareSire" component={FoalsAsBroodMareSire} options={navOptionHandler} />
         <Drawer.Screen name="Search" component={Search} options={navOptionHandler} />
-        <Drawer.Screen name="CreateMatchReport" component={HomeScreen} options={drawerOptionHandler} />
+        <Drawer.Screen name="CreateMatchReport" component={CreateMatchReport} options={navOptionHandler} />
         <Drawer.Screen name="CompareHorses" component={CompareHorses} options={navOptionHandler} />
         <Drawer.Screen name="HorsesForSale" component={HorsesForSale} options={navOptionHandler} />
         <Drawer.Screen name="RegisteredStallions" component={RegisteredStallions} options={navOptionHandler} />
@@ -264,7 +293,68 @@ function MainDrawerNavigation() {
   );
 }
 
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  console.log('token at start', token);
+  if (Constants.isDevice) {
+
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission to access location was denied');
+      return;
+    }
+
+    if (status !== "granted") {
+      Alert.alert(
+        "No Notification Permission",
+        "please goto setting and on notification permission manual",
+        [
+          { text: "cancel", onPress: () => console.log("cancel") },
+          { text: "Allow", onPress: () => Linking.openURL("app-settings:") },
+        ],
+        { cancelable: false }
+      );
+      return;
+    }
+    //    if (finalStatus !== 'granted') {
+    //      alert('Failed to get push token for push notification!');
+    //      return;
+    //    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+    setToken(token)
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
+
+const setToken = async (mobile_token) => {
+  try {
+    await AsyncStorage.setItem('mobile_token', mobile_token)
+
+  } catch (e) {
+  }
+}
+
 export default function App({ navigation }) {
+
+
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [getLanguageClicking, setLanguageClicking] = React.useState(false)
@@ -350,26 +440,39 @@ export default function App({ navigation }) {
 
 
   React.useEffect(() => {
+
+    let item = AsyncStorage.getItem('language').then((val) => {
+      if (val)
+        global.dil = val;
+      else {
+        AsyncStorage.setItem('language', 'tr')
+        global.dil = 'tr';
+      }
+      i18n.changeLanguage(global.dil)
+    });
+
     readData();
-    if (getLanguageClicking === false) {
-      changeLanguage();
-    }
-
-
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-  }, []);
-  const changeLanguage = () => {
-    if (deviceLanguage === "tr_TR") {
-      Global.Language = 1
-    }
-    else {
-      Global.Language = 2
 
-    }
-    setLanguageLoading(false)
-  }
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+
+  }, []);
+
 
 
   if (isLoading) {
@@ -469,46 +572,42 @@ export default function App({ navigation }) {
       </RBSheet>
 
       <NavigationContainer>
-        {getUser == null ? (
-          <Stack.Navigator >
-            <Stack.Screen name="Login" component={LoginScreen} options={navOptionHandler} />
-            <Stack.Screen name="Result" component={ResultScreen} options={navOptionHandler} />
-            <Stack.Screen name="Register" component={RegisterScreen} options={navOptionHandler} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={navOptionHandler} />
-            <Stack.Screen name="MainDrawer" component={MainDrawerNavigation} options={navOptionHandler} />
-          </Stack.Navigator>
-        ) : (
-          <Stack.Navigator>
+        <Stack.Navigator >
 
-            <Stack.Screen name="MainDrawer" component={MainDrawerNavigation} options={navOptionHandler} />
-            <Stack.Screen name="Register" component={RegisterScreen} options={navOptionHandler} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={navOptionHandler} />
-            <Stack.Screen name="MyAccount" component={MyAccount} options={navOptionHandler} />
-            <Stack.Screen name="Login" component={LoginScreen} options={navOptionHandler} />
-            <Stack.Screen name="Result" component={ResultScreen} options={navOptionHandler} />
 
-            <Stack.Group screenOptions={{ presentation: 'modal' }}>
-              <Stack.Screen name="SearchModal" component={SearchModal} options={navOptionHandler} />
-              <Stack.Screen name="HypotheticalSearchModalSire" component={HypotheticalSearchModalSire} options={navOptionHandler} />
-              <Stack.Screen name="HypotheticalSearchModalMare" component={HypotheticalSearchModalMare} options={navOptionHandler} />
-              <Stack.Screen name="EffectiveNickSearchModal" component={EffectiveNickSearchModal} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenPedigree" component={HorseDetailScreenPedigree} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenProfile" component={HorseDetailScreenProfile} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenProgency" component={HorseDetailScreenProgency} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenNick" component={HorseDetailScreenNick} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenFamily" component={HorseDetailScreenFamily} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenSiblingMare" component={HorseDetailScreenSiblingMare} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenSiblingSire" component={HorseDetailScreenSiblingSire} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenTJK" component={HorseDetailScreenTJK} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenSiblingBroodmareSire" component={HorseDetailScreenSiblingBroodmareSire} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenBroodMareSire" component={HorseDetailScreenBroodMareSire} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenTailFemale" component={HorseDetailScreenTailFemale} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenLinebreeding" component={HorseDetailScreenLinebreeding} options={navOptionHandler} />
-              <Stack.Screen name="HorseDetailScreenFemaleFamily" component={HorseDetailScreenFemaleFamily} options={navOptionHandler} />
-              <Stack.Screen name="EffectiveNickScreen" component={EffectiveNickScreen} options={navOptionHandler} />
-            </Stack.Group>
-          </Stack.Navigator>
-        )}
+          <Stack.Screen name="MainDrawer" component={MainDrawerNavigation} options={navOptionHandler} />
+          <Stack.Screen name="Register" component={RegisterScreen} options={navOptionHandler} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={navOptionHandler} />
+          <Stack.Screen name="MyAccount" component={MyAccount} options={navOptionHandler} />
+          <Stack.Screen name="Login" component={LoginScreen} options={navOptionHandler} />
+          <Stack.Screen name="Result" component={ResultScreen} options={navOptionHandler} />
+
+          <Stack.Group screenOptions={{ presentation: 'modal' }}>
+            <Stack.Screen name="SearchModal" component={SearchModal} options={navOptionHandler} />
+            <Stack.Screen name="SearchModal2" component={SearchModal2} options={navOptionHandler} />
+            <Stack.Screen name="HypotheticalSearchModalSire" component={HypotheticalSearchModalSire} options={navOptionHandler} />
+            <Stack.Screen name="HypotheticalSearchModalSire2" component={HypotheticalSearchModalSire2} options={navOptionHandler} />
+            <Stack.Screen name="HypotheticalSearchModalMare" component={HypotheticalSearchModalMare} options={navOptionHandler} />
+            <Stack.Screen name="HypotheticalSearchModalMare2" component={HypotheticalSearchModalMare2} options={navOptionHandler} />
+            <Stack.Screen name="EffectiveNickSearchModal" component={EffectiveNickSearchModal} options={navOptionHandler} />
+            <Stack.Screen name="EffectiveNickSearchModal2" component={EffectiveNickSearchModal2} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenPedigree" component={HorseDetailScreenPedigree} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenProfile" component={HorseDetailScreenProfile} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenProgency" component={HorseDetailScreenProgency} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenNick" component={HorseDetailScreenNick} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenFamily" component={HorseDetailScreenFamily} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenSiblingMare" component={HorseDetailScreenSiblingMare} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenSiblingSire" component={HorseDetailScreenSiblingSire} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenTJK" component={HorseDetailScreenTJK} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenSiblingBroodmareSire" component={HorseDetailScreenSiblingBroodmareSire} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenBroodMareSire" component={HorseDetailScreenBroodMareSire} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenTailFemale" component={HorseDetailScreenTailFemale} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenLinebreeding" component={HorseDetailScreenLinebreeding} options={navOptionHandler} />
+            <Stack.Screen name="HorseDetailScreenFemaleFamily" component={HorseDetailScreenFemaleFamily} options={navOptionHandler} />
+            <Stack.Screen name="EffectiveNickScreen" component={EffectiveNickScreen} options={navOptionHandler} />
+          </Stack.Group>
+        </Stack.Navigator>
+
       </NavigationContainer>
       <Toast ref={(ref) => Toast.setRef(ref)} />
     </>
@@ -555,8 +654,10 @@ const styles = StyleSheet.create({
   },
   FlagContainer: {
     flexDirection: 'row-reverse',
-    left: 220,
-    top: 10
+    right: 0,
+    width: '100%',
+
+
   },
   FlagContainer2: {
     flexDirection: 'row-reverse',

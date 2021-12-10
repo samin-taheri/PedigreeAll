@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, Pressable, StyleSheet, Animated, TouchableOpacity, Text, Dimensions, ScrollView, ActivityIndicator, Image, Modal, FlatList } from 'react-native'
+import { View, Pressable, StyleSheet, Animated, TouchableOpacity, Text, Dimensions, ScrollView, ActivityIndicator, Image, Modal, FlatList, Platform } from 'react-native'
 import Icon from "react-native-vector-icons/FontAwesome5";
 import RBSheet from "react-native-raw-bottom-sheet";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,7 @@ import MyHeader from '../component/MyHeader';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 faker.seed(10);
 const SPACING = 18;
@@ -365,7 +366,7 @@ function CompareHorses({navigation}) {
                                                         </DataTable.Cell>
                                                         <DataTable.Cell onPress={() => { alert(item.HORSE_NAME) }} style={{ width: 100, height: 'auto' }}>{item.HORSE_NAME}</DataTable.Cell>
 
-                                                        <DataTable.Cell onPress={() => { alert(item.HORSE_NAME) }} style={{ marginLeft: 15, width: 80, justifyContent: 'center' }}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                                                        <DataTable.Cell onPress={() => { alert(item.HORSE_NAME) }} style={{ marginLeft: 15, width: 80, justifyContent: 'center' }}>{Translate(item.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
 
                                                         <DataTable.Cell onPress={() => { alert(item.HORSE_NAME) }} style={{ marginLeft: 0, width: 80, justifyContent: 'center' }} >{item.POINT}</DataTable.Cell>
                                                         <DataTable.Cell style={{ marginLeft: 0, width: 80, justifyContent: 'center' }} >{item.EARN} {item.EARN_ICON}</DataTable.Cell>

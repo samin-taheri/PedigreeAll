@@ -161,7 +161,7 @@ function CustomDrawerContent(props) {
         {
           nav: 'MainDrawer',
           routeName: 'MyAddingRequest',
-          title: t('MyAddingRequests')
+          title: t('MyAddingRequest')
         },
         {
           nav: 'MainDrawer',
@@ -644,7 +644,7 @@ const styles = StyleSheet.create({
 
 
   LoginContainer: {
-    marginTop: 15,
+    marginTop: '7%',
     margin: 5,
   },
   PrimaryIconButton: {

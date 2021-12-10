@@ -24,6 +24,7 @@ import WebView from 'react-native-webview';
 import Flag from "react-native-flags";
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 const HorseDetailScreen = ({ route, navigation }) => {
   const { t, i18n } = useTranslation();
@@ -404,7 +405,7 @@ const HorseDetailScreen = ({ route, navigation }) => {
                               style={{ width: 350, left: '0.4%' }}>
                               {item.HORSE_NAME}
                             </DataTable.Cell>
-                            <DataTable.Cell style={styles.DataTableText}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                            <DataTable.Cell style={styles.DataTableText}>{Translate(item.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
 
                             <DataTable.Cell style={styles.DataTableText}>{item.POINT}</DataTable.Cell>
                             <DataTable.Cell style={styles.DataTableText} >{item.EARN} {item.EARN_ICON}</DataTable.Cell>
@@ -494,11 +495,6 @@ const HorseDetailScreen = ({ route, navigation }) => {
         <View style={{ marginBottom: 'auto', flexDirection: 'row', bottom: '3%', left: '25%' }}>
           {/*<Text style={styles.textStyles}>{HorseInformationData.m_cData.HEADER_OBJECT.ROW1_GENERAL}</Text>*/}
 
-          <Animatable.Image
-            animation="fadeIn"
-            style={{ width: '100%', height: '100%', marginLeft: 'auto', right: '50%', bottom: '0%', position: 'absolute', zIndex: -1, resizeMode: 'center' }}
-            source={require('../assets/ver.png')}
-          />
           <Animatable.Text animation="fadeIn" style={styles.textStyles}>{HORSE_NAME}  {MARE_NAME}</Animatable.Text>
 
         </View>
@@ -1282,7 +1278,7 @@ const styles = StyleSheet.create({
   textStyles: {
     color: 'white',
     fontSize: 15,
-    left: '90%'
+    left: '0%'
   },
   TabNavigationContainer: {
     padding: 5,

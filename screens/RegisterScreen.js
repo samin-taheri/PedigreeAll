@@ -12,6 +12,7 @@ import MyHeader from '../component/MyHeader';
 import MyButton from '../component/MyButton';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 function showMessage(data, navigation) {
 
@@ -88,7 +89,7 @@ const RegisterScreen = ({ route, navigation }) => {
                 var list = [];
                 json.m_cData.map(item => (
                     list.push({
-                        label: item.COUNTRY_EN,
+                        label: Translate(item.COUNTRY_TR, item.COUNTRY_EN),
                         value: item.COUNTRY_ID,
                         key: item.COUNTRY_ID.toString()
                     })

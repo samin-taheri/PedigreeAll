@@ -15,6 +15,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import MyButton from '../component/MyButton';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+import { Translate } from '../component/Helper';
 
 export function MyDeleteRequestsScreen({ navigation }) {
   const { t, i18n } = useTranslation();
@@ -114,7 +115,7 @@ export function MyDeleteRequestsScreen({ navigation }) {
         var list = [];
         json.m_cData.map(item => (
           list.push({
-            label: item.REQUEST_STATUS_EN,
+            label: Translate(item.REQUEST_STATUS_TR, item.REQUEST_STATUS_EN),
             value: item.REQUEST_STATUS_ID,
             key: item.REQUEST_STATUS_ID.toString()
 
@@ -222,19 +223,19 @@ export function MyDeleteRequestsScreen({ navigation }) {
         <View>
           {requestStatusList !== undefined &&
             <ScrollView>
-              {requestStatusList.filter((x) => x.REQUEST_STATUS_EN).map(
+              {requestStatusList.filter((x) => Translate(x.REQUEST_STATUS_TR, x.REQUEST_STATUS_EN)).map(
                 (item, i) => (
                   <ListItem
                     key={i}
                     bottomDivider
                     button
                     onPress={() => {
-                      setRequestStatusText(item.REQUEST_STATUS_EN);
-                      setRequestStatusID(item.REQUEST_STATUS_ID)
+                      setRequestStatusText(Translate(item.REQUEST_STATUS_TR,item.REQUEST_STATUS_EN));
+                      setRequestStatusID(Translate(item.REQUEST_STATUS_TR, item.REQUEST_STATUS_ID))
                       BottomSheetRequestsStatus.current.close();
                     }} >
                     <ListItem.Content>
-                        <ListItem.Title>{item.REQUEST_STATUS_EN}</ListItem.Title>
+                        <ListItem.Title>{Translate(item.REQUEST_STATUS_TR, item.REQUEST_STATUS_EN)}</ListItem.Title>
                     </ListItem.Content>
                     <ListItem.Chevron />
                   </ListItem>

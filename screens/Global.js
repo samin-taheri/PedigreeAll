@@ -39,6 +39,8 @@ export class Global {
       : Platform.OS === 'android' && NativeModules.I18nManager.localeIdentifier
 
   static getToken = async () => {
+    getlang()
+
     try {
       const token = await AsyncStorage.getItem('TOKEN');
       if (token !== null) {
@@ -50,6 +52,16 @@ export class Global {
     }
   };
   
+  static getlang = async () => {
+    try {
+      const lang = await AsyncStorage.getItem('language');
+      if (lang !== null) {
+        this.Language = lang;
+      }
+    } catch (error) {
+      console.log("Token Error");
+    }
+  };
   static getUser = async () => {
     try {
       const userKey = await AsyncStorage.getItem('USER')
@@ -63,36 +75,9 @@ export class Global {
       console.log("User Error")
     }
   };
+  
 
-  static getBasket = async () => {
-    try {
-      const user = await AsyncStorage.getItem('USER')
-      if (user !== null) {
-        const userKey = await AsyncStorage.getItem('SEPETIM')
-        if (userKey !== null) {
-          this.Sepetim.push(JSON.parse(userKey)[0])
-          this.TabBarBasketNotification = JSON.parse(userKey).length;
-          //console.log(JSON.parse(userKey).length)
-          //console.log(this.Sepetim)
-        }
 
-      }
-
-    } catch (e) {
-      console.log("User Error")
-    }
-  };
-
-  static getLanguage = async () => {
-    if (this.deviceLanguage === "tr_TR") {
-      this.Language = 1
-
-    }
-    else {
-      this.Language = 2
-
-    }
-  };
   
   static readGetBlogListData = async () => {
     try {

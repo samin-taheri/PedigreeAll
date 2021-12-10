@@ -4,9 +4,10 @@ import { Global } from './Global'
 import { DataTable } from 'react-native-paper';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Flag from "react-native-flags";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
 import MyHeader from '../component/MyHeader';
+import { Translate } from '../component/Helper';
 
 function BreedersTailFemale({ BackButton, navigation, route }) {
     const [time, setTime] = React.useState(true);
@@ -124,7 +125,7 @@ function BreedersTailFemale({ BackButton, navigation, route }) {
                                                     {item.HORSE_NAME}
                                                 </DataTable.Cell>
 
-                                                <DataTable.Cell style={styles.DataTableText}>{item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN}</DataTable.Cell>
+                                                <DataTable.Cell style={styles.DataTableText}>{Translate(item.WINNER_TYPE_OBJECT.WINNER_TYPE_TR, item.WINNER_TYPE_OBJECT.WINNER_TYPE_EN)}</DataTable.Cell>
 
 
                                                 <DataTable.Cell style={styles.DataTableText} >{item.POINT}</DataTable.Cell>
