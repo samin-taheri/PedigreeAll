@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Alert, Text, Modal, Error, TextInput, StyleSheet, StatusBar, Platform, Dimensions, ImageBackground, Button } from 'react-native';
+import { View, Alert, Text, Modal, NativeModules, TextInput, StyleSheet, StatusBar, Platform, Dimensions, ImageBackground, Button } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import { showMessage } from '../Helpers';
@@ -37,22 +37,10 @@ const LoginScreen = ({ navigation }) => {
 
   const saveData = async (data, email, password) => {
     try {
-      const user = AsyncStorage.getItem('USER')
-      if (user !== null) {
-        await AsyncStorage.removeItem('USER')
-        await AsyncStorage.setItem(STORAGE_KEY, data)
-        await AsyncStorage.setItem('TOKEN', btoa(email + ":" + password))
-        Global.Token = btoa(email + ":" + password);
-        const mobile_token = await AsyncStorage.getItem('mobile_token')
-        if (mobile_token)
-          setToken(mobile_token)
-      }
-      else {
-        await AsyncStorage.setItem(STORAGE_KEY, data)
-        await AsyncStorage.setItem('TOKEN', btoa(email + ":" + password))
-        Global.Token = btoa(email + ":" + password);
-        console.log('Data successfully saved')
-      }
+      await AsyncStorage.setItem(STORAGE_KEY, data)
+      await AsyncStorage.setItem('TOKEN', btoa(email + ":" + password))
+      Global.Token = btoa(email + ":" + password);
+      console.log('Data successfully saved')      
       Global.IsLogin = true;
       Global.SideNavigationData = JSON.parse(data)[0].PAGE_LIST
 
@@ -198,7 +186,7 @@ const LoginScreen = ({ navigation }) => {
                     if (showMessage(json)) {
                       Global.IsLogin = true;
                       saveData(JSON.stringify(json.m_cData), email, password)
-                      navigation.navigate('MainDrawer')
+                      NativeModules.DevSettings.reload();
                     }
 
                   })

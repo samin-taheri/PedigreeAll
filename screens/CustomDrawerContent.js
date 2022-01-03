@@ -8,7 +8,8 @@ import {
   Image,
   Linking,
   Text,
-  Platform
+  Platform,
+  NativeModules
 } from 'react-native';
 import { Global } from "./Global";
 import { DrawerContentScrollView } from '@react-navigation/drawer';
@@ -17,6 +18,7 @@ import { SocialIcon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
+
 
 
 
@@ -383,6 +385,7 @@ function CustomDrawerContent(props) {
       </View>
     );
   }
+  
 
   const renderLogoutBtn = () => {
     return (
@@ -397,11 +400,12 @@ function CustomDrawerContent(props) {
 
         {AsyncStorage.getItem('TOKEN') ? <TouchableOpacity style={styles.LogOutButtonStyle} activeOpacity={0.5}
           onPress={() => {
-            props.navigation.navigate('Login');
             removeData();
             setUser(null)
             readData();
             Global.IsLogin = false
+            NativeModules.DevSettings.reload();
+
           }}
         >
           <Image source={require('../assets/logOutt.png')} style={styles.ImageIconStyle} />

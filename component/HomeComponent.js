@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Trans, useTranslation } from "react-i18next";
 import i18n from "../component/i18n";
 import { Translate } from './Helper';
+import { Global } from '../screens/Global';
 
 function HomeComponent({ props }) {
 
@@ -35,30 +36,14 @@ function HomeComponent({ props }) {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': "Basic " + "Z2ZydWx1dGFzQGhvdG1haWwuY29tOjE=",
+                'Authorization': "Basic " + Global.Token,
             },
 
         };
         fetch('https://api.pedigreeall.com/StallionPage/GetRegisteredStallions?p_iRaceId=1&p_iTopCount=7', opts)
             .then((response) => response.json())
             .then((json) => {
-                var aa = [];
-                json.m_cData.map((i, index) => (
-                    aa.push({
-                        HORSE_DATA: i,
-                        HORSE_ID: i.HORSE_ID,
-                        HORSE_NAME: i.HORSE_NAME,
-                        IMAGE: i.IMAGE,
-                        PLACE: i.PLACE,
-                        FEE_TEXT: i.FEE_TEXT,
-                        NAME: i.NAME,
-                        CELL_PHONE: i.CELL_PHONE,
-                    })
-                ))
-                if (isActive) {
-                    SetData(aa)
-                    //console.log(aa)
-                }
+                    SetData(json.m_cData)
             })
             .catch((error) => {
                 console.error(error);
@@ -81,27 +66,8 @@ function HomeComponent({ props }) {
         fetch('https://api.pedigreeall.com/HorseInfo/GetLatest?p_iRaceId=1', opts)
             .then((response) => response.json())
             .then((json) => {
-                var aa = [];
-                json.m_cData.map((i, index) => (
-                    aa.push({
-                        HORSE_DATA: i,
-                        HORSE_ID: i.HORSE_ID,
-                        HORSE_NAME: i.HORSE_NAME,
-                        FATHER_NAME: i.FATHER_NAME,
-                        MOTHER_NAME: i.MOTHER_NAME,
-                        BM_SIRE_NAME: i.BM_SIRE_NAME,
-                        EARN_ICON: i.EARN_ICON,
-                        EARN: i.EARN,
-                        SEX_OBJECT: i.SEX_OBJECT,
-                        POINT: i.POINT,
-                        WINNER_TYPE_OBJECT: i.WINNER_TYPE_OBJECT,
-                        IMAGE: i.IMAGE,
-                    })
-                ))
-                if (isActive) {
-                    setLatestAddedData(aa)
-
-                }
+                setLatestAddedData(json.m_cData)
+  
             })
             .catch((error) => {
                 console.error(error);
@@ -139,28 +105,7 @@ function HomeComponent({ props }) {
         fetch('https://api.pedigreeall.com/Ads/GetFilter', opts)
             .then((response) => response.json())
             .then((json) => {
-                var aa = [];
-                json.m_cData.map((i, index) => (
-                    aa.push({
-                        HORSE_DATA: i,
-                        HORSE_ID: i.HORSE_ID,
-                        ADS_ID: i.ADS_ID,
-                        HEADER: i.HEADER,
-                        ADS_CATEGORY: i.ADS_CATEGORY,
-                        IMAGE_LIST: i.IMAGE_LIST,
-                        LAST_TIME_TEXT: i.LAST_TIME_TEXT,
-                        SEX: i.SEX,
-                        RACE: i.RACE,
-                        PRICE: i.PRICE,
-                        CURRENCY: i.CURRENCY,
-                        HORSE_MOTHER_NAME: i.HORSE_MOTHER_NAME,
-
-                    }
-                    )))
-                if (isActive) {
-                    setHorsesForSale(aa)
-
-                }
+                setHorsesForSale(json.m_cData)
             })
             .catch((error) => {
                 console.error(error);
@@ -185,6 +130,8 @@ function HomeComponent({ props }) {
             <View style={{ top: 20 }}>
                 <Text style={[styles.heightText]}>{t('RegisteredStallions')}</Text>
                 <FlatList horizontal={true}
+                                    keyExtractor={item => item.HORSE_ID}
+
                     pagingEnabled
                     horizontal
                     getItemLayout={(data, index) => ({
@@ -241,11 +188,12 @@ function HomeComponent({ props }) {
                             </View>
 
                         </TouchableOpacity>)}
-                    keyExtractor={item => item.HORSE_ID.toString()}
                 />
 
                 <Text style={styles.heightText}>{t('LastAdded')}</Text>
                 <FlatList horizontal={true}
+                                    keyExtractor={item => item.HORSE_ID}
+
                     pagingEnabled
                     horizontal
                     getItemLayout={(data, index) => ({
@@ -314,11 +262,11 @@ function HomeComponent({ props }) {
                                 </View>
                             </View>
                         </TouchableOpacity>)}
-                    keyExtractor={item => item.HORSE_ID.toString()}
                 />
 
                 <Text style={styles.heightText}>{t('HorsesForSale')}</Text>
                 <FlatList horizontal={true}
+                                    keyExtractor={item => item.HORSE_ID}
                     pagingEnabled
                     horizontal
                     getItemLayout={(data, index) => ({
@@ -373,7 +321,6 @@ function HomeComponent({ props }) {
                             </View>
 
                         </TouchableOpacity>)}
-                    keyExtractor={item => item.HORSE_ID.toString()}
                 />
 
 

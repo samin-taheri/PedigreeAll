@@ -349,26 +349,19 @@ const setToken = async (mobile_token) => {
 }
 
 export default function App({ navigation }) {
-
-
+  const [isSignedIn, setisSignedIn] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-
   const [isLoading, setIsLoading] = React.useState(true);
   const [getLanguageClicking, setLanguageClicking] = React.useState(false)
   const [getUser, setUser] = React.useState(null)
-
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
   const [getLanguageLoading, setLanguageLoading] = React.useState(false);
-
   const [openingScreen, setOpeningScreen] = React.useState("Login");
-
   const bottomSheet2 = useRef();
-
   const saveData = async (data) => {
     try {
       await AsyncStorage.setItem('USER', data)
@@ -387,61 +380,23 @@ export default function App({ navigation }) {
 
       setUser(userKey)
       if (userKey !== null) {
-        const mail = JSON.parse(userKey)[0].EMAIL
-        if (mail === "info@pedigreeall.com") {
-          Global.IsLogin = false;
-          Global.SideNavigationData = JSON.parse(userKey)[0].PAGE_LIST;
-          setOpeningScreen("Login")
-        }
-        else {
-          Global.IsLogin = true;
-          Global.SideNavigationData = JSON.parse(userKey)[0].PAGE_LIST;
-          setOpeningScreen("MainDrawer")
-        }
-        setIsLoading(false)
-      }
-      else {
-        setOpeningScreen("Login")
-        Global.IsLogin = false
-        fetch('https://api.pedigreeall.com/systemuser/login', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            EMAIL: 'info@pedigreeall.com',
-            PASSWORD: 'Ccoft2020'
-          })
-        })
-          .then((response) => response.json())
-          .then((json) => {
-            if (json.m_cDetail.m_eProcessState > 0) {
-              saveData(JSON.stringify(json.m_cData))
-            }
-
-          })
-          .catch((error) => {
-            console.error(error);
-          })
+      setisSignedIn(true);
+        Global.IsLogin = true;
+        Global.SideNavigationData = JSON.parse(userKey)[0].PAGE_LIST;
+        setOpeningScreen("MainDrawer")
+  
       }
     } catch (e) {
     }
   }
 
-
-  const deviceLanguage =
-    Platform.OS === 'ios'
-      ? NativeModules.SettingsManager.settings.AppleLocale ||
-      NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
-      : Platform.OS === 'android' && NativeModules.I18nManager.localeIdentifier
-
-
+  
 
 
   React.useEffect(() => {
 
-    let item = AsyncStorage.getItem('language').then((val) => {
+    
+    AsyncStorage.getItem('language').then((val) => {
       if (val)
         global.dil = val;
       else {
@@ -574,38 +529,46 @@ export default function App({ navigation }) {
       <NavigationContainer>
         <Stack.Navigator >
 
+          {isSignedIn ? (
+            <>
+                          <Stack.Screen name="MainDrawer" component={MainDrawerNavigation} options={navOptionHandler} />
 
-          <Stack.Screen name="MainDrawer" component={MainDrawerNavigation} options={navOptionHandler} />
-          <Stack.Screen name="Register" component={RegisterScreen} options={navOptionHandler} />
-          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={navOptionHandler} />
-          <Stack.Screen name="MyAccount" component={MyAccount} options={navOptionHandler} />
-          <Stack.Screen name="Login" component={LoginScreen} options={navOptionHandler} />
-          <Stack.Screen name="Result" component={ResultScreen} options={navOptionHandler} />
+              <Stack.Screen name="MyAccount" component={MyAccount} options={navOptionHandler} />
+              <Stack.Screen name="Result" component={ResultScreen} options={navOptionHandler} />
+              <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                <Stack.Screen name="SearchModal" component={SearchModal} options={navOptionHandler} />
+                <Stack.Screen name="SearchModal2" component={SearchModal2} options={navOptionHandler} />
+                <Stack.Screen name="HypotheticalSearchModalSire" component={HypotheticalSearchModalSire} options={navOptionHandler} />
+                <Stack.Screen name="HypotheticalSearchModalSire2" component={HypotheticalSearchModalSire2} options={navOptionHandler} />
+                <Stack.Screen name="HypotheticalSearchModalMare" component={HypotheticalSearchModalMare} options={navOptionHandler} />
+                <Stack.Screen name="HypotheticalSearchModalMare2" component={HypotheticalSearchModalMare2} options={navOptionHandler} />
+                <Stack.Screen name="EffectiveNickSearchModal" component={EffectiveNickSearchModal} options={navOptionHandler} />
+                <Stack.Screen name="EffectiveNickSearchModal2" component={EffectiveNickSearchModal2} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenPedigree" component={HorseDetailScreenPedigree} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenProfile" component={HorseDetailScreenProfile} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenProgency" component={HorseDetailScreenProgency} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenNick" component={HorseDetailScreenNick} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenFamily" component={HorseDetailScreenFamily} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenSiblingMare" component={HorseDetailScreenSiblingMare} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenSiblingSire" component={HorseDetailScreenSiblingSire} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenTJK" component={HorseDetailScreenTJK} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenSiblingBroodmareSire" component={HorseDetailScreenSiblingBroodmareSire} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenBroodMareSire" component={HorseDetailScreenBroodMareSire} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenTailFemale" component={HorseDetailScreenTailFemale} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenLinebreeding" component={HorseDetailScreenLinebreeding} options={navOptionHandler} />
+                <Stack.Screen name="HorseDetailScreenFemaleFamily" component={HorseDetailScreenFemaleFamily} options={navOptionHandler} />
+                <Stack.Screen name="EffectiveNickScreen" component={EffectiveNickScreen} options={navOptionHandler} />
+              </Stack.Group>
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Login" component={LoginScreen} options={navOptionHandler} />
+              <Stack.Screen name="Register" component={RegisterScreen} options={navOptionHandler} />
+              <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={navOptionHandler} />
+            </>
+          )
+          }
 
-          <Stack.Group screenOptions={{ presentation: 'modal' }}>
-            <Stack.Screen name="SearchModal" component={SearchModal} options={navOptionHandler} />
-            <Stack.Screen name="SearchModal2" component={SearchModal2} options={navOptionHandler} />
-            <Stack.Screen name="HypotheticalSearchModalSire" component={HypotheticalSearchModalSire} options={navOptionHandler} />
-            <Stack.Screen name="HypotheticalSearchModalSire2" component={HypotheticalSearchModalSire2} options={navOptionHandler} />
-            <Stack.Screen name="HypotheticalSearchModalMare" component={HypotheticalSearchModalMare} options={navOptionHandler} />
-            <Stack.Screen name="HypotheticalSearchModalMare2" component={HypotheticalSearchModalMare2} options={navOptionHandler} />
-            <Stack.Screen name="EffectiveNickSearchModal" component={EffectiveNickSearchModal} options={navOptionHandler} />
-            <Stack.Screen name="EffectiveNickSearchModal2" component={EffectiveNickSearchModal2} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenPedigree" component={HorseDetailScreenPedigree} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenProfile" component={HorseDetailScreenProfile} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenProgency" component={HorseDetailScreenProgency} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenNick" component={HorseDetailScreenNick} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenFamily" component={HorseDetailScreenFamily} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenSiblingMare" component={HorseDetailScreenSiblingMare} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenSiblingSire" component={HorseDetailScreenSiblingSire} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenTJK" component={HorseDetailScreenTJK} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenSiblingBroodmareSire" component={HorseDetailScreenSiblingBroodmareSire} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenBroodMareSire" component={HorseDetailScreenBroodMareSire} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenTailFemale" component={HorseDetailScreenTailFemale} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenLinebreeding" component={HorseDetailScreenLinebreeding} options={navOptionHandler} />
-            <Stack.Screen name="HorseDetailScreenFemaleFamily" component={HorseDetailScreenFemaleFamily} options={navOptionHandler} />
-            <Stack.Screen name="EffectiveNickScreen" component={EffectiveNickScreen} options={navOptionHandler} />
-          </Stack.Group>
         </Stack.Navigator>
 
       </NavigationContainer>
