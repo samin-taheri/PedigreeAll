@@ -1,6 +1,8 @@
 # PedigreeAll_
 Thoroughbred Horse Pedigree
+
 Genetic Analysis and Reporting Portal
+
 This projest is about racehorses, which had over 20 pages and users could enter, edit and delete racehorses, make reports and genetic analyzes about them. 
 ![Simulator Screen Shot - iPhone 13 - 2022-02-02 at 15 15 16](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/3eb620fa-3119-4707-9819-8eae955c7675)
 ![Simulator Screen Shot - iPhone 13 - 2022-02-02 at 15 15 41](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/e5b5cdbe-8c17-4e35-a1be-92f1a0047f57)
