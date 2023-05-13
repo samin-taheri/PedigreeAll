@@ -57,8 +57,6 @@ This projest is about racehorses, which had over 20 pages and users could enter,
 ![Screenshot_20211006-085132_Expo Go](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/373ce4bb-36dd-47c3-a5b8-08c73b9d99d1)
 ![Screenshot_20211005-213839_Expo Go](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/8e00e817-89dc-4496-b35d-01fd60090138)
 ![Screenshot_20210903-215647_Expo Go](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/bb982d27-91a3-489f-96dc-3f04ba6a0f71)
-![Screenshot_20210816-202429_Expo Go](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/7dd5a88f-36d4-4cf6-bb5f-9ba436bd8714)
-![Screenshot_20210914-191122_Expo Go](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/8aeced2f-1dac-4df2-adcb-14d030ed1654)
 ![Screenshot_20210914-191127_Expo Go](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/df08e240-ed72-4416-8c45-e5d13f42e6ec)
 
 ![Simulator Screen Shot - iPhone 13 - 2022-02-02 at 15 15 16](https://github.com/samin-taheri/PedigreeAll_/assets/58706708/3eb620fa-3119-4707-9819-8eae955c7675)
