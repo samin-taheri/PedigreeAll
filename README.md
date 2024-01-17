@@ -1,10 +1,10 @@
 
-# PedigreeAll_
+# PedigreeAll
 Thoroughbred Horse Pedigree
 
 Genetic Analysis and Reporting Portal
 
-This project is about racehorses, which has over 30 pages and users can enter, edit, and delete racehorses, make reports and genetic analyses about them.
+This project is a React-Native app about racehorses, which has over 30 pages and users can enter, edit, and delete racehorses, make reports and genetic analyses about them.
 
 
 <table align="center">
